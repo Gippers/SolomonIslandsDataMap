@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "SolomonIslandsDataMap"
+  site-url: "https://Gippers.github.io/SolomonIslandsDataMap"
+  description: "An interactive Map that displays key stats for the Solomon Islands"
+  repo-branch: main
+  repo-url: "https://github.com/Gippers/SolomonIslandsDataMap"
