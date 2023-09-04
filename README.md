@@ -166,8 +166,3 @@ fig.show()
 ```
 
 ![](index_files/figure-commonmark/cell-5-output-1.png)
-
-``` python
-```
-
-    NameError: name 'FileAttachment' is not defined
