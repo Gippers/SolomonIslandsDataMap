@@ -5,4 +5,10 @@ d = { 'settings': { 'branch': 'main',
                 'doc_host': 'https://Gippers.github.io',
                 'git_url': 'https://github.com/Gippers/SolomonIslandsDataMap',
                 'lib_path': 'SolomonIslandsDataMap'},
-  'syms': {'SolomonIslandsDataMap.core': {'SolomonIslandsDataMap.core.foo': ('core.html#foo', 'SolomonIslandsDataMap/core.py')}}}
+  'syms': { 'SolomonIslandsDataMap.core': {'SolomonIslandsDataMap.core.foo': ('core.html#foo', 'SolomonIslandsDataMap/core.py')},
+            'SolomonIslandsDataMap.load_data': { 'SolomonIslandsDataMap.load_data.SolomonGeo': ( 'load_data.html#solomongeo',
+                                                                                                 'SolomonIslandsDataMap/load_data.py'),
+                                                 'SolomonIslandsDataMap.load_data.SolomonGeo.__init__': ( 'load_data.html#solomongeo.__init__',
+                                                                                                          'SolomonIslandsDataMap/load_data.py'),
+                                                 'SolomonIslandsDataMap.load_data.foo': ( 'load_data.html#foo',
+                                                                                          'SolomonIslandsDataMap/load_data.py')}}}
