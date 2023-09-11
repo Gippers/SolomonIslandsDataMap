@@ -20,17 +20,20 @@ class SolomonGeo:
         adm3    Geopandas dataframe containing admin 3 geographies.
     '''
     def __init__(self):
-        self.adm3 = self.elt()
+        self.adm3 = self.elt('ward', '2009')
 
-    def elt(self, )-> gpd.GeoDataFrame: # The geojason dataset for given aggregation
+    def elt(self, 
+            aggregation:str, # Inicates the aggregation of the data
+            year:str, # The year of that data, only relevant for census data
+           )-> gpd.GeoDataFrame: # The geojason dataset for given aggregation
         '''
         Load and transform given filepath into a geejason geopandas dataframe
         '''
         repo = Repo('.', search_parent_directories=True)
         pw = str(repo.working_tree_dir) + "/testData/"
         
-        geo = self.load_geo(pw + '2009_PHC_Solomons_Ward_4326')
-        df = self.load_census(pw + 'sol_census_2009_ward.csv')
+        geo = self.load_geo(pw + 'geo_' + aggregation + '.json')
+        df = self.load_census(pw + 'census_' + aggregation + '_' + year + '.csv')
         adm3 = geo.merge(df, on="WID").set_index("ward_name")
         return adm3
 
