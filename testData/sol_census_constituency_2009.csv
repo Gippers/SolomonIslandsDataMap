@@ -1,0 +1,54 @@
+﻿id,ward_name,male_pop,female_pop,total_pop
+101,South Choiseul,4307,4128,8435
+102,North West Choiseul,6147,5808,11955
+103,East Choiseul,3078,2904,5982
+1041,East Honiara,13339,12051,25390
+1042,Central Honiara,12134,10785,22919
+1043,West Honiara,8616,7684,16300
+204,Shortland Islands,1881,1822,3703
+205,North Vella la Vella,2461,2339,4800
+206,South Vella la Vella,3905,3635,7540
+207,Ranongga-Simbo,4330,4120,8450
+208,Gizo-Kolombangara,7270,6208,13478
+209,West New Georgia-Vonavona,7196,6630,13826
+210,North New Georgia,2086,1935,4021
+211,South New Georgia-Rendova,4429,4116,8545
+212,Marovo,6368,5918,12286
+313,Hograno-Kia-Havulei,4893,4579,9472
+314,Marigne-Kokota,4995,4768,9763
+315,Gao-Bugotu,3440,3483,6923
+430,Nggela,8500,8311,16811
+431,Savo-Russull Islands,4761,4479,9240
+532,Rennell-Bellona,1549,1492,3041
+633,North West Guadalcanl,11231,10193,21424
+634,West Guadalcanal,5007,4562,9569
+635,South Guadalcanal,3324,3415,6739
+636,East Guadalcanal,5002,5229,10231
+637,East-Central,5472,5234,10706
+638,North-East,5472,5034,10506
+639,North Guadalcanal,4941,4536,9477
+640,Central Guadalcanal,7834,7127,14961
+716,North Malaita,6350,6275,12625
+717,Lau-Mbaelela,7314,7390,14704
+718,Baegu-Asifola,2790,2857,5647
+719,Fataleka,3851,3720,7571
+720,West Kwara'ae,7675,7378,15053
+721,Central Kwara'ae,8925,8645,17570
+722,East Malaita,3921,3866,7787
+723,Auki-Langalanga,3516,3511,7027
+724,East Kwaio,4720,4789,9509
+725,West Kwaio,5336,5156,10492
+726,East AreAre,3567,3532,7099
+727,West Areare,3621,3579,7200
+728,Small Malaita,6484,6483,12967
+729,Malaita Outer Island,1162,1183,2345
+844,West Makira,6289,5771,12060
+845,Central Makira,5295,4820,10115
+846,East Makira,6939,6773,13712
+847,Ulawa-Ugi,2266,2266,4532
+948,Temotu Pele,2621,2906,5527
+949,Temotu-Nende,5768,5810,11578
+950,Temotu Vatu,2077,2180,4257
+,,,,
+,,,,
+,,,,
