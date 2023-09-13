@@ -15,33 +15,51 @@ class SolomonGeo:
     # TODO work out how to format the attributes
     # Look at nbdev docs maybe?
     # TODO change all data to int?
+    # TODO - should I make this a dataclass for the auto functionaliy? potentially should try it out
     '''
     Load the solomon islands geography data 
     Attributes:
         adm3    Geopandas dataframe containing admin 3 geographies.
     '''
-    def __init__(self):
-        self.adm3 = self.elt('ward', '2009')
-        #self.adm3 = self.elt('constituency', '2009')
+    def __init__(self, 
+                geo_df): # A geopandas dataset containing population and geography boundaries for each aggregation
+        self.geo_df = geo_df
 
-    def elt(self, 
+    @classmethod
+    def read_test(cls,
+                 )-> gpd.GeoDataFrame: # The geopandas dataset for given aggregation
+        '''
+        Initialise the object using the local testing data
+        '''
+        # TODO - need to pass a filepath here
+        df = cls.elt('ward', '2009')
+        #cls.adm3 = cls.elt('constituency', '2009')
+
+        return cls(
+            geo_df = df
+        )
+        
+
+    @classmethod
+    def elt(cls, 
             aggregation:str, # Inicates the aggregation of the data
             year:str, # The year of that data, only relevant for census data
-           )-> gpd.GeoDataFrame: # The geojason dataset for given aggregation
+           )-> gpd.GeoDataFrame: # The geopandas dataset for given aggregation
         '''
         Load and transform given filepath into a geojason geopandas dataframe
         '''
         repo = Repo('.', search_parent_directories=True)
         pw = str(repo.working_tree_dir) + "/testData/"
         
-        geo = self.load_geo(pw + 'sol_geo_' + aggregation + '.json')
-        df = self.load_census(pw + 'sol_census_' + aggregation + '_' + year + '.csv')
+        geo = cls.load_geo(pw + 'sol_geo_' + aggregation + '.json')
+        df = cls.load_census(pw + 'sol_census_' + aggregation + '_' + year + '.csv')
         # Add a column that indicates level of aggregation
         geo['agg'] = aggregation
         adm3 = geo.merge(df, on=['id', 'geo_name']).set_index("geo_name")
         return adm3
 
-    def load_geo(self, pw:str, # The pathway to the dataset
+    @classmethod
+    def load_geo(cls, pw:str, # The pathway to the dataset
            )-> gpd.GeoDataFrame: # The geojason dataset for given aggregation
         '''
         Load and transform given filepath into a geojason geopandas dataframe
@@ -54,7 +72,8 @@ class SolomonGeo:
         geo = geo[['id', 'geo_name', 'geometry']]
         return geo
 
-    def load_census(self, pw:str, # Pathway of the dataset
+    @classmethod
+    def load_census(cls, pw:str, # Pathway of the dataset
            )-> pd.DataFrame: # A pandas dataframe
         '''
         Load and transform data from filepath into pandas dataset
@@ -73,5 +92,5 @@ class SolomonGeo:
         '''
         A getter method for the GeoDataFrame that returns a Geo JSON
         '''
-        return json.loads(self.adm3.to_json())
+        return json.loads(self.geo_df.to_json())
 

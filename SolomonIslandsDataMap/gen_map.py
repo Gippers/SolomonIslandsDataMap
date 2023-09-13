@@ -7,6 +7,6 @@ __all__ = []
 from nbdev.showdoc import *
 from .load_data import *
 import plotly.express as px
-import plotly.io as pio # Unless this is used graphs will not be dynamic
+import plotly.io as pio # Unless this is used graphs will not be dynamic?
 import json
 import pandas as pd

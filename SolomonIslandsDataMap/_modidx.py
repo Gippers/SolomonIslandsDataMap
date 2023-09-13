@@ -17,4 +17,6 @@ d = { 'settings': { 'branch': 'main',
                                                  'SolomonIslandsDataMap.load_data.SolomonGeo.load_census': ( 'load_data.html#solomongeo.load_census',
                                                                                                              'SolomonIslandsDataMap/load_data.py'),
                                                  'SolomonIslandsDataMap.load_data.SolomonGeo.load_geo': ( 'load_data.html#solomongeo.load_geo',
-                                                                                                          'SolomonIslandsDataMap/load_data.py')}}}
+                                                                                                          'SolomonIslandsDataMap/load_data.py'),
+                                                 'SolomonIslandsDataMap.load_data.SolomonGeo.read_test': ( 'load_data.html#solomongeo.read_test',
+                                                                                                           'SolomonIslandsDataMap/load_data.py')}}}
