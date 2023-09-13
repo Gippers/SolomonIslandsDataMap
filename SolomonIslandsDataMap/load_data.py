@@ -38,7 +38,22 @@ class SolomonGeo:
         return cls(
             geo_df = df
         )
-        
+
+    @classmethod
+    def extract_from_file(cls, 
+                            aggregation:str, # Inicates the aggregation of the data
+                            year:str, # The year of that data, only relevant for census data
+                 )-> (pd.DataFrame, 
+                      gpd.GeoDataFrame): # Returns input pandas and geopandas datasets
+        '''
+        Extract and return input datasets from file
+        '''
+        repo = Repo('.', search_parent_directories=True)
+        pw = str(repo.working_tree_dir) + "/testData/"
+        return (
+            pd.read_csv(pw + 'sol_census_' + aggregation + '_' + year + '.csv'), 
+            gpd.read_file(pw + 'sol_geo_' + aggregation + '.json')
+        )
 
     @classmethod
     def elt(cls, 
@@ -86,7 +101,7 @@ class SolomonGeo:
         df['id'] = df['id'].astype(int).astype(str)  # Change type of id
         return df
 
-
+    # TODO add this as a @patch method to seperate out
     def get_geojson(self,
                    ) -> dict: # Geo JSON formatted dataset
         '''
