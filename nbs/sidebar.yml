@@ -4,3 +4,4 @@ website:
       - index.ipynb
       - 00_load_data.ipynb
       - 01_gen_map.ipynb
+      - testing.ipynb

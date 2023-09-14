@@ -3,14 +3,16 @@
 # %% auto 0
 __all__ = ['SolomonGeo']
 
-# %% ../nbs/00_load_data.ipynb 2
+# %% ../nbs/00_load_data.ipynb 3
 from nbdev.showdoc import *
 import geopandas as gpd
 import pandas as pd
 from git import Repo
 import json
+from fastcore import *
+from fastcore.basics import patch
 
-# %% ../nbs/00_load_data.ipynb 5
+# %% ../nbs/00_load_data.ipynb 6
 class SolomonGeo:
     # TODO work out how to format the attributes
     # Look at nbdev docs maybe?
@@ -19,10 +21,10 @@ class SolomonGeo:
     '''
     Load the solomon islands geography data 
     Attributes:
-        adm3    Geopandas dataframe containing admin 3 geographies.
+        geo_df    Geopandas dataframe containing geographies and census data
     '''
     def __init__(self, 
-                geo_df): # A geopandas dataset containing population and geography boundaries for each aggregation
+                geo_df:gpd.GeoDataFrame): # A geopandas dataset containing population and geography boundaries for each aggregation
         self.geo_df = geo_df
 
     @classmethod
@@ -31,19 +33,19 @@ class SolomonGeo:
         '''
         Initialise the object using the local testing data
         '''
-        # TODO - need to pass a filepath here
-        df = cls.elt('ward', '2009')
+        df, geo = cls.extract_from_file('ward', '2009')
+        geo_df = cls.transform('ward', '2009', df, geo)
         #cls.adm3 = cls.elt('constituency', '2009')
 
         return cls(
-            geo_df = df
+            geo_df = geo_df
         )
 
     @classmethod
     def extract_from_file(cls, 
-                            aggregation:str, # Inicates the aggregation of the data
+                            aggregation:str, # Indicates the aggregation of the data
                             year:str, # The year of that data, only relevant for census data
-                 )-> (pd.DataFrame, 
+                 ) -> (pd.DataFrame, 
                       gpd.GeoDataFrame): # Returns input pandas and geopandas datasets
         '''
         Extract and return input datasets from file
@@ -56,56 +58,41 @@ class SolomonGeo:
         )
 
     @classmethod
-    def elt(cls, 
+    def transform(cls, 
             aggregation:str, # Inicates the aggregation of the data
             year:str, # The year of that data, only relevant for census data
+            df:pd.DataFrame, # Uncleaned input census dataset
+            geo:gpd.GeoDataFrame, # Uncleaned input geospatial dataset
            )-> gpd.GeoDataFrame: # The geopandas dataset for given aggregation
         '''
-        Load and transform given filepath into a geojason geopandas dataframe
+        Tranform given raw input dataset into a cleaned and combined geopandas dataframe
         '''
-        repo = Repo('.', search_parent_directories=True)
-        pw = str(repo.working_tree_dir) + "/testData/"
-        
-        geo = cls.load_geo(pw + 'sol_geo_' + aggregation + '.json')
-        df = cls.load_census(pw + 'sol_census_' + aggregation + '_' + year + '.csv')
-        # Add a column that indicates level of aggregation
-        geo['agg'] = aggregation
-        adm3 = geo.merge(df, on=['id', 'geo_name']).set_index("geo_name")
-        return adm3
-
-    @classmethod
-    def load_geo(cls, pw:str, # The pathway to the dataset
-           )-> gpd.GeoDataFrame: # The geojason dataset for given aggregation
-        '''
-        Load and transform given filepath into a geojason geopandas dataframe
-        '''
-        geo = gpd.read_file(pw)
-        # Rename columns and keep only necessary ones.
-        # Note that id can be province id, contsituency id etc.
+        # Clean the geospatial dataframe
+        # Rename columns and keep only necessary ones, Note that id can be province id, contsituency id etc.
         geo.columns = geo.columns.str.replace(r'^[a-zA-Z]+name$', 'geo_name', case = False, regex = True)
         geo.rename(columns = {geo.columns[0]:'id'}, inplace=True)
         geo = geo[['id', 'geo_name', 'geometry']]
-        return geo
+        
+        # Add a column that indicates level of aggregation and one for the year
+        geo['agg'] = aggregation
+        geo['year'] = year
 
-    @classmethod
-    def load_census(cls, pw:str, # Pathway of the dataset
-           )-> pd.DataFrame: # A pandas dataframe
-        '''
-        Load and transform data from filepath into pandas dataset
-        '''
-        df = pd.read_csv(pw)
-        # Remove any missing 
+        # Clean the census data
         df = df.dropna()
         # Rename columns to be consistent across geography
         df.columns = df.columns.str.replace(r'^[a-zA-Z]+_name$', 'geo_name', case = False, regex = True)
         df['id'] = df['id'].astype(int).astype(str)  # Change type of id
-        return df
 
-    # TODO add this as a @patch method to seperate out
-    def get_geojson(self,
-                   ) -> dict: # Geo JSON formatted dataset
-        '''
-        A getter method for the GeoDataFrame that returns a Geo JSON
-        '''
-        return json.loads(self.geo_df.to_json())
+        # Merge the data together
+        geo_df = geo.merge(df, on=['id', 'geo_name']).set_index("geo_name")
+        return geo_df
+        
 
+# %% ../nbs/00_load_data.ipynb 7
+@patch
+def get_geojson(self:SolomonGeo, 
+               ) -> dict: # Geo JSON formatted dataset
+    '''
+    A getter method for the SolomonGeo class that returns a Geo JSON formatted dataset
+    '''
+    return json.loads(self.geo_df.to_json())
