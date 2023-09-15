@@ -100,8 +100,12 @@ class SolomonGeo:
 # %% ../nbs/00_load_data.ipynb 9
 @patch
 def get_geojson(self:SolomonGeo, 
+                agg_filter:str = None, # Filters the geojson to the requested aggregation 
                ) -> dict: # Geo JSON formatted dataset
     '''
     A getter method for the SolomonGeo class that returns a Geo JSON formatted dataset
     '''
-    return json.loads(self.geo_df.to_json())
+    ret = self.geo_df
+    if agg_filter is not None:
+        ret = ret.loc[ret['agg'] == agg_filter, :]
+    return json.loads(ret.to_json())
