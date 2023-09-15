@@ -33,9 +33,15 @@ class SolomonGeo:
         '''
         Initialise the object using the local testing data
         '''
+        # TODO might need to further abstract this concatenation process
         df, geo = cls.extract_from_file('ward', '2009')
-        geo_df = cls.transform('ward', '2009', df, geo)
-        #cls.adm3 = cls.elt('constituency', '2009')
+        gdf_ward = cls.transform('ward', '2009', df, geo)
+
+        df, geo = cls.extract_from_file('constituency', '2009')
+        gdf_const = cls.transform('constituency', '2009', df, geo)
+
+        # Append the datasets together
+        geo_df = pd.concat([gdf_ward, gdf_const])
 
         return cls(
             geo_df = geo_df
@@ -70,25 +76,26 @@ class SolomonGeo:
         # Clean the geospatial dataframe
         # Rename columns and keep only necessary ones, Note that id can be province id, contsituency id etc.
         geo.columns = geo.columns.str.replace(r'^[a-zA-Z]+name$', 'geo_name', case = False, regex = True)
+        # TODO this assume the key column is the first one (which so far it is...)
         geo.rename(columns = {geo.columns[0]:'id'}, inplace=True)
-        geo = geo[['id', 'geo_name', 'geometry']]
+        geo = geo.loc[:, ['id', 'geo_name', 'geometry']]
         
         # Add a column that indicates level of aggregation and one for the year
-        geo['agg'] = aggregation
-        geo['year'] = year
+        geo.loc[:, 'agg'] = aggregation
+        geo.loc[:, 'year'] = year
 
         # Clean the census data
         df = df.dropna()
         # Rename columns to be consistent across geography
         df.columns = df.columns.str.replace(r'^[a-zA-Z]+_name$', 'geo_name', case = False, regex = True)
-        df['id'] = df['id'].astype(int).astype(str)  # Change type of id
-
+        #df.loc[:, 'id'] = df['id'].astype(int).astype(str)  # Change type of id
+        df = df.astype({'id': 'str'})
         # Merge the data together
         geo_df = geo.merge(df, on=['id', 'geo_name']).set_index("geo_name")
         return geo_df
         
 
-# %% ../nbs/00_load_data.ipynb 7
+# %% ../nbs/00_load_data.ipynb 9
 @patch
 def get_geojson(self:SolomonGeo, 
                ) -> dict: # Geo JSON formatted dataset
