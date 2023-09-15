@@ -36,10 +36,10 @@ class SolomonGeo:
         # TODO might need to further abstract this concatenation process
         df, geo = cls.extract_from_file('ward', '2009')
         gdf_ward = cls.transform('ward', '2009', df, geo)
-
+        
         df, geo = cls.extract_from_file('constituency', '2009')
         gdf_const = cls.transform('constituency', '2009', df, geo)
-
+        
         # Append the datasets together
         geo_df = pd.concat([gdf_ward, gdf_const])
 
@@ -83,13 +83,15 @@ class SolomonGeo:
         # Add a column that indicates level of aggregation and one for the year
         geo.loc[:, 'agg'] = aggregation
         geo.loc[:, 'year'] = year
-
+        
         # Clean the census data
         df = df.dropna()
         # Rename columns to be consistent across geography
         df.columns = df.columns.str.replace(r'^[a-zA-Z]+_name$', 'geo_name', case = False, regex = True)
-        #df.loc[:, 'id'] = df['id'].astype(int).astype(str)  # Change type of id
+        # id needs to change types twice so that it is a string of an int
+        df = df.astype({'id': 'int', 'male_pop':'int', 	'female_pop':'int', 'total_pop':'int'})
         df = df.astype({'id': 'str'})
+        
         # Merge the data together
         geo_df = geo.merge(df, on=['id', 'geo_name']).set_index("geo_name")
         return geo_df
