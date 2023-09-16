@@ -78,7 +78,8 @@ class SolomonGeo:
         geo.columns = geo.columns.str.replace(r'^[a-zA-Z]+name$', 'geo_name', case = False, regex = True)
         # TODO this assume the key column is the first one (which so far it is...)
         geo.rename(columns = {geo.columns[0]:'id'}, inplace=True)
-        geo = geo.loc[:, ['id', 'geo_name', 'geometry']]
+        # Dropping geo_name from the geography dataset and relying on census data naming
+        geo = geo.loc[:, ['id', 'geometry']] 
         
         # Add a column that indicates level of aggregation and one for the year
         geo.loc[:, 'agg'] = aggregation
@@ -93,7 +94,7 @@ class SolomonGeo:
         df = df.astype({'id': 'str'})
         
         # Merge the data together
-        geo_df = geo.merge(df, on=['id', 'geo_name']).set_index("geo_name")
+        geo_df = geo.merge(df, on=['id']).set_index("geo_name") # , 'geo_name'
         return geo_df
         
 
