@@ -11,6 +11,7 @@ from git import Repo
 import json
 from fastcore import *
 from fastcore.basics import patch
+from fastcore.test import *
 
 # %% ../nbs/00_load_data.ipynb 6
 class SolomonGeo:
@@ -109,4 +110,22 @@ def get_geojson(self:SolomonGeo,
     ret = self.geo_df
     if agg_filter is not None:
         ret = ret.loc[ret['agg'] == agg_filter, :]
-    return json.loads(ret.to_json())
+    # Return only the core data to minimise the html size
+    return json.loads(ret.loc[:, ['geometry']].to_json())
+
+# %% ../nbs/00_load_data.ipynb 11
+@patch
+def get_df(self:SolomonGeo, 
+                agg_filter:str = None, # Filters the dataframe to the requested aggregation 
+               ) -> pd.DataFrame: # Pandas Dataframe containing population data
+    '''
+    A getter method for the SolomonGeo class that returns a pandas dataset containg
+    the id variable and the total population variable. This is the minimal data required
+    to display on the map. 
+    '''
+    ret = self.geo_df
+    # TODO check that filter is valid
+    if agg_filter is not None:
+        ret = ret.loc[ret['agg'] == agg_filter, :]
+    # Return only the core data to minimise the html size
+    return pd.DataFrame(ret.loc[:, ['total_pop']])
