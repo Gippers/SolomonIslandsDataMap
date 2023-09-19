@@ -40,9 +40,12 @@ class SolomonGeo:
         
         df, geo = cls.extract_from_file('constituency', '2009')
         gdf_const = cls.transform('constituency', '2009', df, geo)
+
+        df, geo = cls.extract_from_file('province', '2009')
+        gdf_prov = cls.transform('province', '2009', df, geo)
         
         # Append the datasets together
-        geo_df = pd.concat([gdf_ward, gdf_const])
+        geo_df = pd.concat([gdf_ward, gdf_const, gdf_prov])
 
         return cls(
             geo_df = geo_df
