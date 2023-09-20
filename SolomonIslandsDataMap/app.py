@@ -79,7 +79,6 @@ def update_graph(user_input):  # function arguments come from the component prop
 
 
 # %% ../nbs/app.ipynb 12
-#server
 # Run app
 if __name__=='__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, port = 10000)

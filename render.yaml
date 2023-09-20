@@ -7,7 +7,7 @@ services:
     # Pull files from setting.ini
     buildCommand: "pip install --upgrade pip && pip install -U nbdev && pip install -r requirements.txt && pip install -e \".[dev]\""
     # Run the correct ptyhon file
-    startCommand: "gunicorn --chdir SolomonIslandsDataMap app:server"
+    startCommand: "gunicorn --chdir SolomonIslandsDataMap --timeout 60 app:server"
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.0
