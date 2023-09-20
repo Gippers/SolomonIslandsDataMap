@@ -5,7 +5,11 @@ __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'mytitle', 'mygraph', 'aggs', '
 
 # %% ../nbs/app.ipynb 2
 from nbdev.showdoc import *
-from .load_data import *
+# TODO work out how to get around below hack
+try:
+    from SolomonIslandsDataMap.load_data import *
+except: 
+    from load_data import *
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio # Unless this is used graphs will not be dynamic?
