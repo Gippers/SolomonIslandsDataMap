@@ -5,7 +5,7 @@ services:
     plan: free
     rootDir: SolomonIslandsDataMap
     # Pull files from setting.ini
-    buildCommand: "pip install --upgrade pip && pip install -U nbdev && pip install -r requirements.txt && pip pip install -e \".[dev]\""
+    buildCommand: "pip install --upgrade pip && pip install -U nbdev && pip install -r requirements.txt && pip install -e \".[dev]\""
     # Run the correct ptyhon file
     startCommand: "gunicorn --chdir src app:server"
     envVars:
