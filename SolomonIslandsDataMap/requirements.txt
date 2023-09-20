@@ -8,5 +8,4 @@ GitPython
 numpy 
 dash_bootstrap_components 
 dash==2.13.0
-random 
 gunicorn
