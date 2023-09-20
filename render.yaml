@@ -3,11 +3,11 @@ services:
     name: solDataMap
     env: python
     plan: free
-    rootDir: SolomonIslandsDataMap
+    #rootDir: SolomonIslandsDataMap
     # Pull files from setting.ini
     buildCommand: "pip install --upgrade pip && pip install -U nbdev && pip install -r requirements.txt && pip install -e \".[dev]\""
     # Run the correct ptyhon file
-    startCommand: "gunicorn --chdir src app:server"
+    startCommand: "gunicorn --chdir SolomonIslandsDataMap app:server"
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.0
