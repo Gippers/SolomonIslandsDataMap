@@ -1,0 +1,12 @@
+fastcore 
+pandas 
+plotly>=5.16.1 
+nbformat>=4.2.0 
+geopandas 
+repo 
+GitPython 
+numpy 
+dash_bootstrap_components 
+dash 
+random 
+gunicorn
