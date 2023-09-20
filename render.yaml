@@ -3,6 +3,7 @@ services:
     name: solDataMap
     env: python
     plan: free
+    region: singapore
     #rootDir: SolomonIslandsDataMap
     # Pull files from setting.ini
     buildCommand: "pip install --upgrade pip && pip install -U nbdev && pip install -r requirements.txt && pip install -e \".[dev]\""
