@@ -3,6 +3,7 @@ service
     name: solDataMap
     env: python
     plan: free
+    rootDir: SolomonIslandsDataMap
     # Pull files from setting.ini
     buildCommand: "Build Command = pip install --upgrade pip setuptools wheel && pip install -U nbdev && pip install -r requirements.txt && pip pip install -e \".[dev]\""
     # Run the correct ptyhon file
