@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: solDataMap
+    name: solomonIslandsDataMap
     env: python
     plan: free
     region: singapore
