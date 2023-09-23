@@ -59,7 +59,7 @@ sidebar = html.Div(
         html.Hr(),
         dbc.Nav(
             [
-                html.P("Data Aggregation"),
+                html.P("Geography"), # TODO add a little info button here with link to geo explanation
                 dropdown,
                 html.Br(),
                 #dcc.Dropdown(id = 'two'),
@@ -115,7 +115,7 @@ def update_graph(user_input):  # function arguments come from the component prop
     return fig, '# Solomon Islands Data map - ' + user_input
 
 
-# %% ../nbs/01_app.ipynb 14
+# %% ../nbs/01_app.ipynb 15
 # Run app
 if __name__=='__main__':
     app.run_server(debug=True)

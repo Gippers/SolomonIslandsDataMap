@@ -13,7 +13,7 @@ from fastcore import *
 from fastcore.basics import patch
 from fastcore.test import *
 import sys
-#import topojson as tp
+import topojson as tp
 
 # %% ../nbs/00_load_data.ipynb 6
 class SolomonGeo:
@@ -50,10 +50,11 @@ class SolomonGeo:
         geo_df = pd.concat([gdf_ward, gdf_const, gdf_prov])
 
         # simplify the geography
-        geo_df.geometry = geo_df.geometry.simplify(tolerance = 360/43200)
+        #geo_df.geometry = geo_df.geometry.simplify(tolerance = 360/43200)
         # TODO use topo to preserver the topology between shapes
-        #topo = tp.Topology(gdf, prequantize=False)
-        #gdf_simplified = topo.toposimplify(5).to_gdf()
+        topo = tp.Topology(geo_df, prequantize=False)
+        geo_df = topo.toposimplify(360/43200).to_gdf()
+
 
         return cls(
             geo_df = geo_df
