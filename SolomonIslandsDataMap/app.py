@@ -23,7 +23,7 @@ import dash_bootstrap_components as dbc    # pip install dash-bootstrap-componen
 import random
 
 # %% ../nbs/01_app.ipynb 4
-sol_geo = SolomonGeo.read_test()
+sol_geo = SolomonGeo.load_pickle("/testData/")
 geo_df = sol_geo.geo_df
 
 # %% ../nbs/01_app.ipynb 6

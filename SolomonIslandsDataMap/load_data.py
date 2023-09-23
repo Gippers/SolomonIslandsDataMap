@@ -14,6 +14,7 @@ from fastcore.basics import patch
 from fastcore.test import *
 import sys
 import topojson as tp
+import pickle
 
 # %% ../nbs/00_load_data.ipynb 6
 class SolomonGeo:
@@ -32,7 +33,7 @@ class SolomonGeo:
 
     @classmethod
     def read_test(cls,
-                 )-> gpd.GeoDataFrame: # The geopandas dataset for given aggregation
+                 ): # A solmon geo class TODO work out how to return self here... (can't?)
         '''
         Initialise the object using the local testing data
         '''
@@ -49,9 +50,7 @@ class SolomonGeo:
         # Append the datasets together
         geo_df = pd.concat([gdf_ward, gdf_const, gdf_prov])
 
-        # simplify the geography
-        #geo_df.geometry = geo_df.geometry.simplify(tolerance = 360/43200)
-        # TODO use topo to preserver the topology between shapes
+        # simplify the geography, use topo to preserver the topology between shapes
         topo = tp.Topology(geo_df, prequantize=False)
         geo_df = topo.toposimplify(360/43200).to_gdf()
 
@@ -109,9 +108,55 @@ class SolomonGeo:
         # Merge the data together
         geo_df = geo.merge(df, on=['id']).set_index("geo_name") # , 'geo_name'
         return geo_df
+
+    @classmethod
+    def load_pickle(cls,
+                    folder:str, #file path of the folder to save in
+                    file_name:str = 'sol_geo.pickle' # file name of the saved class
+                 ):
+        '''
+        Initialise the object from a saved filepath
+        '''
+        # TODO work out how to make this a class method
+        repo = Repo('.', search_parent_directories=True)
+        pw = str(repo.working_tree_dir) + folder + file_name
+        
+        with open(pw, 'rb') as f:
+            tmp_geo = pickle.load(f)
+
+        # TODO  guide said do below line, don't think relevant though
+        #cls.__dict__.update(tmp_dict) 
+        
+        return cls(
+            geo_df = gpd.GeoDataFrame(tmp_geo['geo_df'])
+        )
         
 
-# %% ../nbs/00_load_data.ipynb 9
+# %% ../nbs/00_load_data.ipynb 11
+@patch
+def save_pickle(self:SolomonGeo,
+              folder:str, #file path of the folder to save in
+                file_name:str = 'sol_geo.pickle' # file name of the saved class
+             ):
+    '''
+    Save a pickle of the SolomonGeo class
+    '''
+    repo = Repo('.', search_parent_directories=True)
+    pw = str(repo.working_tree_dir) + folder + file_name
+    
+    f = open(pw, 'wb')
+    pickle.dump(self.__dict__, f, 2)
+    f.close()
+
+    # For now I will also save the goegraphy in an assets folder
+    # TODO update this process in future - may need to save elsewhere
+    # TODO I think I need to save in multiple spots
+    pw_asset = str(repo.working_tree_dir) + "/assets/sol_geo.json"
+    with open(pw_asset, 'w') as f:
+        json.dump(self.get_geojson(), f)
+
+
+# %% ../nbs/00_load_data.ipynb 15
 @patch
 def get_geojson(self:SolomonGeo, 
                 agg_filter:str = None, # Filters the geojson to the requested aggregation 
@@ -125,7 +170,7 @@ def get_geojson(self:SolomonGeo,
     # Return only the core data to minimise the html size
     return json.loads(ret.loc[:, ['geometry']].to_json())
 
-# %% ../nbs/00_load_data.ipynb 11
+# %% ../nbs/00_load_data.ipynb 17
 @patch
 def get_df(self:SolomonGeo, 
                 agg_filter:str = None, # Filters the dataframe to the requested aggregation 
