@@ -3,5 +3,5 @@ website:
     contents:
       - index.ipynb
       - 00_load_data.ipynb
-      - 01_gen_map.ipynb
+      - 01_app.ipynb
       - testing.ipynb
