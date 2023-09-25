@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'mytitle', 'mygraph', 'geos', 'cen_vars', 'dropdown_geo', 'dropdown_var',
-           'SIDEBAR_STYLE', 'sidebar', 'update_graph']
+           'SIDEBAR_STYLE', 'sidebar', 'define_map', 'update_map']
 
 # %% ../nbs/01_app.ipynb 2
 from nbdev.showdoc import *
@@ -27,7 +27,50 @@ import random
 sol_geo = SolomonGeo.load_pickle("/testData/")
 geo_df = sol_geo.geo_df
 
-# %% ../nbs/01_app.ipynb 6
+# %% ../nbs/01_app.ipynb 5
+def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to input into map
+                )->type(go.Figure()): # Returns a graph object figure
+    '''
+    Creates and returns the base cloreopath map
+    '''
+    # TODO - should I update this into a class with methods for updating
+    # the other things? Acutally maybe as another function if the update is done through patch
+    
+    # cols_dd dictates the aggregation that will be visable
+    cols_dd = sol_df.geo_levels
+    # we need to add this to select which trace 
+    # is going to be visible
+    visible = np.array(cols_dd)
+    # define traces and buttons at once
+    traces = []
+    buttons = []
+    # TODO if fails remember I changed visible from cols_dd
+    for value in cols_dd:
+        traces.append(go.Choroplethmapbox(
+                                geojson=sol_df.get_geojson(agg_filter = value),
+                               locations=sol_df.get_df(agg_filter = value).index,
+                               z = sol_df.get_df(agg_filter = value)['total_pop'],
+                               colorscale="deep",
+                                marker_line_width = 0.5,
+                                zauto=True,
+                visible= True if value==cols_dd[0] else False))
+        
+    # Show figure
+    fig = go.Figure(data=traces)
+    # This is in order to get the first title displayed correctly
+    first_title = cols_dd[0]
+    fig.update_layout(title=f"<b>{first_title}</b>",
+                        title_x=0.5,
+                        mapbox_style = 'carto-positron',
+                        mapbox_zoom = 5,
+                        mapbox_center={"lat": -9.565766, "lon": 162.012453},
+    )
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    
+    return fig
+
+
+# %% ../nbs/01_app.ipynb 10
 # Build your components
 # FYI the best themes seem to be: [Darkly, Flatly, Minty, Slate]
 app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY])
@@ -35,7 +78,7 @@ server = app.server
 
 
 mytitle = dcc.Markdown(children='')
-mygraph = dcc.Graph(figure={})
+mygraph = dcc.Graph(figure=define_map(sol_geo))
 geos = geo_df.loc[:, 'agg'].unique()
 cen_vars = sol_geo.census_vars
 dropdown_geo = dcc.Dropdown(options=geos,
@@ -45,7 +88,7 @@ dropdown_var = dcc.Dropdown(options=cen_vars,
                         value=cen_vars[-1],  # initial value displayed when page first loads
                         clearable=False)
 
-# %% ../nbs/01_app.ipynb 8
+# %% ../nbs/01_app.ipynb 13
 # Note, for now I am not using a sidebar style as I do not want to fix the width
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -82,7 +125,7 @@ sidebar = html.Div(
 
 
 
-# %% ../nbs/01_app.ipynb 10
+# %% ../nbs/01_app.ipynb 15
 app.layout = dbc.Container([
                 dbc.Row([
                     dbc.Col(),
@@ -95,34 +138,29 @@ app.layout = dbc.Container([
                      ], justify = 'center'),                    
                 ], fluid = True)
 
-# %% ../nbs/01_app.ipynb 13
+# %% ../nbs/01_app.ipynb 17
 # Callback allows components to interact
 @app.callback(
     Output(mygraph, 'figure'),
     Output(mytitle, 'children'),
-    Input(dropdown_geo, 'value')
+    Input(dropdown_geo, 'value'),
+    allow_duplicate=True,
+    prevent_initial_call=True
 )
-def update_graph(user_input):  # function arguments come from the component property of the Input
-    repo = Repo('.', search_parent_directories=True)
-    fig = px.choropleth_mapbox(sol_geo.get_df(agg_filter = user_input),
-        # TODO - may need to use old version of mapping to get visibility hack to work..
-                        #geojson = str(repo.working_tree_dir) + "/assets/sol_geo.json",
-                            geojson=sol_geo.get_geojson(agg_filter = user_input),
-                           locations=sol_geo.get_df(agg_filter = user_input).index,
-                               color = 'total_pop',
-                           color_continuous_scale="deep",
-                               mapbox_style = 'carto-positron',
-                               opacity = 0.8,
-                        zoom = 5,
-                        center={"lat": -9.565766, "lon": 162.012453}
+def update_map(user_input:str # User input from the geography dropdown
+              )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
 
-    )
-    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    patched_figure = Patch()
+    print(user_input)
+    for geo in sol_geo.geo_levels:
+        i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
+        patched_figure['data'][i]['visible'] = user_input == geo
+        print(user_input == geo)
     
     # returned objects are assigned to the component property of the Output
-    return fig, '# Solomon Islands Data map - ' + user_input
+    return patched_figure, '# Solomon Islands Data map - ' + user_input
 
-# %% ../nbs/01_app.ipynb 20
+# %% ../nbs/01_app.ipynb 25
 # Run app
 if __name__=='__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, port = random.randint(1000, 9999)) # Random int mitigates port collision

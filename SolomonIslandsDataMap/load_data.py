@@ -26,15 +26,20 @@ class SolomonGeo:
     Load the solomon islands geography data 
     Attributes:
         geo_df    Geopandas dataframe containing geographies and census data
+        geo_levels    A list of the types of available aggregations
         census_vars    A list of census variables in the dataset 
     '''
     def __init__(self, 
                 geo_df:gpd.GeoDataFrame): # A geopandas dataset containing population and geography boundaries for each aggregation
         self.geo_df = geo_df
 
+        # variable that tracks the types of aggregations
+        self.geo_levels = geo_df.loc[:, 'agg'].unique()
+
         # Save a list of census variables
         col_ignore = ['geometry', 'id', 'agg', 'year']
         self.census_vars = list(geo_df.drop(columns = col_ignore).columns)
+
 
     @classmethod
     def read_test(cls,
