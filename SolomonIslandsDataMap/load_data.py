@@ -26,10 +26,15 @@ class SolomonGeo:
     Load the solomon islands geography data 
     Attributes:
         geo_df    Geopandas dataframe containing geographies and census data
+        census_vars    A list of census variables in the dataset 
     '''
     def __init__(self, 
                 geo_df:gpd.GeoDataFrame): # A geopandas dataset containing population and geography boundaries for each aggregation
         self.geo_df = geo_df
+
+        # Save a list of census variables
+        col_ignore = ['geometry', 'id', 'agg', 'year']
+        self.census_vars = list(geo_df.drop(columns = col_ignore).columns)
 
     @classmethod
     def read_test(cls,
@@ -153,7 +158,7 @@ def save_pickle(self:SolomonGeo,
     # TODO I think I need to save in multiple spots
     pw_asset = str(repo.working_tree_dir) + "/assets/sol_geo.json"
     with open(pw_asset, 'w') as f:
-        json.dump(self.get_geojson(), f)
+        json.dump(self.get_geojson(agg_filter = 'ward'), f)
 
 
 # %% ../nbs/00_load_data.ipynb 15
@@ -185,4 +190,5 @@ def get_df(self:SolomonGeo,
     if agg_filter is not None:
         ret = ret.loc[ret['agg'] == agg_filter, :]
     # Return only the core data to minimise the html size
-    return pd.DataFrame(ret.loc[:, ['total_pop']])
+    names = ['geometry', 'id', 'agg', 'year']
+    return pd.DataFrame(ret.drop(columns = names))
