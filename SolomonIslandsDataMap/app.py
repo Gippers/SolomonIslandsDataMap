@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'mytitle', 'mygraph', 'geos', 'cen_vars', 'dropdown_geo', 'dropdown_var',
-           'SIDEBAR_STYLE', 'sidebar', 'define_map', 'update_geography', 'update_census_var']
+           'SIDEBAR_STYLE', 'sidebar', 'define_map', 'update_geography']
 
 # %% ../nbs/01_app.ipynb 2
 from nbdev.showdoc import *
@@ -19,7 +19,7 @@ from git import Repo
 import pandas as pd
 import numpy as np
 from fastcore.test import *
-from dash import Dash, dcc, Output, Input, html, Patch  # pip install dash
+from dash import Dash, dcc, Output, Input, html, Patch, ctx  # pip install dash
 import dash_bootstrap_components as dbc    # pip install dash-bootstrap-components
 import random
 
@@ -144,44 +144,38 @@ app.layout = dbc.Container([
     Output(mygraph, 'figure'),
     Output(mytitle, 'children'),
     Input(dropdown_geo, 'value'),
-    allow_duplicate=True,
-    prevent_initial_call=True
-)
-def update_geography(geo_input:str # User input from the geography dropdown
-              )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
-
-    patched_figure = Patch()
-
-    # Update disaplayed geography based on 
-    for geo in sol_geo.geo_levels:
-        i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-        patched_figure['data'][i]['visible'] = geo_input == geo
-        print(geo_input == geo)
-    
-    # returned objects are assigned to the component property of the Output
-    return patched_figure, '# Solomon Islands Data map - ' + geo_input
-
-# %% ../nbs/01_app.ipynb 19
-# Callback allows components to interact
-@app.callback(
-    Output(mygraph, 'figure'),
     Input(dropdown_var, 'value'),
     allow_duplicate=True,
     prevent_initial_call=True
 )
-def update_census_var(census_data:str # User input that determings
+def update_geography(geo_input:str, # User input from the geography dropdown
+                     census_var:str # User input for the census variable
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
-    Updates the focus census variable dispalayed on the map
+    Updates the focus census variable or geography dispalayed on the map
     '''
     patched_figure = Patch()
+    button_clicked = ctx.triggered_id
 
-    # Update disaplayed geography based on 
-    for geo in sol_geo.geo_levels:
-        i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-        patched_figure['data'][i]['z'] = geo_input == geo
-        print(geo_input == geo)
-    
+    if button_clicked == dropdown_geo.id:
+        # Update disaplayed geography based on 
+        for geo in sol_geo.geo_levels:
+            i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
+            patched_figure['data'][i]['visible'] = geo_input == geo
+            print(geo_input == geo)
+    elif button_clicked == dropdown_var.id:
+        # Update the z values in map to the data for the requested
+        # census variable
+        
+        for geo in sol_geo.geo_levels:
+        # Ar updates the z value ie. data disaplyed each time
+        # TODO this is fairly inefficient, as we are processing each time
+        # Maybe faster framework like polars could help? or caching but would require a lot of caching
+            i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
+            ar = sol_geo.get_df(agg_filter = geo, var_filter = census_var).values
+            ar = ar.reshape((ar.shape[0],))
+            patched_figure['data'][i]['z'] = ar
+
     # returned objects are assigned to the component property of the Output
     return patched_figure, '# Solomon Islands Data map - ' + geo_input
 
