@@ -184,6 +184,7 @@ def get_geojson(self:SolomonGeo,
 @patch
 def get_df(self:SolomonGeo, 
                 agg_filter:str = None, # Filters the dataframe to the requested aggregation 
+                var_filter:str = None, # Selects the desired column from the dataframe
                ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
     A getter method for the SolomonGeo class that returns a pandas dataset containg
@@ -196,4 +197,10 @@ def get_df(self:SolomonGeo,
         ret = ret.loc[ret['agg'] == agg_filter, :]
     # Return only the core data to minimise the html size
     names = ['geometry', 'id', 'agg', 'year']
-    return pd.DataFrame(ret.drop(columns = names))
+    ret = ret.drop(columns = names)
+
+    # Keep only selected column if required
+    if var_filter is not None:
+        ret = ret.filter(items = [var_filter])
+    
+    return pd.DataFrame(ret)

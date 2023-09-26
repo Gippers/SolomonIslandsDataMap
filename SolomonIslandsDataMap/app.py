@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'mytitle', 'mygraph', 'geos', 'cen_vars', 'dropdown_geo', 'dropdown_var',
-           'SIDEBAR_STYLE', 'sidebar', 'define_map', 'update_map']
+           'SIDEBAR_STYLE', 'sidebar', 'define_map', 'update_geography', 'update_census_var']
 
 # %% ../nbs/01_app.ipynb 2
 from nbdev.showdoc import *
@@ -147,20 +147,45 @@ app.layout = dbc.Container([
     allow_duplicate=True,
     prevent_initial_call=True
 )
-def update_map(user_input:str # User input from the geography dropdown
+def update_geography(geo_input:str # User input from the geography dropdown
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
 
     patched_figure = Patch()
-    print(user_input)
+
+    # Update disaplayed geography based on 
     for geo in sol_geo.geo_levels:
         i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-        patched_figure['data'][i]['visible'] = user_input == geo
-        print(user_input == geo)
+        patched_figure['data'][i]['visible'] = geo_input == geo
+        print(geo_input == geo)
     
     # returned objects are assigned to the component property of the Output
-    return patched_figure, '# Solomon Islands Data map - ' + user_input
+    return patched_figure, '# Solomon Islands Data map - ' + geo_input
 
-# %% ../nbs/01_app.ipynb 25
+# %% ../nbs/01_app.ipynb 19
+# Callback allows components to interact
+@app.callback(
+    Output(mygraph, 'figure'),
+    Input(dropdown_var, 'value'),
+    allow_duplicate=True,
+    prevent_initial_call=True
+)
+def update_census_var(census_data:str # User input that determings
+              )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
+    '''
+    Updates the focus census variable dispalayed on the map
+    '''
+    patched_figure = Patch()
+
+    # Update disaplayed geography based on 
+    for geo in sol_geo.geo_levels:
+        i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
+        patched_figure['data'][i]['z'] = geo_input == geo
+        print(geo_input == geo)
+    
+    # returned objects are assigned to the component property of the Output
+    return patched_figure, '# Solomon Islands Data map - ' + geo_input
+
+# %% ../nbs/01_app.ipynb 29
 # Run app
 if __name__=='__main__':
     app.run_server(debug=True, port = random.randint(1000, 9999)) # Random int mitigates port collision
