@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'geos', 'cen_vars', 'mytitle', 'mygraph', 'dropdown_geo', 'dropdown_var',
-           'navbar', 'SIDEBAR_STYLE', 'sidebar', 'update_geography']
+           'navbar', 'SIDEBAR_STYLE', 'sidebar', 'define_map', 'update_geography']
 
 # %% ../nbs/01_app.ipynb 2
 from nbdev.showdoc import *
@@ -28,6 +28,50 @@ import dash_mantine_components as dmc
 # %% ../nbs/01_app.ipynb 4
 sol_geo = SolomonGeo.load_pickle("/testData/")
 geo_df = sol_geo.geo_df
+
+# %% ../nbs/01_app.ipynb 5
+# TODO I should build figures and maps in another script
+def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to input into map
+                )->type(go.Figure()): # Returns a graph object figure
+    '''
+    Creates and returns the base cloreopath map
+    '''
+    # TODO - should I update this into a class with methods for updating
+    # the other things? Acutally maybe as another function if the update is done through patch
+    
+    # cols_dd dictates the aggregation that will be visable
+    cols_dd = sol_df.geo_levels
+    # we need to add this to select which trace 
+    # is going to be visible
+    visible = np.array(cols_dd)
+    # define traces and buttons at once
+    traces = []
+    buttons = []
+    # TODO if fails remember I changed visible from cols_dd
+    for value in cols_dd:
+        traces.append(go.Choroplethmapbox(
+                                geojson=sol_df.get_geojson(agg_filter = value),
+                               locations=sol_df.get_df(agg_filter = value).index,
+                               z = sol_df.get_df(agg_filter = value)['total_pop'],
+                               colorscale="deep",
+                                marker_line_width = 0.5,
+                                zauto=True,
+                visible= True if value==cols_dd[0] else False))
+        
+    # Show figure
+    fig = go.Figure(data=traces)
+    # This is in order to get the first title displayed correctly
+    first_title = cols_dd[0]
+    fig.update_layout(title=f"<b>{first_title}</b>",
+                        title_x=0.5,
+                        mapbox_style = 'carto-positron',
+                        mapbox_zoom = 5,
+                        mapbox_center={"lat": -9.565766, "lon": 162.012453},
+    )
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    
+    return fig
+
 
 # %% ../nbs/01_app.ipynb 10
 # Build your components
@@ -172,7 +216,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
             patched_figure['data'][i]['z'] = ar
 
     # returned objects are assigned to the component property of the Output
-    return patched_figure, '# Solomon Islands Data map - ' + geo_input
+    return patched_figure, '## Solomon Islands Data map - ' + geo_input
 
 # %% ../nbs/01_app.ipynb 29
 # Run app
