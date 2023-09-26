@@ -40,6 +40,9 @@ class SolomonGeo:
         col_ignore = ['geometry', 'id', 'agg', 'year']
         self.census_vars = list(geo_df.drop(columns = col_ignore).columns)
 
+        # TODO: might be useful to track current selection so that I can pass useful info about it?
+        # maybe not though as well...
+
 
     @classmethod
     def read_test(cls,
