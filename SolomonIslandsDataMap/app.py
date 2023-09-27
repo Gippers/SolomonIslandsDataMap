@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'geos', 'cen_vars', 'mytitle', 'mygraph', 'dropdown_geo', 'dropdown_var',
-           'navbar', 'SIDEBAR_STYLE', 'sidebar', 'define_map', 'update_geography']
+           'navbar', 'base_card', 'SIDEBAR_STYLE', 'sidebar', 'define_map', 'update_geography']
 
 # %% ../nbs/01_app.ipynb 2
 from nbdev.showdoc import *
@@ -25,11 +25,11 @@ from dash_bootstrap_templates import load_figure_template
 import random
 import dash_mantine_components as dmc
 
-# %% ../nbs/01_app.ipynb 4
+# %% ../nbs/01_app.ipynb 5
 sol_geo = SolomonGeo.load_pickle("/testData/")
 geo_df = sol_geo.geo_df
 
-# %% ../nbs/01_app.ipynb 5
+# %% ../nbs/01_app.ipynb 6
 # TODO I should build figures and maps in another script
 def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to input into map
                 )->type(go.Figure()): # Returns a graph object figure
@@ -73,7 +73,7 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
     return fig
 
 
-# %% ../nbs/01_app.ipynb 10
+# %% ../nbs/01_app.ipynb 11
 # Build your components
 # FYI the best themes seem to be: [Darkly, Flatly, Minty, Slate, JOURNAL]
 app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY])
@@ -123,6 +123,24 @@ navbar = dbc.NavbarSimple(
 )
 
 # %% ../nbs/01_app.ipynb 13
+# todo - turn this eventually into a function
+
+# TODO - make it in future so that clicking on a card updates the current census variable
+# selection and it highlights it as clicked.
+
+base_card = dbc.Card(
+    dbc.CardBody(
+        [
+        html.H4(cen_vars[-1]),
+        html.Hr(),
+        html.H5(sol_geo.get_df(agg_filter = 'province', 
+                               var_filter = 'total_pop').sum(), 
+                className = "text-center")
+        ]
+    ) , className="m-2 border-primary mb-3"
+)
+
+# %% ../nbs/01_app.ipynb 15
 # Note, for now I am not using a sidebar style as I do not want to fix the width
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -159,7 +177,7 @@ sidebar = html.Div(
 
 
 
-# %% ../nbs/01_app.ipynb 15
+# %% ../nbs/01_app.ipynb 17
 app.layout = dbc.Container([
                 dbc.Row([
                     navbar
@@ -169,13 +187,16 @@ app.layout = dbc.Container([
                     dbc.Col([mytitle,
                              mygraph,
                             dbc.Row(
-                                []
+                                [
+                                    #dbc.Col(),
+                                    dbc.Col([base_card], width = 3)
+                                ]
                             )
                             ], width = 9)#, style = {'margin-left':'15px', 'margin-top':'7px', 'margin-right':'15px'})
                      ], justify = 'center'),                    
                 ], fluid = True)
 
-# %% ../nbs/01_app.ipynb 17
+# %% ../nbs/01_app.ipynb 19
 # Callback allows components to interact
 
 # TODO put title in it's own callback
@@ -218,7 +239,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     # returned objects are assigned to the component property of the Output
     return patched_figure, '## Solomon Islands Data map - ' + geo_input
 
-# %% ../nbs/01_app.ipynb 29
+# %% ../nbs/01_app.ipynb 31
 # Run app
 if __name__=='__main__':
     app.run_server(debug=True, port = random.randint(1000, 9999)) # Random int mitigates port collision
