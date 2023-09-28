@@ -3,5 +3,6 @@ website:
     contents:
       - index.ipynb
       - 00_load_data.ipynb
-      - 01_app.ipynb
+      - 01_dash_components.ipynb
+      - 02_app.ipynb
       - testing.ipynb
