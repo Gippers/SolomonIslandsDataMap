@@ -4,5 +4,16 @@
 
 ## [Click here to view the map](https://unsplash.com/@glt23)
 
-[![title](img/gilly-tanabose-o7oV-rGy53Y-unsplash.jpg)](https://solomonislandsdatamap.onrender.com/)
+``` python
+md("[![title](%s)](https://solomonislandsdatamap.onrender.com/)"%(fp))
+```
+
+<div>
+
+[![](./home/tom/git/SolomonIslandsDataMap/img/gilly-tanabose-o7oV-rGy53Y-unsplash.jpg)](https://solomonislandsdatamap.onrender.com/)
+
+title
+
+</div>
+
 [Image Credit](https://unsplash.com/@glt23)
