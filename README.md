@@ -4,16 +4,5 @@
 
 ## [Click here to view the map](https://unsplash.com/@glt23)
 
-``` python
-md("[![title](%s)](https://solomonislandsdatamap.onrender.com/)"%(fp))
-```
-
-<div>
-
-[![](./home/tom/git/SolomonIslandsDataMap/img/gilly-tanabose-o7oV-rGy53Y-unsplash.jpg)](https://solomonislandsdatamap.onrender.com/)
-
-title
-
-</div>
-
+[![Guadacanal](img/gilly-tanabose-o7oV-rGy53Y-unsplash.jpg)](https://solomonislandsdatamap.onrender.com/)
 [Image Credit](https://unsplash.com/@glt23)
