@@ -40,8 +40,8 @@ class SolomonGeo:
         col_ignore = ['geometry', 'id', 'agg', 'year']
         self.census_vars = list(geo_df.drop(columns = col_ignore).columns)
 
-        # TODO: might be useful to track current selection so that I can pass useful info about it?
-        # maybe not though as well...
+        # TODO: save a list of locations, should be dictionary accessed by geo
+        
 
 
     @classmethod
@@ -188,6 +188,7 @@ def get_geojson(self:SolomonGeo,
 def get_df(self:SolomonGeo, 
                 agg_filter:str = None, # Filters the dataframe to the requested aggregation 
                 var_filter:str = None, # Selects the desired column from the dataframe
+                loc_filter:[str] = None, # Filters one of more locations
                ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
     A getter method for the SolomonGeo class that returns a pandas dataset containg
@@ -201,6 +202,9 @@ def get_df(self:SolomonGeo,
     # Return only the core data to minimise the html size
     names = ['geometry', 'id', 'agg', 'year']
     ret = ret.drop(columns = names)
+
+    if loc_filter is not None:
+        ret = ret.loc[ret.index.isin(loc_filter), :]
 
     # Keep only selected column if required
     if var_filter is not None:
