@@ -58,7 +58,7 @@ dropdown_geo = dmc.SegmentedControl(
                             value=geos[0],
                             data=geos,
                              orientation="vertical",
-                            color = 'pink',
+                            color = 'gray',
                             fullWidth = True,
                             # TODO - think there is a version issue with class_name on the server, need to fix
                             #className="btn-group btn-primary",
@@ -67,6 +67,27 @@ dropdown_geo = dmc.SegmentedControl(
     # TODO this color functionality is beyond stupid...
     # TODO definitely change to dbc, even though more complicated get consistent theme.s..
                         ) # TODO consider redoing as theme is not consistent with this library
+'''
+dropdown_geo = dbc.ButtonGroup(
+    [
+        dbc.RadioItems(
+            id="radios",
+            className="btn-group",
+            inputClassName="btn-check",
+            labelClassName="btn btn-outline-primary",
+            labelCheckedClassName="active",
+            options=[
+                {"label": geos[0], "value": geos[0]},
+                {"label": geos[1], "value": geos[1]},
+                {"label": geos[2], "value": geos[2]},
+            ],
+            value=geos[0],
+        ),
+        #html.Div(id="output"),
+    ],
+    className="radio-group",
+    vertical = True,
+)'''
 dropdown_var = dcc.Dropdown(options=cen_vars,
                         value=cen_vars[-1],  # initial value displayed when page first loads
                         clearable=False,)
@@ -162,7 +183,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     '''
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
-
+    print(dropdown_geo)
     if button_clicked == dropdown_geo.id:
         # Update disaplayed geography based on 
         for geo in sol_geo.geo_levels:
@@ -194,6 +215,8 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     prevent_initial_call=True
 )
 def update_kpis(clickData):
+    # TODO - I need to know the current variable selection in order to make this selection correct.
+    # TODO - I also need to reset this when the filter is changed
     if clickData is None:
         # TODO when none, maybe in future return current saved state, for now doing total
         # TODO add a heading and maybe put in an acordian
