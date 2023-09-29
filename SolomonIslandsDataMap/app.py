@@ -42,8 +42,18 @@ geos = geo_df.loc[:, 'agg'].unique()
 cen_vars = sol_geo.census_vars
 mytitle = dcc.Markdown(children="## " + cen_vars[-1] + " by " + geos[0]) # TODO This needs a default title
 map_graph = dcc.Graph(figure=define_map(sol_geo))
-# TODO in future below will need to somehow account for mutiple layers of cards
-cards = dbc.CardGroup(children=card_list(sol_geo, sol_geo.geo_levels[0], sol_geo.census_vars[-1]))
+# TODO entire accordian will need to be the child
+cards = dbc.Row(dbc.Accordion(
+        [
+            dbc.AccordionItem(children=
+                 dbc.Row(card_list(sol_geo, sol_geo.geo_levels[0], sol_geo.census_vars[-1])),
+                title="Population",
+            ),
+        ],
+        always_open=True,
+        class_name = "accordion-header",
+    ))
+               
 
 #dropdown_geo = dbc.Dropdown(options=geos,
 #                        value=geos[0],  # initial value displayed when page first loads
@@ -55,6 +65,7 @@ dropdown_geo = dmc.SegmentedControl(
                              orientation="vertical",
                             color = 'pink',
                             fullWidth = True,
+                            class_name="btn-group btn-primary",
                             #class_name = "btn btn-primary"
                             #color = dmc.theme.DEFAULT_COLORS["teal"][3]
     # TODO this color functionality is beyond stupid...
@@ -62,7 +73,7 @@ dropdown_geo = dmc.SegmentedControl(
                         ) # TODO consider redoing as theme is not consistent with this library
 dropdown_var = dcc.Dropdown(options=cen_vars,
                         value=cen_vars[-1],  # initial value displayed when page first loads
-                        clearable=False)
+                        clearable=False,)
 
 navbar = dbc.NavbarSimple(
     children=[
@@ -80,7 +91,8 @@ navbar = dbc.NavbarSimple(
     brand="Solomon Islands Data Map",
     brand_href="#",
     color="primary",
-    dark=True,
+    #dark=True,
+    class_name="navbar navbar-expand-lg bg-primary"
 )
 
 
@@ -118,7 +130,6 @@ sidebar = html.Div(
     ],
     #style=SIDEBAR_STYLE,
 )
-
 
 
 # %% ../nbs/02_app.ipynb 13
@@ -181,6 +192,8 @@ def update_geography(geo_input:str, # User input from the geography dropdown
 # %% ../nbs/02_app.ipynb 18
 @app.callback(
     Output(cards, 'children'),
+    # TODO - make this a Row object with children, then use function to recontruct
+    # a group of them
     Input(map_graph, 'clickData'),
     prevent_initial_call=True
 )
@@ -196,10 +209,10 @@ def update_kpis(clickData):
         print(clickData)
         location = clickData['points'][0]['location']
         # filter dataframe by store location, then sum all orders of that store.
-        new_cards = card_list(sol_geo, 
+        new_cards = dbc.Row(card_list(sol_geo, 
                               sol_geo.geo_levels[0], 
                               sol_geo.census_vars[-1], 
-                              [location])
+                              [location]))
         
         # get all orders from this stor location 
 

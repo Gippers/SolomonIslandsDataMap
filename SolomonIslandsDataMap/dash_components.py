@@ -85,7 +85,7 @@ def card_list(sg:SolomonGeo, # Input data object
     '''
     cards = []
     for var in sg.census_vars:
-        cards.append(
+        cards.append(dbc.Col([
             dbc.Card(
             children = [
                 dbc.CardHeader(
@@ -101,9 +101,9 @@ def card_list(sg:SolomonGeo, # Input data object
                     ] # TODO - in future will need to do weighted sum for some: might need an aggregate feature in class that 
                         # aggregates correctly based on the variable (i.e. sum or weighted sum), maybe work out in get_df function
                 )]
-            , class_name ="m-2 border-primary mb-3"
+            , class_name ="border-primary" #m-2 mb-3
             
-            )
+            )])
         )
 
     return cards
