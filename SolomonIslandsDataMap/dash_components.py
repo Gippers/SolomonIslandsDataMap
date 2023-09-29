@@ -74,12 +74,14 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
 # TODO - make it in future so that clicking on a card updates the current census variable
 # selection and it highlights it as clicked.
 # TODO - workout how to make this into a collection of cards, potentially cardgroup
+# TODO - need to rename this
 
 def card_list(sg:SolomonGeo, # Input data object
+                header:str, # Header of Accordian
                 agg:str, #Desired aggregation of data in card
                 var:str, # Desired variable to display in card
                 loc:str = None, # Desired location within aggregation
-                    )->[dbc.Card]: # Returns a list of cards 
+                    )->[dbc.AccordionItem]: # Returns an accordian with selected data
     '''
     Create a list of cards to put in a cardgroup
     '''
@@ -106,4 +108,7 @@ def card_list(sg:SolomonGeo, # Input data object
             )])
         )
 
-    return cards
+    return [dbc.AccordionItem(
+                 dbc.Row(cards),
+                title=header,
+            )]
