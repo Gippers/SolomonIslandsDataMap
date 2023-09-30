@@ -217,6 +217,8 @@ def update_geography(geo_input:str, # User input from the geography dropdown
 def update_kpis(clickData):
     # TODO - I need to know the current variable selection in order to make this selection correct.
     # TODO - I also need to reset this when the filter is changed
+    # TODO - This callback should be triggered by the main callback https://dash.plotly.com/advanced-callbacks see callbacks as an indirect
+    # result section
     if clickData is None:
         # TODO when none, maybe in future return current saved state, for now doing total
         # TODO add a heading and maybe put in an acordian
