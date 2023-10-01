@@ -211,15 +211,17 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     Output(cards, 'children'),
     # TODO - make this a Row object with children, then use function to recontruct
     # a group of them
-    Input(map_graph, 'clickData'),
+    Input(map_graph, 'selectedData'),
     prevent_initial_call=True
 )
-def update_kpis(clickData):
+def update_kpis(selectedData):
     # TODO - I need to know the current variable selection in order to make this selection correct.
     # TODO - I also need to reset this when the filter is changed
     # TODO - This callback should be triggered by the main callback https://dash.plotly.com/advanced-callbacks see callbacks as an indirect
     # result section
-    if clickData is None:
+    # TODO add a hidden state tracker
+    # TODO workout how to make multi point selection work
+    if selectedData is None:
         # TODO when none, maybe in future return current saved state, for now doing total
         # TODO add a heading and maybe put in an acordian
         new_cards = card_list(sol_geo, 
@@ -227,14 +229,15 @@ def update_kpis(clickData):
                               sol_geo.census_vars[-1])
         return new_cards
     else:
-        print(clickData)
-        location = clickData['points'][0]['location']
+        # The locations are list of dictionaries
+        locations = list(map(lambda x: x['location'], selectedData['points']))
+        print(locations)
         # filter dataframe by store location, then sum all orders of that store.
         new_cards = card_list(sol_geo, 
-                              "Population - " + location,
+                              "Population - " + ", ".join(locations),
                               sol_geo.geo_levels[0], 
                               sol_geo.census_vars[-1], 
-                              [location])
+                              locations)
         
         # get all orders from this stor location 
 
