@@ -37,7 +37,8 @@ class SolomonGeo:
         self.geo_levels = geo_df.loc[:, 'agg'].unique()
 
         # Save a list of census variables
-        col_ignore = ['geometry', 'id', 'agg', 'year']
+        # TODO this list is repeated twice, how can I undo this harcoding??
+        col_ignore = ['geometry', 'id', 'agg', 'year', 'type']
         self.census_vars = list(geo_df.drop(columns = col_ignore).columns)
 
         # TODO: save a list of locations, should be dictionary accessed by geo
@@ -207,7 +208,7 @@ def get_df(self:SolomonGeo,
     if agg_filter is not None:
         ret = ret.loc[ret['agg'] == agg_filter, :]
     # Return only the core data to minimise the html size
-    names = ['geometry', 'id', 'agg', 'year']
+    names = ['geometry', 'id', 'agg', 'year', 'type']
     ret = ret.drop(columns = names)
 
     if loc_filter is not None:

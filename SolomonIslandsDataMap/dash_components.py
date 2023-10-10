@@ -36,18 +36,14 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
     
     # cols_dd dictates the aggregation that will be visable
     cols_dd = sol_df.geo_levels
-    # we need to add this to select which trace 
-    # is going to be visible
-    visible = np.array(cols_dd)
     # define traces and buttons at once
     traces = []
-    buttons = []
     # TODO if fails remember I changed visible from cols_dd
     for value in cols_dd:
         traces.append(go.Choroplethmapbox(
                                 geojson=sol_df.get_geojson(agg_filter = value),
                                locations=sol_df.get_df(agg_filter = value).index,
-                               z = sol_df.get_df(agg_filter = value)['total_pop'],
+                               z = sol_df.get_df(agg_filter = value).iloc[:, 0],
                                colorscale="deep",
                                 marker_line_width = 0.5,
                                 zauto=True,
@@ -77,6 +73,8 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
 # selection and it highlights it as clicked.
 # TODO - workout how to make this into a collection of cards, potentially cardgroup
 # TODO - need to rename this
+# TODO create bottom padding
+# TODO - should I have some graphs here instead of cards??
 
 def card_list(sg:SolomonGeo, # Input data object
                 header:str, # Header of Accordian
@@ -87,6 +85,8 @@ def card_list(sg:SolomonGeo, # Input data object
     '''
     Create a list of cards to put in a cardgroup
     '''
+    # TODO should try not to call get for each var. What if instead, I 
+    # called get once, then looped for each column locally.
     cards = []
     for var in sg.census_vars:
         cards.append(dbc.Col([
