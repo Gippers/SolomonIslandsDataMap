@@ -28,6 +28,7 @@ class SolomonGeo:
         geo_df    Geopandas dataframe containing geographies and census data
         geo_levels    A list of the types of available aggregations
         census_vars    A list of census variables in the dataset 
+        data_type   Specifies whether the variable is a percentage or number
     '''
     def __init__(self, 
                 geo_df:gpd.GeoDataFrame): # A geopandas dataset containing population and geography boundaries for each aggregation
@@ -40,6 +41,8 @@ class SolomonGeo:
         # TODO this list is repeated twice, how can I undo this harcoding??
         col_ignore = ['geometry', 'id', 'agg', 'year', 'type']
         self.census_vars = list(geo_df.drop(columns = col_ignore).columns)
+        # TODO should captialise first letter
+        self.data_type = geo_df.loc[:, 'type'].unique()
 
         # TODO: save a list of locations, should be dictionary accessed by geo
         

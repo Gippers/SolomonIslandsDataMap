@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'geos', 'cen_vars', 'mytitle', 'map_graph', 'cards', 'dropdown_geo',
-           'dropdown_var', 'navbar', 'SIDEBAR_STYLE', 'sidebar', 'update_kpis', 'update_geography']
+           'control_type', 'dropdown_var', 'navbar', 'SIDEBAR_STYLE', 'sidebar', 'update_kpis', 'update_geography']
 
 # %% ../nbs/02_app.ipynb 2
 from nbdev.showdoc import *
@@ -54,7 +54,7 @@ cards = dbc.Accordion(children=
 #                        value=geos[0],  # initial value displayed when page first loads
 #                        clearable=False)
 dropdown_geo = dmc.SegmentedControl(
-                            id="segmented",
+                            id="segmented_geo",
                             value=geos[0],
                             data=geos,
                              orientation="vertical",
@@ -67,6 +67,14 @@ dropdown_geo = dmc.SegmentedControl(
     # TODO this color functionality is beyond stupid...
     # TODO definitely change to dbc, even though more complicated get consistent theme.s..
                         ) # TODO consider redoing as theme is not consistent with this library
+
+control_type = dmc.SegmentedControl(
+                        id="segmented_type",
+                        value=sol_geo.data_type[0],
+                        data=sol_geo.data_type,
+                        orientation="vertical",
+                        color = 'gray',
+                        fullWidth = True,)
 '''
 dropdown_geo = dbc.ButtonGroup(
     [
@@ -137,6 +145,9 @@ sidebar = html.Div(
                 html.Br(),
                 html.P("Data"), # TODO add a little info button here with link to geo explanation
                 dropdown_var,
+                html.Br(),
+                html.P("Number or Proportion"), 
+                control_type,
                 #html.Br(),
                 #dcc.Dropdown(id = 'three')
 
@@ -209,14 +220,15 @@ def update_kpis(clickData):
 @app.callback(
     Output(map_graph, 'figure'),
     Output(mytitle, 'children'),
-    Output(map_graph, "clickData"),
     Input(dropdown_geo, 'value'),
+    Input(control_type, 'value'),
     Input(dropdown_var, 'value'),
     Input(map_graph, "clickData"),
     allow_duplicate=True,
     prevent_initial_call=True
 )
 def update_geography(geo_input:str, # User input from the geography dropdown
+                     data_type:str, # User input of type of data
                      census_var:str, # User input for the census variable
                      map_selection:dict, # A dictionary of selected points on the map
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
@@ -232,8 +244,19 @@ def update_geography(geo_input:str, # User input from the geography dropdown
             i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
             patched_figure['data'][i]['visible'] = geo_input == geo
             print(geo_input == geo)
-        map_selection = None
-        #map_selection = None # Map selection is none when geography is changed
+    elif button_clicked == control_type.id:
+        # Update the type of data displayed
+        # TODO currently displayed data will need to be tracked. Can't be tracked in object, use hidden 
+        # TODO will need to track this update also in var dropdown clicked
+        # TODO will also need to track current census_var in here
+        # TODO this also needs to trigger cards
+        print(data_type)
+        for geo in sol_geo.geo_levels:
+            i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
+            ar = sol_geo.get_df(agg_filter = geo, type_filter=data_type, var_filter = 'Total Households').values
+            ar = ar.reshape((ar.shape[0],))
+            patched_figure['data'][i]['z'] = ar
+
     elif button_clicked == dropdown_var.id:
         # Update the z values in map to the data for the requested
         # census variable
@@ -252,7 +275,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     # TODO - potentially not with census updates though...
     #update_kpis(selectedData = map_selection)
 
-    return patched_figure, '## Solomon Islands Data map - ' + geo_input, map_selection
+    return patched_figure, '## Solomon Islands Data map - ' + geo_input
 
 # %% ../nbs/02_app.ipynb 28
 # Run app

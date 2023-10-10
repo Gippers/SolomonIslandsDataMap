@@ -43,7 +43,7 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
         traces.append(go.Choroplethmapbox(
                                 geojson=sol_df.get_geojson(agg_filter = value),
                                locations=sol_df.get_df(agg_filter = value).index,
-                               z = sol_df.get_df(agg_filter = value).iloc[:, 0],
+                               z = sol_df.get_df(agg_filter = value)['Total Households'],
                                colorscale="deep",
                                 marker_line_width = 0.5,
                                 zauto=True,
