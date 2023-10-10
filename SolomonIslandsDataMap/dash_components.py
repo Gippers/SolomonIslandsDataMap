@@ -63,7 +63,8 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
                         mapbox_zoom = 5,
                         mapbox_center={"lat": -9.565766, "lon": 162.012453},
                         margin={"r":0,"t":0,"l":0,"b":0},
-                        clickmode = 'event+select',
+                        # TODO in future consider going back to multiselect, currently too hard
+                        #clickmode = 'event+select',
     )
     
     return fig

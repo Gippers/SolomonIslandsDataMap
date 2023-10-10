@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'geos', 'cen_vars', 'mytitle', 'map_graph', 'cards', 'dropdown_geo',
-           'dropdown_var', 'navbar', 'SIDEBAR_STYLE', 'sidebar', 'update_geography', 'update_kpis']
+           'dropdown_var', 'navbar', 'SIDEBAR_STYLE', 'sidebar', 'update_kpis', 'update_geography']
 
 # %% ../nbs/02_app.ipynb 2
 from nbdev.showdoc import *
@@ -41,7 +41,7 @@ load_figure_template("minty")
 geos = geo_df.loc[:, 'agg'].unique()
 cen_vars = sol_geo.census_vars
 mytitle = dcc.Markdown(children="## " + cen_vars[-1] + " by " + geos[0]) # TODO This needs a default title
-map_graph = dcc.Graph(figure=define_map(sol_geo))
+map_graph = dcc.Graph(figure=define_map(sol_geo), selectedData=None)
 # TODO entire accordian will need to be the child
 cards = dbc.Accordion(children= 
         card_list(sol_geo, "Population - Total", sol_geo.geo_levels[0], sol_geo.census_vars[-1]),
@@ -164,19 +164,61 @@ app.layout = dbc.Container([
                 ], fluid = True)
 
 # %% ../nbs/02_app.ipynb 15
+@app.callback(
+    Output(cards, 'children'),
+    # TODO - make this a Row object with children, then use function to recontruct
+    # a group of them
+    Input(map_graph, 'clickData'),
+    prevent_initial_call=True
+)
+def update_kpis(clickData):
+    # TODO - I need to know the current variable selection in order to make this selection correct.
+    # TODO - I also need to reset this when the filter is changed
+    # TODO - This callback should be triggered by the main callback https://dash.plotly.com/advanced-callbacks see callbacks as an indirect
+    # result section
+    # TODO add a hidden state tracker - update var and geo based on this
+    # TODO workout how to make multi point selection work - hard todo - might need to find open source web example
+    
+    if clickData is None:
+        # TODO when none, maybe in future return current saved state, for now doing total
+        # TODO add a heading and maybe put in an acordian
+        new_cards = card_list(sol_geo, 
+                              "Population - Total",
+                              sol_geo.geo_levels[0], 
+                              sol_geo.census_vars[-1])
+        return new_cards
+    else:
+        # The locations are list of dictionaries
+        locations = list(map(lambda x: x['location'], clickData['points']))
+        print(locations)
+        # filter dataframe by store location, then sum all orders of that store.
+        new_cards = card_list(sol_geo, 
+                              "Population - " + ", ".join(locations),
+                              sol_geo.geo_levels[0], 
+                              sol_geo.census_vars[-1], 
+                              locations)
+        
+        # get all orders from this stor location 
+
+        return new_cards
+
+# %% ../nbs/02_app.ipynb 17
 # Callback allows components to interact
 
 # TODO put title in it's own callback
 @app.callback(
     Output(map_graph, 'figure'),
     Output(mytitle, 'children'),
+    Output(map_graph, "clickData"),
     Input(dropdown_geo, 'value'),
     Input(dropdown_var, 'value'),
+    Input(map_graph, "clickData"),
     allow_duplicate=True,
     prevent_initial_call=True
 )
 def update_geography(geo_input:str, # User input from the geography dropdown
-                     census_var:str # User input for the census variable
+                     census_var:str, # User input for the census variable
+                     map_selection:dict, # A dictionary of selected points on the map
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
     Updates the focus census variable or geography dispalayed on the map
@@ -190,6 +232,8 @@ def update_geography(geo_input:str, # User input from the geography dropdown
             i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
             patched_figure['data'][i]['visible'] = geo_input == geo
             print(geo_input == geo)
+        map_selection = None
+        #map_selection = None # Map selection is none when geography is changed
     elif button_clicked == dropdown_var.id:
         # Update the z values in map to the data for the requested
         # census variable
@@ -204,46 +248,13 @@ def update_geography(geo_input:str, # User input from the geography dropdown
             patched_figure['data'][i]['z'] = ar
 
     # returned objects are assigned to the component property of the Output
-    return patched_figure, '## Solomon Islands Data map - ' + geo_input
+    # After updating fileter, we always reset map selection 
+    # TODO - potentially not with census updates though...
+    #update_kpis(selectedData = map_selection)
 
-# %% ../nbs/02_app.ipynb 18
-@app.callback(
-    Output(cards, 'children'),
-    # TODO - make this a Row object with children, then use function to recontruct
-    # a group of them
-    Input(map_graph, 'selectedData'),
-    prevent_initial_call=True
-)
-def update_kpis(selectedData):
-    # TODO - I need to know the current variable selection in order to make this selection correct.
-    # TODO - I also need to reset this when the filter is changed
-    # TODO - This callback should be triggered by the main callback https://dash.plotly.com/advanced-callbacks see callbacks as an indirect
-    # result section
-    # TODO add a hidden state tracker
-    # TODO workout how to make multi point selection work
-    if selectedData is None:
-        # TODO when none, maybe in future return current saved state, for now doing total
-        # TODO add a heading and maybe put in an acordian
-        new_cards = card_list(sol_geo, 
-                              sol_geo.geo_levels[0], 
-                              sol_geo.census_vars[-1])
-        return new_cards
-    else:
-        # The locations are list of dictionaries
-        locations = list(map(lambda x: x['location'], selectedData['points']))
-        print(locations)
-        # filter dataframe by store location, then sum all orders of that store.
-        new_cards = card_list(sol_geo, 
-                              "Population - " + ", ".join(locations),
-                              sol_geo.geo_levels[0], 
-                              sol_geo.census_vars[-1], 
-                              locations)
-        
-        # get all orders from this stor location 
+    return patched_figure, '## Solomon Islands Data map - ' + geo_input, map_selection
 
-        return new_cards
-
-# %% ../nbs/02_app.ipynb 29
+# %% ../nbs/02_app.ipynb 28
 # Run app
 if __name__=='__main__':
     try:

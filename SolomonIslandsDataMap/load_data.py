@@ -42,6 +42,7 @@ class SolomonGeo:
 
         # TODO: save a list of locations, should be dictionary accessed by geo
         
+        # TODO: need a list of column sub headings: get from column name split by `:`
 
 
     @classmethod
@@ -51,46 +52,56 @@ class SolomonGeo:
         Initialise the object using the local testing data
         '''
         # TODO might need to further abstract this concatenation process
-        df, geo = cls.extract_from_file('ward', '2009')
-        gdf_ward = cls.transform('ward', '2009', df, geo)
-        
-        df, geo = cls.extract_from_file('constituency', '2009')
-        gdf_const = cls.transform('constituency', '2009', df, geo)
+        df, geo = cls.extract_from_file('2009')
 
-        df, geo = cls.extract_from_file('province', '2009')
-        gdf_prov = cls.transform('province', '2009', df, geo)
-        
-        # Append the datasets together
-        geo_df = pd.concat([gdf_ward, gdf_const, gdf_prov])
-
-        # simplify the geography, use topo to preserver the topology between shapes
-        topo = tp.Topology(geo_df, prequantize=False)
-        geo_df = topo.toposimplify(360/43200).to_gdf()
-
+        gdf = cls.transform('2009', df, geo)
 
         return cls(
-            geo_df = geo_df
+            geo_df = gdf
         )
 
     @classmethod
     def extract_from_file(cls, 
-                            aggregation:str, # Indicates the aggregation of the data
                             year:str, # The year of that data, only relevant for census data
                  ) -> (pd.DataFrame, 
                       gpd.GeoDataFrame): # Returns input pandas and geopandas datasets
         '''
-        Extract and return input datasets from file
+        Extract and return input datasets from file. Assumes correct format of input dataset
+        # TODO specify characteristics of dataset
+        # TODO - refact load, too many of the cleaning functions are being done during the loading
         '''
         repo = Repo('.', search_parent_directories=True)
         pw = str(repo.working_tree_dir) + "/testData/"
+        df = pd.read_csv(pw + 'sol_census_all_' + year + '.csv')
+        aggs = df.loc[:, 'agg'].unique()
+        geos = gpd.GeoDataFrame()
+        for agg in aggs:
+            geo = gpd.read_file(pw + 'sol_geo_' + agg.lower() + '.json')
+            # Before combining, need to rename like columns
+            # Rename columns and keep only necessary ones, Note that id can be province id, contsituency id etc.
+            geo.columns = geo.columns.str.replace(r'^[a-zA-Z]+name$', 'geo_name', case = False, regex = True)
+            # TODO this assumes the id key column is the first one (which so far it is...)
+            geo.rename(columns = {geo.columns[0]:'id'}, inplace=True)
+
+            # keep only the id and geometry columns
+            geo = geo.loc[:, ['id', 'geometry']] 
+
+            # Add an agg column, as the data and geometry need to be joined by id and agg
+            geo.loc[:, 'agg'] = agg
+
+            # simplify the geography, use topo to preserver the topology between shapes
+            topo = tp.Topology(geo, prequantize=False)
+            geo = topo.toposimplify(360/43200).to_gdf()
+
+            geos = pd.concat([geos, geo])
+
         return (
-            pd.read_csv(pw + 'sol_census_' + aggregation + '_' + year + '.csv'), 
-            gpd.read_file(pw + 'sol_geo_' + aggregation + '.json')
+            df, 
+            geos
         )
 
     @classmethod
     def transform(cls, 
-            aggregation:str, # Inicates the aggregation of the data
             year:str, # The year of that data, only relevant for census data
             df:pd.DataFrame, # Uncleaned input census dataset
             geo:gpd.GeoDataFrame, # Uncleaned input geospatial dataset
@@ -99,15 +110,7 @@ class SolomonGeo:
         Tranform given raw input dataset into a cleaned and combined geopandas dataframe
         '''
         # Clean the geospatial dataframe
-        # Rename columns and keep only necessary ones, Note that id can be province id, contsituency id etc.
-        geo.columns = geo.columns.str.replace(r'^[a-zA-Z]+name$', 'geo_name', case = False, regex = True)
-        # TODO this assume the key column is the first one (which so far it is...)
-        geo.rename(columns = {geo.columns[0]:'id'}, inplace=True)
-        # Dropping geo_name from the geography dataset and relying on census data naming
-        geo = geo.loc[:, ['id', 'geometry']] 
-        
-        # Add a column that indicates level of aggregation and one for the year
-        geo.loc[:, 'agg'] = aggregation
+        # Add a column that indicates the year
         geo.loc[:, 'year'] = year
         
         # Clean the census data
@@ -115,11 +118,11 @@ class SolomonGeo:
         # Rename columns to be consistent across geography
         df.columns = df.columns.str.replace(r'^[a-zA-Z]+_name$', 'geo_name', case = False, regex = True)
         # id needs to change types twice so that it is a string of an int
-        df = df.astype({'id': 'int', 'male_pop':'int', 	'female_pop':'int', 'total_pop':'int'})
+        df = df.astype({'id': 'int'})#, 'male_pop':'int', 	'female_pop':'int', 'total_pop':'int'})
         df = df.astype({'id': 'str'})
         
         # Merge the data together
-        geo_df = geo.merge(df, on=['id']).set_index("geo_name") # , 'geo_name'
+        geo_df = geo.merge(df, on=['id', 'agg']).set_index("geo_name") # , 'geo_name'
         return geo_df
 
     @classmethod
@@ -178,6 +181,8 @@ def get_geojson(self:SolomonGeo,
     A getter method for the SolomonGeo class that returns a Geo JSON formatted dataset
     '''
     ret = self.geo_df
+    # Only need geojson from one half of the dataset
+    ret = ret.loc[ret['type'] == 'number', :]
     if agg_filter is not None:
         ret = ret.loc[ret['agg'] == agg_filter, :]
     # Return only the core data to minimise the html size
@@ -189,6 +194,7 @@ def get_df(self:SolomonGeo,
                 agg_filter:str = None, # Filters the dataframe to the requested aggregation 
                 var_filter:str = None, # Selects the desired column from the dataframe
                 loc_filter:[str] = None, # Filters one of more locations
+                type_filter:str = 'number', # Return either number of proportion
                ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
     A getter method for the SolomonGeo class that returns a pandas dataset containg
@@ -196,6 +202,7 @@ def get_df(self:SolomonGeo,
     to display on the map. 
     '''
     ret = self.geo_df
+    ret = ret.loc[ret['type'] == type_filter, :]
     # TODO check that filter is valid
     if agg_filter is not None:
         ret = ret.loc[ret['agg'] == agg_filter, :]
