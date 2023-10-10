@@ -146,7 +146,7 @@ sidebar = html.Div(
                 html.P("Data"), # TODO add a little info button here with link to geo explanation
                 dropdown_var,
                 html.Br(),
-                html.P("Number or Proportion"), 
+                html.P("Data Type"), 
                 control_type,
                 #html.Br(),
                 #dcc.Dropdown(id = 'three')
@@ -237,23 +237,20 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     '''
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
-    print(dropdown_geo)
     if button_clicked == dropdown_geo.id:
         # Update disaplayed geography based on 
         for geo in sol_geo.geo_levels:
             i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
             patched_figure['data'][i]['visible'] = geo_input == geo
-            print(geo_input == geo)
     elif button_clicked == control_type.id:
         # Update the type of data displayed
         # TODO currently displayed data will need to be tracked. Can't be tracked in object, use hidden 
         # TODO will need to track this update also in var dropdown clicked
         # TODO will also need to track current census_var in here
         # TODO this also needs to trigger cards
-        print(data_type)
         for geo in sol_geo.geo_levels:
             i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_df(agg_filter = geo, type_filter=data_type, var_filter = 'Total Households').values
+            ar = sol_geo.get_df(agg_filter = geo, type_filter=data_type, var_filter = census_var).values#'Total Households').values
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][i]['z'] = ar
 
@@ -266,10 +263,11 @@ def update_geography(geo_input:str, # User input from the geography dropdown
         # TODO this is fairly inefficient, as we are processing each time
         # Maybe faster framework like polars could help? or caching but would require a lot of caching
             i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_df(agg_filter = geo, var_filter = census_var).values
+            ar = sol_geo.get_df(agg_filter = geo, type_filter=data_type, var_filter = census_var).values
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][i]['z'] = ar
 
+    print(census_var)
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
     # TODO - potentially not with census updates though...
