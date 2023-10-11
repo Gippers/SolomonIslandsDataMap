@@ -29,6 +29,7 @@ class SolomonGeo:
         geo_levels    A list of the types of available aggregations
         census_vars    A list of census variables in the dataset 
         data_type   Specifies whether the variable is a percentage or number
+        locations A dictionary of locations accessed by the geography level
     '''
     def __init__(self, 
                 geo_df:gpd.GeoDataFrame): # A geopandas dataset containing population and geography boundaries for each aggregation
@@ -44,8 +45,11 @@ class SolomonGeo:
         # TODO should captialise first letter
         self.data_type = geo_df.loc[:, 'type'].unique()
 
-        # TODO: save a list of locations, should be dictionary accessed by geo
-        
+        # save a list of locations as a dictionary access by geography level
+        locations = {}
+        for geo in self.geo_levels:
+            locations[geo] = geo_df.loc[geo_df['agg'] == geo].index.values
+        self.locations = locations
         # TODO: need a list of column sub headings: get from column name split by `:`
 
 
