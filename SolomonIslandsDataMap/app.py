@@ -98,7 +98,9 @@ dropdown_geo = dbc.ButtonGroup(
 )'''
 dropdown_var = dcc.Dropdown(options=cen_vars,
                         value=cen_vars[-1],  # initial value displayed when page first loads
-                        clearable=False,)
+                        searchable=True,
+                        clearable=False,
+                        optionHeight=100)
 
 navbar = dbc.NavbarSimple(
     children=[
@@ -183,7 +185,7 @@ app.layout = dbc.Container([
     prevent_initial_call=True
 )
 def update_kpis(clickData):
-    # TODO - I need to know the current variable selection in order to make this selection correct.
+    # TODO - What this should do, is on click set the location dropdown selection. Then that triggers data update.
     # TODO - I also need to reset this when the filter is changed
     # TODO - This callback should be triggered by the main callback https://dash.plotly.com/advanced-callbacks see callbacks as an indirect
     # result section
@@ -223,14 +225,12 @@ def update_kpis(clickData):
     Input(dropdown_geo, 'value'),
     Input(control_type, 'value'),
     Input(dropdown_var, 'value'),
-    Input(map_graph, "clickData"),
     allow_duplicate=True,
     prevent_initial_call=True
 )
 def update_geography(geo_input:str, # User input from the geography dropdown
                      data_type:str, # User input of type of data
                      census_var:str, # User input for the census variable
-                     map_selection:dict, # A dictionary of selected points on the map
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
     Updates the focus census variable or geography dispalayed on the map
@@ -279,6 +279,6 @@ def update_geography(geo_input:str, # User input from the geography dropdown
 # Run app
 if __name__=='__main__':
     try:
-        app.run_server(debug=True, port = random.randint(1000, 9999)) # Random int mitigates port collision
+        app.run_server(debug=True, port=9999) # Random int mitigates port collision
     except:
         print("Cannot run server here")
