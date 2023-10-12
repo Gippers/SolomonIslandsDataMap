@@ -48,7 +48,7 @@ class SolomonGeo:
         # save a list of locations as a dictionary access by geography level
         locations = {}
         for geo in self.geo_levels:
-            locations[geo] = geo_df.loc[geo_df['agg'] == geo].index.values
+            locations[geo] = geo_df.loc[geo_df['agg'] == geo].index.unique().sort_values()
         self.locations = locations
         # TODO: need a list of column sub headings: get from column name split by `:`
 
