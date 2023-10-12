@@ -190,15 +190,47 @@ app.layout = dbc.Container([
                      ], justify = 'center'),                    
                 ], fluid = True)
 
-# %% ../nbs/02_app.ipynb 15
+# %% ../nbs/02_app.ipynb 16
 @app.callback(
-    Output(cards, 'children'),
+    Output(dropdown_location, 'value'),
     # TODO - make this a Row object with children, then use function to recontruct
     # a group of them
     Input(map_graph, 'clickData'),
     prevent_initial_call=True
 )
-def update_kpis(clickData:str # The currently clicked location on the map
+def update_kpis(clickData:str, # The currently clicked location on the map
+                )->str: # Returns the new value for the dropdown
+    # TODO - What this should do, is on click set the location dropdown selection. Then that triggers data update.
+    # TODO - I also need to reset this when the filter is changed
+    # TODO - This callback should be triggered by the main callback https://dash.plotly.com/advanced-callbacks see callbacks as an indirect
+    # result section
+    # TODO add a hidden state tracker - update var and geo based on this
+    # TODO workout how to make multi point selection work - hard todo - might need to find open source web example
+    
+    print("map clicked updating to:")
+    if clickData is None:
+        # TODO when none, maybe in future return current saved state, for now doing total
+        # TODO add a heading and maybe put in an acordian
+        return None
+    else:
+        # The locations are list of dictionaries
+        locations = list(map(lambda x: x['location'], clickData['points']))
+        print(locations)
+        return locations
+        
+
+
+# %% ../nbs/02_app.ipynb 17
+@app.callback(
+    Output(cards, 'children'),
+    # TODO - make this a Row object with children, then use function to recontruct
+    # a group of them
+    Input(dropdown_location, 'value'),
+    Input(control_type, 'value'),
+    prevent_initial_call=True
+)
+def update_kpis(locations:str, # The currently selected location. Including defualt of none
+                data_type:str, # The currently selected data type (Total or Proportion)
                 )->type(dbc.Card):
     # TODO - What this should do, is on click set the location dropdown selection. Then that triggers data update.
     # TODO - I also need to reset this when the filter is changed
@@ -207,6 +239,9 @@ def update_kpis(clickData:str # The currently clicked location on the map
     # TODO add a hidden state tracker - update var and geo based on this
     # TODO workout how to make multi point selection work - hard todo - might need to find open source web example
     
+    button_clicked = ctx.triggered_id
+    print(button_clicked)
+    print(map_graph.id)
     if clickData is None:
         # TODO when none, maybe in future return current saved state, for now doing total
         # TODO add a heading and maybe put in an acordian
@@ -230,7 +265,7 @@ def update_kpis(clickData:str # The currently clicked location on the map
 
         return new_cards
 
-# %% ../nbs/02_app.ipynb 16
+# %% ../nbs/02_app.ipynb 19
 @app.callback(
     Output(dropdown_location, 'options'),
     Input(dropdown_geo, 'value'),
@@ -244,7 +279,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     '''
     return sol_geo.locations[geo_input]
 
-# %% ../nbs/02_app.ipynb 18
+# %% ../nbs/02_app.ipynb 22
 # Callback allows components to interact
 
 # TODO put title in it's own callback
@@ -280,7 +315,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
         # TODO this also needs to trigger cards
         for geo in sol_geo.geo_levels:
             i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_df(agg_filter = geo, type_filter=data_type, var_filter = census_var).values#'Total Households').values
+            ar = sol_geo.get_df(agg_filter = geo, type_filter=data_type, var_filter = census_var).values
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][i]['z'] = ar
 
@@ -305,7 +340,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
 
     return patched_figure, '## Solomon Islands Data map - ' + geo_input
 
-# %% ../nbs/02_app.ipynb 29
+# %% ../nbs/02_app.ipynb 33
 # Run app
 if __name__=='__main__':
     try:

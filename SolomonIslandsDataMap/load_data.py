@@ -202,7 +202,8 @@ def get_df(self:SolomonGeo,
                 agg_filter:str = None, # Filters the dataframe to the requested aggregation 
                 var_filter:str = None, # Selects the desired column from the dataframe
                 loc_filter:[str] = None, # Filters one of more locations
-                type_filter:str = 'number', # Return either number of proportion
+                # TODO remove hardcoding here?
+                type_filter:str = 'Total', # Return either number of proportion
                ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
     A getter method for the SolomonGeo class that returns a pandas dataset containg
