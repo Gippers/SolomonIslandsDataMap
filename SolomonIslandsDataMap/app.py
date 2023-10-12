@@ -48,7 +48,7 @@ mytitle = dcc.Markdown(children="## " + cen_vars[-1] + " by " + geos[0]) # TODO 
 map_graph = dcc.Graph(figure=define_map(sol_geo), selectedData=None)
 # TODO entire accordian will need to be the child
 cards = dbc.Accordion(children= 
-        card_list(sol_geo, "Population - Total"),
+        card_list(sol_geo, "Current Selection: Total"),
         always_open=True,
         class_name = "accordion-header",
     )
