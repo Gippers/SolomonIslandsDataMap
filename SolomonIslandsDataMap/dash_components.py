@@ -41,10 +41,10 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
     # TODO if fails remember I changed visible from cols_dd
     for value in cols_dd:
         traces.append(go.Choroplethmapbox(
-                                geojson=sol_df.get_geojson(agg_filter = value),
-                               locations=sol_df.get_df(agg_filter = value).index,
+                                geojson=sol_df.get_geojson(geo_filter = value),
+                               locations=sol_df.get_df(geo_filter = value).index,
                                # TODO undo hardcoding
-                               z = sol_df.get_df(agg_filter = value)['Key Statistics: Total Households'],
+                               z = sol_df.get_df(geo_filter = value)['Key Statistics: Total Households'].values,
                                colorscale="deep",
                                 marker_line_width = 0.5,
                                 zauto=True,
@@ -67,7 +67,7 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
     return fig
 
 
-# %% ../nbs/01_dash_components.ipynb 12
+# %% ../nbs/01_dash_components.ipynb 13
 # todo - turn this eventually into a function
 
 # TODO - make it in future so that clicking on a card updates the current census variable
@@ -79,18 +79,31 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
 
 def card_list(sg:SolomonGeo, # Input data object
                 header:str, # Header of Accordian
-                agg:str, #Desired aggregation of data in card
-                var:str, # Desired variable to display in card
-                loc:str = None, # Desired location within aggregation
-                type_filter:str = 'number', # The type 
+                loc:[str] = None, # Desired location within aggregation
+                typeFilter:str = 'Total', # The type 
                     )->[dbc.AccordionItem]: # Returns an accordian with selected data
     '''
     Create a list of cards to put in a cardgroup
     '''
+    # If location is none, set agg to any location.
+    # This means if not location is selected, we always return the total
+    agg = None
+    if loc == None:
+        agg = sg.geo_levels[0]
     # TODO should try not to call get for each var. What if instead, I 
     # called get once, then looped for each column locally.
     cards = []
     for var in sg.census_vars:
+        if loc == None:
+            df = sg.agg_df(geo_filter = agg, 
+                            var_filter = var, 
+                            loc_filter = loc,
+                            type_filter = typeFilter).values[0]
+        else:
+            df = sg.get_df(geo_filter = agg, 
+                            var_filter = var, 
+                            loc_filter = loc,
+                            type_filter = typeFilter).values[0]
         cards.append(dbc.Col([
             dbc.Card(
             children = [
@@ -100,9 +113,7 @@ def card_list(sg:SolomonGeo, # Input data object
                 ),
                 dbc.CardBody(
                     [
-                    html.H5(sg.get_df(agg_filter = agg, 
-                                        var_filter = var, 
-                                        loc_filter = loc).sum(), 
+                    html.H5(df, 
                             className = "text-center")
                     ] # TODO - in future will need to do weighted sum for some: might need an aggregate feature in class that 
                         # aggregates correctly based on the variable (i.e. sum or weighted sum), maybe work out in get_df function

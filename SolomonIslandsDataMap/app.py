@@ -32,7 +32,7 @@ import dash_mantine_components as dmc
 sol_geo = SolomonGeo.load_pickle("/testData/")
 geo_df = sol_geo.geo_df
 
-# %% ../nbs/02_app.ipynb 9
+# %% ../nbs/02_app.ipynb 10
 # Build your components
 # FYI the best themes seem to be: [Darkly, Flatly, Minty, Slate, JOURNAL]
 app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY])
@@ -41,15 +41,20 @@ load_figure_template("minty")
 
 geos = geo_df.loc[:, 'agg'].unique()
 cen_vars = sol_geo.census_vars
+
+
+# %% ../nbs/02_app.ipynb 12
 mytitle = dcc.Markdown(children="## " + cen_vars[-1] + " by " + geos[0]) # TODO This needs a default title
 map_graph = dcc.Graph(figure=define_map(sol_geo), selectedData=None)
 # TODO entire accordian will need to be the child
 cards = dbc.Accordion(children= 
-        card_list(sol_geo, "Population - Total", sol_geo.geo_levels[0], sol_geo.census_vars[-1]),
+        card_list(sol_geo, "Population - Total"),
         always_open=True,
         class_name = "accordion-header",
     )
 
+
+# %% ../nbs/02_app.ipynb 14
 # TODO options gets changed in callback?
 # TODO need to store locations in data class
 dropdown_location = dcc.Dropdown(options=sol_geo.locations[sol_geo.geo_levels[0]],
@@ -113,6 +118,8 @@ dropdown_var = dcc.Dropdown(options=cen_vars,
                         clearable=False,
                         optionHeight=100)
 
+
+# %% ../nbs/02_app.ipynb 16
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Census Data", href="#")),
@@ -134,7 +141,7 @@ navbar = dbc.NavbarSimple(
 )
 
 
-# %% ../nbs/02_app.ipynb 11
+# %% ../nbs/02_app.ipynb 18
 # Note, for now I am not using a sidebar style as I do not want to fix the width
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -176,7 +183,7 @@ sidebar = html.Div(
 )
 
 
-# %% ../nbs/02_app.ipynb 13
+# %% ../nbs/02_app.ipynb 20
 app.layout = dbc.Container([
                 dbc.Row([
                     navbar
@@ -190,7 +197,7 @@ app.layout = dbc.Container([
                      ], justify = 'center'),                    
                 ], fluid = True)
 
-# %% ../nbs/02_app.ipynb 16
+# %% ../nbs/02_app.ipynb 23
 @app.callback(
     Output(dropdown_location, 'value'),
     # TODO - make this a Row object with children, then use function to recontruct
@@ -220,7 +227,7 @@ def update_kpis(clickData:str, # The currently clicked location on the map
         
 
 
-# %% ../nbs/02_app.ipynb 17
+# %% ../nbs/02_app.ipynb 24
 @app.callback(
     Output(cards, 'children'),
     # TODO - make this a Row object with children, then use function to recontruct
@@ -265,7 +272,7 @@ def update_kpis(locations:str, # The currently selected location. Including defu
 
         return new_cards
 
-# %% ../nbs/02_app.ipynb 19
+# %% ../nbs/02_app.ipynb 26
 @app.callback(
     Output(dropdown_location, 'options'),
     Input(dropdown_geo, 'value'),
@@ -279,7 +286,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     '''
     return sol_geo.locations[geo_input]
 
-# %% ../nbs/02_app.ipynb 22
+# %% ../nbs/02_app.ipynb 29
 # Callback allows components to interact
 
 # TODO put title in it's own callback
@@ -315,7 +322,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
         # TODO this also needs to trigger cards
         for geo in sol_geo.geo_levels:
             i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_df(agg_filter = geo, type_filter=data_type, var_filter = census_var).values
+            ar = sol_geo.get_df(geo_filter = geo, type_filter=data_type, var_filter = census_var).values
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][i]['z'] = ar
 
@@ -328,7 +335,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
         # TODO this is fairly inefficient, as we are processing each time
         # Maybe faster framework like polars could help? or caching but would require a lot of caching
             i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_df(agg_filter = geo, type_filter=data_type, var_filter = census_var).values
+            ar = sol_geo.get_df(geo_filter = geo, type_filter=data_type, var_filter = census_var).values
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][i]['z'] = ar
 
@@ -340,7 +347,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
 
     return patched_figure, '## Solomon Islands Data map - ' + geo_input
 
-# %% ../nbs/02_app.ipynb 33
+# %% ../nbs/02_app.ipynb 40
 # Run app
 if __name__=='__main__':
     try:

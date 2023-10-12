@@ -52,6 +52,8 @@ class SolomonGeo:
         self.locations = locations
         # TODO: need a list of column sub headings: get from column name split by `:`
 
+        self.type_default = 'Total'
+
 
     @classmethod
     def read_test(cls,
@@ -177,33 +179,34 @@ def save_pickle(self:SolomonGeo,
     # TODO I think I need to save in multiple spots
     pw_asset = str(repo.working_tree_dir) + "/assets/sol_geo.json"
     with open(pw_asset, 'w') as f:
-        json.dump(self.get_geojson(agg_filter = 'ward'), f)
+        json.dump(self.get_geojson(geo_filter = 'ward'), f)
 
 
 # %% ../nbs/00_load_data.ipynb 15
 @patch
 def get_geojson(self:SolomonGeo, 
-                agg_filter:str = None, # Filters the geojson to the requested aggregation 
+                geo_filter:str = None, # Filters the geojson to the requested aggregation 
                ) -> dict: # Geo JSON formatted dataset
     '''
     A getter method for the SolomonGeo class that returns a Geo JSON formatted dataset
     '''
     ret = self.geo_df
     # Only need geojson from one half of the dataset
-    ret = ret.loc[ret['type'] == 'number', :]
-    if agg_filter is not None:
-        ret = ret.loc[ret['agg'] == agg_filter, :]
+    ret = ret.loc[ret['type'] == self.type_default, :]
+    if geo_filter is not None:
+        ret = ret.loc[ret['agg'] == geo_filter, :]
     # Return only the core data to minimise the html size
     return json.loads(ret.loc[:, ['geometry']].to_json())
 
 # %% ../nbs/00_load_data.ipynb 17
 @patch
 def get_df(self:SolomonGeo, 
-                agg_filter:str = None, # Filters the dataframe to the requested aggregation 
+                geo_filter:str = None, # Filters the dataframe to the requested geography 
                 var_filter:str = None, # Selects the desired column from the dataframe
                 loc_filter:[str] = None, # Filters one of more locations
                 # TODO remove hardcoding here?
                 type_filter:str = 'Total', # Return either number of proportion
+                agg_flag = False, # Whether to return the dataset aggregated for the given selection
                ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
     A getter method for the SolomonGeo class that returns a pandas dataset containg
@@ -213,8 +216,8 @@ def get_df(self:SolomonGeo,
     ret = self.geo_df
     ret = ret.loc[ret['type'] == type_filter, :]
     # TODO check that filter is valid
-    if agg_filter is not None:
-        ret = ret.loc[ret['agg'] == agg_filter, :]
+    if geo_filter is not None:
+        ret = ret.loc[ret['agg'] == geo_filter, :]
     # Return only the core data to minimise the html size
     names = ['geometry', 'id', 'agg', 'year', 'type']
     ret = ret.drop(columns = names)
@@ -225,5 +228,30 @@ def get_df(self:SolomonGeo,
     # Keep only selected column if required
     if var_filter is not None:
         ret = ret.filter(items = [var_filter])
-    
+        
     return pd.DataFrame(ret)
+
+# %% ../nbs/00_load_data.ipynb 20
+@patch
+def agg_df(self:SolomonGeo, 
+                geo_filter:str = None, # Filters the dataframe to the requested geography 
+                var_filter:str = None, # Selects the desired column from the dataframe
+                loc_filter:[str] = None, # Filters one of more locations
+                # TODO remove hardcoding here?
+                type_filter:str = 'Total', # Return either number of proportion
+               ) -> pd.Series: # Pandas data series containing aggregated and filtered data
+    '''
+    A getter method for the SolomonGeo class that calls get_df to get a spcific and then further 
+    aggregates that dataset so that the proportion is the weighted proportion
+    '''
+    df = self.get_df(geo_filter, var_filter, loc_filter, type_filter)
+
+    if type_filter == 'Total':
+        df = df.sum()
+    elif type_filter == 'Proportion':
+        tot_df = self.get_df(geo_filter, var_filter, loc_filter, 'Total')
+        df = df * tot_df
+        df = df.sum() / tot_df.sum()
+    else:
+        raise ValueError('The type passed to the aggregate function must be one of the following: \'Total\', \'Proportion\'.')
+    return df
