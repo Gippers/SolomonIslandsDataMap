@@ -2,8 +2,8 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'geos', 'cen_vars', 'mytitle', 'map_graph', 'cards', 'dropdown_location',
-           'dropdown_geo', 'control_type', 'dropdown_var', 'navbar', 'SIDEBAR_STYLE', 'sidebar', 'update_kpis',
-           'update_geography']
+           'dropdown_geo', 'control_type', 'dropdown_var', 'navbar', 'SIDEBAR_STYLE', 'sidebar', 'map_click',
+           'update_kpis', 'update_geography']
 
 # %% ../nbs/02_app.ipynb 2
 from nbdev.showdoc import *
@@ -57,11 +57,7 @@ cards = dbc.Accordion(children=
 # %% ../nbs/02_app.ipynb 14
 # TODO options gets changed in callback?
 # TODO need to store locations in data class
-dropdown_location = dcc.Dropdown(options=sol_geo.locations[sol_geo.geo_levels[0]],
-                        value=None,  # initial value displayed when page first loads
-                        searchable=True,
-                        clearable=True,
-                        placeholder='Search for a location or click the map')
+dropdown_location = html.Div(children = gen_loc_dd(sol_geo.locations[sol_geo.geo_levels[0]]))
                
 
 #dropdown_geo = dbc.Dropdown(options=geos,
@@ -91,27 +87,7 @@ control_type = dmc.SegmentedControl(
                         orientation="vertical",
                         color = 'gray',
                         fullWidth = True,)
-'''
-dropdown_geo = dbc.ButtonGroup(
-    [
-        dbc.RadioItems(
-            id="radios",
-            className="btn-group",
-            inputClassName="btn-check",
-            labelClassName="btn btn-outline-primary",
-            labelCheckedClassName="active",
-            options=[
-                {"label": geos[0], "value": geos[0]},
-                {"label": geos[1], "value": geos[1]},
-                {"label": geos[2], "value": geos[2]},
-            ],
-            value=geos[0],
-        ),
-        #html.Div(id="output"),
-    ],
-    className="radio-group",
-    vertical = True,
-)'''
+
 dropdown_var = dcc.Dropdown(options=cen_vars,
                         value=cen_vars[-1],  # initial value displayed when page first loads
                         searchable=True,
@@ -199,13 +175,13 @@ app.layout = dbc.Container([
 
 # %% ../nbs/02_app.ipynb 23
 @app.callback(
-    Output(dropdown_location, 'value'),
+    Output('locDropdown', 'value'),
     # TODO - make this a Row object with children, then use function to recontruct
     # a group of them
     Input(map_graph, 'clickData'),
     prevent_initial_call=True
 )
-def update_kpis(clickData:str, # The currently clicked location on the map
+def map_click(clickData:str, # The currently clicked location on the map
                 )->str: # Returns the new value for the dropdown
     # TODO - What this should do, is on click set the location dropdown selection. Then that triggers data update.
     # TODO - I also need to reset this when the filter is changed
@@ -223,7 +199,7 @@ def update_kpis(clickData:str, # The currently clicked location on the map
         # The locations are list of dictionaries
         locations = list(map(lambda x: x['location'], clickData['points']))
         print(locations)
-        return locations
+        return locations[0]
         
 
 
@@ -232,49 +208,38 @@ def update_kpis(clickData:str, # The currently clicked location on the map
     Output(cards, 'children'),
     # TODO - make this a Row object with children, then use function to recontruct
     # a group of them
-    Input(dropdown_location, 'value'),
+    Input('locDropdown', 'value'),
     Input(control_type, 'value'),
-    prevent_initial_call=True
+    #Input(dropdown_location, 'options'),
+    prevent_initial_call=True,
+    allow_duplicate=True,
 )
 def update_kpis(locations:str, # The currently selected location. Including defualt of none
                 data_type:str, # The currently selected data type (Total or Proportion)
+                #dd_updated:[str], # The currently selected data type (Total or Proportion)
                 )->type(dbc.Card):
-    # TODO - What this should do, is on click set the location dropdown selection. Then that triggers data update.
-    # TODO - I also need to reset this when the filter is changed
-    # TODO - This callback should be triggered by the main callback https://dash.plotly.com/advanced-callbacks see callbacks as an indirect
-    # result section
-    # TODO add a hidden state tracker - update var and geo based on this
+    '''
+    Based on updates to either te dropdown location (which is triggered by map clicks) or 
+    changes to the type of data dispalyed, update the cards
+    '''
+    print("triggered update cards")
+    #if the dropdown_locations options was just updated, then we overwrite
     # TODO workout how to make multi point selection work - hard todo - might need to find open source web example
-    
-    button_clicked = ctx.triggered_id
-    print(button_clicked)
-    print(map_graph.id)
-    if clickData is None:
-        # TODO when none, maybe in future return current saved state, for now doing total
-        # TODO add a heading and maybe put in an acordian
-        new_cards = card_list(sol_geo, 
-                              "Population - Total",
-                              sol_geo.geo_levels[0], 
-                              sol_geo.census_vars[-1])
-        return new_cards
-    else:
-        # The locations are list of dictionaries
-        locations = list(map(lambda x: x['location'], clickData['points']))
-        print(locations)
-        # filter dataframe by store location, then sum all orders of that store.
-        new_cards = card_list(sol_geo, 
-                              "Population - " + ", ".join(locations),
-                              sol_geo.geo_levels[0], 
-                              sol_geo.census_vars[-1], 
-                              locations)
-        
-        # get all orders from this stor location 
+    # filter dataframe by store location, then sum all orders of that store.
+    header_text = "Total"
+    if locations is not None:
+        header_text = locations
+        locations = [locations]
+    new_cards = card_list(sol_geo, 
+                            "Current Selection: "  + header_text,
+                            loc = locations, 
+                            type_filter = data_type)
 
-        return new_cards
+    return new_cards
 
-# %% ../nbs/02_app.ipynb 26
+# %% ../nbs/02_app.ipynb 27
 @app.callback(
-    Output(dropdown_location, 'options'),
+    Output(dropdown_location, 'children'),
     Input(dropdown_geo, 'value'),
     allow_duplicate=True,
     prevent_initial_call=True
@@ -282,11 +247,11 @@ def update_kpis(locations:str, # The currently selected location. Including defu
 def update_geography(geo_input:str, # User input from the geography dropdown
               )->[str]: # Returns a new list of locations to display
     '''
-    Updates the dropdown_location dropdown based on the currently selected data aggregation
+    Updates the dropdown_location dropdown based on the currently selected data aggregation.
     '''
-    return sol_geo.locations[geo_input]
+    return gen_loc_dd(sol_geo.locations[geo_input])
 
-# %% ../nbs/02_app.ipynb 29
+# %% ../nbs/02_app.ipynb 30
 # Callback allows components to interact
 
 # TODO put title in it's own callback
