@@ -218,6 +218,7 @@ def update_kpis(locations:str, # The currently selected location. Including defu
                 data_type:str, # The currently selected data type (Total or Proportion)
                 #dd_updated:[str], # The currently selected data type (Total or Proportion)
                 )->type(dbc.Card):
+    # TODO might be worth exploring if patching will help
     '''
     Based on updates to either te dropdown location (which is triggered by map clicks) or 
     changes to the type of data dispalyed, update the cards
