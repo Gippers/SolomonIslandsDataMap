@@ -36,19 +36,25 @@ class SolomonGeo:
         self.geo_df = geo_df
 
         # variable that tracks the types of aggregations
-        self.geo_levels = geo_df.loc[:, 'agg'].unique()
+        self.geo_levels = geo_df.loc[:, ('core', 'agg')].unique()
 
-        # Save a list of census variables
-        # TODO this list is repeated twice, how can I undo this harcoding??
-        col_ignore = ['geometry', 'id', 'agg', 'year', 'type']
-        self.census_vars = list(geo_df.drop(columns = col_ignore).columns)
+        # Save a list of census variables, ignoring the core variables
+        # Use a dictionary that maps the upper level column names to lower level ones
+        var_df = geo_df.drop(columns = "core", level=0)
+        vars = {}
+        for col in var_df.columns:
+            if col[0] not in vars:
+                vars[col[0]] = [col[1]]
+            else:
+                vars[col[0]].append(col[1])
+        self.census_vars = vars
         # TODO should captialise first letter
-        self.data_type = geo_df.loc[:, 'type'].unique()
+        self.data_type = geo_df.loc[:, ('core', 'type')].unique()
 
         # save a list of locations as a dictionary access by geography level
         locations = {}
         for geo in self.geo_levels:
-            locations[geo] = geo_df.loc[geo_df['agg'] == geo].index.unique().sort_values()
+            locations[geo] = geo_df.loc[geo_df['core']['agg'] == geo].index.unique().sort_values()
         self.locations = locations
         # TODO: need a list of column sub headings: get from column name split by `:`
 
@@ -133,6 +139,20 @@ class SolomonGeo:
         
         # Merge the data together
         geo_df = geo.merge(df, on=['id', 'agg']).set_index("geo_name") # , 'geo_name'
+
+        # Convert into a multiindex dataframe, with hiearchical columns
+        try:
+            geo_df = geo_df.rename(columns = {'geometry':'core: geometry', 
+                                          'id':'core: id', 'agg':'core: agg', 
+                                          'year':'core: year', 'type':'core: type'})
+            cols = geo_df.columns.str.extract(r'(.*): (.+)', expand=True)
+            geo_df.columns = pd.MultiIndex.from_arrays((cols[0], cols[1]))
+            geo_df.columns.names = [None]*2
+        except:
+            raise ValueError("Issue converting geopandas dataframe to multindex. \
+                             Check that all columns have \': \' beside the following\
+                             core columns: geometry, id, agg, year, type.")
+        # Turn the transformed dataset
         return geo_df
 
     @classmethod
@@ -174,13 +194,6 @@ def save_pickle(self:SolomonGeo,
     pickle.dump(self.__dict__, f, 2)
     f.close()
 
-    # For now I will also save the goegraphy in an assets folder
-    # TODO update this process in future - may need to save elsewhere
-    # TODO I think I need to save in multiple spots
-    pw_asset = str(repo.working_tree_dir) + "/assets/sol_geo.json"
-    with open(pw_asset, 'w') as f:
-        json.dump(self.get_geojson(geo_filter = 'ward'), f)
-
 
 # %% ../nbs/00_load_data.ipynb 15
 @patch
@@ -192,17 +205,18 @@ def get_geojson(self:SolomonGeo,
     '''
     ret = self.geo_df
     # Only need geojson from one half of the dataset
-    ret = ret.loc[ret['type'] == self.type_default, :]
+    ret = ret.loc[ret['core']['type'] == self.type_default, :]
     if geo_filter is not None:
-        ret = ret.loc[ret['agg'] == geo_filter, :]
+        ret = ret.loc[ret['core']['agg'] == geo_filter, :]
     # Return only the core data to minimise the html size
-    return json.loads(ret.loc[:, ['geometry']].to_json())
+    return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
 
 # %% ../nbs/00_load_data.ipynb 17
 @patch
 def get_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
-                var_filter:str = None, # Selects the desired column from the dataframe
+                var1:str = None, # Selects an upper level 
+                var2:str = None, # Selects the lower level variable, if var 1 is used, var2 must be used.
                 loc_filter:[str] = None, # Filters one of more locations
                 # TODO remove hardcoding here?
                 type_filter:str = 'Total', # Return either number of proportion
@@ -214,20 +228,27 @@ def get_df(self:SolomonGeo,
     to display on the map. 
     '''
     ret = self.geo_df
-    ret = ret.loc[ret['type'] == type_filter, :]
+    ret = ret.loc[ret['core']['type'] == type_filter, :]
     # TODO check that filter is valid
     if geo_filter is not None:
-        ret = ret.loc[ret['agg'] == geo_filter, :]
+        ret = ret.loc[ret['core']['agg'] == geo_filter, :]
     # Return only the core data to minimise the html size
-    names = ['geometry', 'id', 'agg', 'year', 'type']
-    ret = ret.drop(columns = names)
+    ret = ret.drop(columns = 'core', level=0)
 
     if loc_filter is not None:
         ret = ret.loc[ret.index.isin(loc_filter), :]
 
     # Keep only selected column if required
-    if var_filter is not None:
-        ret = ret.filter(items = [var_filter])
+    if var2 is not None:
+        try:
+            assert(var1 is not None)
+            assert(var2 in self.census_vars[var1])
+        except:
+            ValueError("If var2 is set, var 1 must be set and the key value pair of var1 and var2 must match")
+        ret = ret[var1].filter(items = [var2])
+    elif var1 is not None:
+        # Keep all values from upper level column
+        ret = ret[var1]
         
     return pd.DataFrame(ret)
 
@@ -235,7 +256,8 @@ def get_df(self:SolomonGeo,
 @patch
 def agg_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
-                var_filter:str = None, # Selects the desired column from the dataframe
+                var1:str = None, # Selects an upper level 
+                var2:str = None, # Selects the lower level variable, if var 1 is used, var2 must be used.
                 loc_filter:[str] = None, # Filters one of more locations
                 # TODO remove hardcoding here?
                 type_filter:str = 'Total', # Return either number of proportion
@@ -244,12 +266,12 @@ def agg_df(self:SolomonGeo,
     A getter method for the SolomonGeo class that calls get_df to get a spcific and then further 
     aggregates that dataset so that the proportion is the weighted proportion
     '''
-    df = self.get_df(geo_filter, var_filter, loc_filter, type_filter)
+    df = self.get_df(geo_filter, var1, var2, loc_filter, type_filter)
 
     if type_filter == 'Total':
         df = df.sum()
     elif type_filter == 'Proportion':
-        tot_df = self.get_df(geo_filter, var_filter, loc_filter, 'Total')
+        tot_df = self.get_df(geo_filter, var1, var2, loc_filter, 'Total')
         df = df * tot_df
         df = df.sum() / tot_df.sum()
     else:
