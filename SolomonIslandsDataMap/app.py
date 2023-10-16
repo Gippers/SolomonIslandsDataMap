@@ -2,8 +2,8 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'geos', 'cen_vars', 'mytitle', 'map_graph', 'cards', 'dropdown_location',
-           'dropdown_geo', 'control_type', 'dd_var1', 'dd_var2', 'navbar', 'SIDEBAR_STYLE', 'sidebar', 'map_click',
-           'update_kpis', 'update_geography']
+           'dropdown_geo', 'control_type', 'dd_var', 'dd_measure', 'navbar', 'SIDEBAR_STYLE', 'sidebar', 'map_click',
+           'update_kpis', 'update_geography', 'update_measure']
 
 # %% ../nbs/02_app.ipynb 2
 from nbdev.showdoc import *
@@ -57,7 +57,8 @@ cards = dbc.Accordion(children=
 # %% ../nbs/02_app.ipynb 15
 # TODO options gets changed in callback?
 # TODO need to store locations in data class
-dropdown_location = html.Div(children = gen_loc_dd(sol_geo.locations[sol_geo.geo_levels[0]]))
+dropdown_location = html.Div(children = gen_dd(sol_geo.locations[sol_geo.geo_levels[0]], 
+                                                'locDropdown', clear = True, place_holder='Select Dropdown Location',))
                
 
 #dropdown_geo = dbc.Dropdown(options=geos,
@@ -88,15 +89,12 @@ control_type = dmc.SegmentedControl(
                         color = 'gray',
                         fullWidth = True,)
 
-dd_var1 = dcc.Dropdown(options=cen_vars,
-                        value=cen_vars[-1],  # initial value displayed when page first loads
-                        searchable=True,
-                        clearable=False,
-                        optionHeight=100)
-dd_var2 = gen_dd
-dcc.Dropdown()
+dd_var = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdown', 
+                                    val = 'Total Households'))
+dd_measure = html.Div(children = gen_dd(sol_geo.measure['Key Statistics'], 'measureDropdown',
+                                      val = sol_geo.measure['Key Statistics'][sol_geo.census_vars['Key Statistics'][0]]))
 
-# %% ../nbs/02_app.ipynb 19
+# %% ../nbs/02_app.ipynb 17
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Census Data", href="#")),
@@ -118,7 +116,7 @@ navbar = dbc.NavbarSimple(
 )
 
 
-# %% ../nbs/02_app.ipynb 21
+# %% ../nbs/02_app.ipynb 19
 # Note, for now I am not using a sidebar style as I do not want to fix the width
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -144,7 +142,8 @@ sidebar = html.Div(
                 dropdown_location,
                 html.Br(),
                 html.P("Data"), # TODO add a little info button here with link to geo explanation
-                dropdown_var,
+                dd_var,
+                dd_measure,
                 html.Br(),
                 html.P("Data Type"), 
                 control_type,
@@ -160,7 +159,7 @@ sidebar = html.Div(
 )
 
 
-# %% ../nbs/02_app.ipynb 23
+# %% ../nbs/02_app.ipynb 21
 app.layout = dbc.Container([
                 dbc.Row([
                     navbar
@@ -174,7 +173,7 @@ app.layout = dbc.Container([
                      ], justify = 'center'),                    
                 ], fluid = True)
 
-# %% ../nbs/02_app.ipynb 26
+# %% ../nbs/02_app.ipynb 24
 @app.callback(
     Output('locDropdown', 'value'),
     # TODO - make this a Row object with children, then use function to recontruct
@@ -184,11 +183,6 @@ app.layout = dbc.Container([
 )
 def map_click(clickData:str, # The currently clicked location on the map
                 )->str: # Returns the new value for the dropdown
-    # TODO - What this should do, is on click set the location dropdown selection. Then that triggers data update.
-    # TODO - I also need to reset this when the filter is changed
-    # TODO - This callback should be triggered by the main callback https://dash.plotly.com/advanced-callbacks see callbacks as an indirect
-    # result section
-    # TODO add a hidden state tracker - update var and geo based on this
     # TODO workout how to make multi point selection work - hard todo - might need to find open source web example
     
     print("map clicked updating to:")
@@ -204,7 +198,7 @@ def map_click(clickData:str, # The currently clicked location on the map
         
 
 
-# %% ../nbs/02_app.ipynb 27
+# %% ../nbs/02_app.ipynb 25
 @app.callback(
     Output(cards, 'children'),
     # TODO - make this a Row object with children, then use function to recontruct
@@ -239,7 +233,7 @@ def update_kpis(locations:str, # The currently selected location. Including defu
 
     return new_cards
 
-# %% ../nbs/02_app.ipynb 30
+# %% ../nbs/02_app.ipynb 28
 @app.callback(
     Output(dropdown_location, 'children'),
     Input(dropdown_geo, 'value'),
@@ -251,7 +245,23 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     '''
     Updates the dropdown_location dropdown based on the currently selected data aggregation.
     '''
-    return gen_dd(sol_geo.locations[geo_input], "Select a location")
+    return gen_dd(sol_geo.locations[geo_input], 'locDropdown', "Select a location", clear = True)
+
+# %% ../nbs/02_app.ipynb 31
+@app.callback(
+    Output(dd_measure, 'children'),
+    Input('varDropdown', 'value'),
+    allow_duplicate=True,
+    prevent_initial_call=True
+)
+def update_measure(new_var:str, # Selected variable
+              )->dcc.Dropdown: # Returns a dropdown of measures for selected variable
+    '''
+    Updates the dropdown_location dropdown based on the currently selected data aggregation.
+    '''
+    # When a variable is selected, the measure will be set as the first one
+    return gen_dd(sol_geo.measure[new_var], 'measureDropdown', 
+                  val = sol_geo.measure[new_var][sol_geo.census_vars[new_var][0]])
 
 # %% ../nbs/02_app.ipynb 33
 # Callback allows components to interact
@@ -262,13 +272,13 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     Output(mytitle, 'children'),
     Input(dropdown_geo, 'value'),
     Input(control_type, 'value'),
-    Input(dropdown_var, 'value'),
+    Input('measureDropdown', 'value'),
     allow_duplicate=True,
     prevent_initial_call=True
 )
 def update_geography(geo_input:str, # User input from the geography dropdown
                      data_type:str, # User input of type of data
-                     census_var:str, # User input for the census variable
+                     var_measure:[str], # A list of length 2 where first position is variable and second is measure
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
     Updates the focus census variable or geography dispalayed on the map
@@ -282,18 +292,18 @@ def update_geography(geo_input:str, # User input from the geography dropdown
             patched_figure['data'][i]['visible'] = geo_input == geo
         
     elif button_clicked == control_type.id:
-        # Update the type of data displayed
+        # Update the type of data displayed on map
         # TODO currently displayed data will need to be tracked. Can't be tracked in object, use hidden 
         # TODO will need to track this update also in var dropdown clicked
         # TODO will also need to track current census_var in here
         # TODO this also needs to trigger cards
         for geo in sol_geo.geo_levels:
             i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_df(geo_filter = geo, type_filter=data_type, var_filter = census_var).values
+            ar = sol_geo.get_df(geo_filter = geo, type_filter=data_type, var = var_measure[0], measure = var_measure[1]).values
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][i]['z'] = ar
 
-    elif button_clicked == dropdown_var.id:
+    elif button_clicked == 'measureDropdown':
         # Update the z values in map to the data for the requested
         # census variable
         
@@ -302,7 +312,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
         # TODO this is fairly inefficient, as we are processing each time
         # Maybe faster framework like polars could help? or caching but would require a lot of caching
             i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_df(geo_filter = geo, type_filter=data_type, var_filter = census_var).values
+            ar = sol_geo.get_df(geo_filter = geo, type_filter=data_type, var = var_measure[0], measure=var_measure[1]).values
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][i]['z'] = ar
 

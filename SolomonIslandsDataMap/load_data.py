@@ -28,7 +28,7 @@ class SolomonGeo:
         geo_df    Geopandas dataframe containing geographies and census data
         geo_levels    A list of the types of available aggregations
         census_vars    A dictionary of census variables in the dataset 
-        census_vars2    A dictionary of dictionaries of second order census variables in the dataset 
+        measure    A dictionary of dictionaries of measures for each census variable in the dataset 
         data_type   Specifies whether the variable is a percentage or number
         locations A dictionary of locations accessed by the geography level
     '''
@@ -50,17 +50,17 @@ class SolomonGeo:
                 vars[col[0]].append(col[1])
         self.census_vars = vars
 
-        # Census vars2 contains a dictionary of the secondary variable name, where the
+        # Measures contains a dictionary of the measure for each census variable, where the
         # key is the seondary name and the value is an array with the primary name and 
         # the secondary name in a list. This is necessary to construct a dropdown.
-        vars2 = {}
+        measure = {}
         for key in vars:
             d2 = {}
             for val in vars[key]:
                 d2[val] = [key, val]
-            vars2[key] = d2
+            measure[key] = d2
             
-        self.census_vars2 = vars2
+        self.measure = measure
 
 
         # TODO should captialise first letter
@@ -230,8 +230,8 @@ def get_geojson(self:SolomonGeo,
 @patch
 def get_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
-                var1:str = None, # Selects an upper level 
-                var2:str = None, # Selects the lower level variable, if var 1 is used, var2 must be used.
+                var:str = None, # Selects an upper level 
+                measure:str = None, # Selects the lower level variable, if var 1 is used, measure must be used.
                 loc_filter:[str] = None, # Filters one of more locations
                 # TODO remove hardcoding here?
                 type_filter:str = 'Total', # Return either number of proportion
@@ -254,16 +254,16 @@ def get_df(self:SolomonGeo,
         ret = ret.loc[ret.index.isin(loc_filter), :]
 
     # Keep only selected column if required
-    if var2 is not None:
+    if measure is not None:
         try:
-            assert(var1 is not None)
-            assert(var2 in self.census_vars[var1])
+            assert(var is not None)
+            assert(measure in self.census_vars[var])
         except:
-            ValueError("If var2 is set, var 1 must be set and the key value pair of var1 and var2 must match")
-        ret = ret[var1].filter(items = [var2])
-    elif var1 is not None:
+            ValueError("If measure is set, var 1 must be set and the key value pair of var and measure must match")
+        ret = ret[var].filter(items = [measure])
+    elif var is not None:
         # Keep all values from upper level column
-        ret = ret[var1]
+        ret = ret[var]
         
     return pd.DataFrame(ret)
 
@@ -271,8 +271,8 @@ def get_df(self:SolomonGeo,
 @patch
 def agg_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
-                var1:str = None, # Selects an upper level 
-                var2:str = None, # Selects the lower level variable, if var 1 is used, var2 must be used.
+                var:str = None, # Selects an upper level 
+                measure:str = None, # Selects the lower level variable, if var 1 is used, measure must be used.
                 loc_filter:[str] = None, # Filters one of more locations
                 # TODO remove hardcoding here?
                 type_filter:str = 'Total', # Return either number of proportion
@@ -281,12 +281,12 @@ def agg_df(self:SolomonGeo,
     A getter method for the SolomonGeo class that calls get_df to get a spcific and then further 
     aggregates that dataset so that the proportion is the weighted proportion
     '''
-    df = self.get_df(geo_filter, var1, var2, loc_filter, type_filter)
+    df = self.get_df(geo_filter, var, measure, loc_filter, type_filter)
 
     if type_filter == 'Total':
         df = df.sum()
     elif type_filter == 'Proportion':
-        tot_df = self.get_df(geo_filter, var1, var2, loc_filter, 'Total')
+        tot_df = self.get_df(geo_filter, var, measure, loc_filter, 'Total')
         df = df * tot_df
         df = df.sum() / tot_df.sum()
     else:

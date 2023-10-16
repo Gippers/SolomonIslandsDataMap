@@ -44,8 +44,8 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
                                 geojson=sol_df.get_geojson(geo_filter = value),
                                locations=sol_df.get_df(geo_filter = value).index,
                                # TODO undo hardcoding
-                               z = sol_df.get_df(geo_filter = value, var1 = 'Key Statistics', 
-                                                 var2 = 'Total Households').values,
+                               z = sol_df.get_df(geo_filter = value, var = 'Key Statistics', 
+                                                 measure = 'Total Households').values,
                                colorscale="deep",
                                 marker_line_width = 0.5,
                                 zauto=True,
@@ -102,14 +102,14 @@ def card_list(sg:SolomonGeo, # Input data object
             # Create an accordian with the header of the variable and such
             if loc == None:
                 df = sg.agg_df(geo_filter = geo,
-                                var1 = key,
-                                var2 = var, 
+                                var = key,
+                                measure = var, 
                                 loc_filter = loc,
                                 type_filter = type_filter).values[0]
             else:
                 df = sg.get_df(geo_filter = geo, 
-                                var1 = key,
-                                var2 = var, 
+                                var = key,
+                                measure = var, 
                                 loc_filter = loc,
                                 type_filter = type_filter).values[0]
             cards.append(dbc.Col([
@@ -139,8 +139,10 @@ def card_list(sg:SolomonGeo, # Input data object
 
 # %% ../nbs/01_dash_components.ipynb 15
 def gen_dd(location_list:[str], # a list of locations
-           place_holder:str, # a placeholder message to display
+           id:str, # Id of the dropdown
+           place_holder:str = None, # a placeholder message to display
            val:str = None, # The starting value of the dropdown
+           clear:bool = False, # pick whether the 
                         )->dcc.Dropdown: # Returns a dropdown
     '''
     Create the location dropdown from given list
@@ -148,7 +150,7 @@ def gen_dd(location_list:[str], # a list of locations
     dd = dcc.Dropdown(options=location_list,
                         value=val,  # initial value displayed when page first loads
                         searchable=True,
-                        clearable=True,
+                        clearable=clear,
                         placeholder=place_holder, 
-                        id = "locDropdown")
+                        id = id)
     return dd
