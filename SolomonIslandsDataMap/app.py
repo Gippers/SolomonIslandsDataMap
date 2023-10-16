@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'geos', 'cen_vars', 'mytitle', 'map_graph', 'cards', 'dropdown_location',
-           'dropdown_geo', 'control_type', 'dropdown_var', 'navbar', 'SIDEBAR_STYLE', 'sidebar', 'map_click',
+           'dropdown_geo', 'control_type', 'dd_var1', 'dd_var2', 'navbar', 'SIDEBAR_STYLE', 'sidebar', 'map_click',
            'update_kpis', 'update_geography']
 
 # %% ../nbs/02_app.ipynb 2
@@ -39,12 +39,12 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY])
 server = app.server
 load_figure_template("minty")
 
-geos = geo_df.loc[:, 'agg'].unique()
+geos = sol_geo.geo_levels
 cen_vars = sol_geo.census_vars
 
 
-# %% ../nbs/02_app.ipynb 12
-mytitle = dcc.Markdown(children="## " + cen_vars[-1] + " by " + geos[0]) # TODO This needs a default title
+# %% ../nbs/02_app.ipynb 13
+mytitle = dcc.Markdown(children="## " + list(cen_vars.keys())[0] + " by " + geos[0]) # TODO This needs a default title
 map_graph = dcc.Graph(figure=define_map(sol_geo), selectedData=None)
 # TODO entire accordian will need to be the child
 cards = dbc.Accordion(children= 
@@ -54,7 +54,7 @@ cards = dbc.Accordion(children=
     )
 
 
-# %% ../nbs/02_app.ipynb 14
+# %% ../nbs/02_app.ipynb 15
 # TODO options gets changed in callback?
 # TODO need to store locations in data class
 dropdown_location = html.Div(children = gen_loc_dd(sol_geo.locations[sol_geo.geo_levels[0]]))
@@ -88,14 +88,15 @@ control_type = dmc.SegmentedControl(
                         color = 'gray',
                         fullWidth = True,)
 
-dropdown_var = dcc.Dropdown(options=cen_vars,
+dd_var1 = dcc.Dropdown(options=cen_vars,
                         value=cen_vars[-1],  # initial value displayed when page first loads
                         searchable=True,
                         clearable=False,
                         optionHeight=100)
+dd_var2 = gen_dd
+dcc.Dropdown()
 
-
-# %% ../nbs/02_app.ipynb 16
+# %% ../nbs/02_app.ipynb 19
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Census Data", href="#")),
@@ -117,7 +118,7 @@ navbar = dbc.NavbarSimple(
 )
 
 
-# %% ../nbs/02_app.ipynb 18
+# %% ../nbs/02_app.ipynb 21
 # Note, for now I am not using a sidebar style as I do not want to fix the width
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -159,7 +160,7 @@ sidebar = html.Div(
 )
 
 
-# %% ../nbs/02_app.ipynb 20
+# %% ../nbs/02_app.ipynb 23
 app.layout = dbc.Container([
                 dbc.Row([
                     navbar
@@ -173,7 +174,7 @@ app.layout = dbc.Container([
                      ], justify = 'center'),                    
                 ], fluid = True)
 
-# %% ../nbs/02_app.ipynb 23
+# %% ../nbs/02_app.ipynb 26
 @app.callback(
     Output('locDropdown', 'value'),
     # TODO - make this a Row object with children, then use function to recontruct
@@ -203,7 +204,7 @@ def map_click(clickData:str, # The currently clicked location on the map
         
 
 
-# %% ../nbs/02_app.ipynb 24
+# %% ../nbs/02_app.ipynb 27
 @app.callback(
     Output(cards, 'children'),
     # TODO - make this a Row object with children, then use function to recontruct
@@ -238,7 +239,7 @@ def update_kpis(locations:str, # The currently selected location. Including defu
 
     return new_cards
 
-# %% ../nbs/02_app.ipynb 27
+# %% ../nbs/02_app.ipynb 30
 @app.callback(
     Output(dropdown_location, 'children'),
     Input(dropdown_geo, 'value'),
@@ -250,9 +251,9 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     '''
     Updates the dropdown_location dropdown based on the currently selected data aggregation.
     '''
-    return gen_loc_dd(sol_geo.locations[geo_input])
+    return gen_dd(sol_geo.locations[geo_input], "Select a location")
 
-# %% ../nbs/02_app.ipynb 30
+# %% ../nbs/02_app.ipynb 33
 # Callback allows components to interact
 
 # TODO put title in it's own callback
@@ -313,7 +314,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
 
     return patched_figure, '## Solomon Islands Data map - ' + geo_input
 
-# %% ../nbs/02_app.ipynb 40
+# %% ../nbs/02_app.ipynb 43
 # Run app
 if __name__=='__main__':
     try:

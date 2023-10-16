@@ -27,7 +27,8 @@ class SolomonGeo:
     Attributes:
         geo_df    Geopandas dataframe containing geographies and census data
         geo_levels    A list of the types of available aggregations
-        census_vars    A list of census variables in the dataset 
+        census_vars    A dictionary of census variables in the dataset 
+        census_vars2    A dictionary of dictionaries of second order census variables in the dataset 
         data_type   Specifies whether the variable is a percentage or number
         locations A dictionary of locations accessed by the geography level
     '''
@@ -48,6 +49,20 @@ class SolomonGeo:
             else:
                 vars[col[0]].append(col[1])
         self.census_vars = vars
+
+        # Census vars2 contains a dictionary of the secondary variable name, where the
+        # key is the seondary name and the value is an array with the primary name and 
+        # the secondary name in a list. This is necessary to construct a dropdown.
+        vars2 = {}
+        for key in vars:
+            d2 = {}
+            for val in vars[key]:
+                d2[val] = [key, val]
+            vars2[key] = d2
+            
+        self.census_vars2 = vars2
+
+
         # TODO should captialise first letter
         self.data_type = geo_df.loc[:, ('core', 'type')].unique()
 
