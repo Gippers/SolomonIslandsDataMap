@@ -40,12 +40,14 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
     traces = []
     # TODO if fails remember I changed visible from cols_dd
     for value in cols_dd:
+        z_vals = sol_df.get_df(geo_filter = value, var = 'Key Statistics', 
+                                                 measure = 'Total Households').values
+        z_vals = z_vals.reshape((z_vals.shape[0],))
         traces.append(go.Choroplethmapbox(
                                 geojson=sol_df.get_geojson(geo_filter = value),
                                locations=sol_df.get_df(geo_filter = value).index,
                                # TODO undo hardcoding
-                               z = sol_df.get_df(geo_filter = value, var = 'Key Statistics', 
-                                                 measure = 'Total Households').values,
+                               z = z_vals,
                                colorscale="deep",
                                 marker_line_width = 0.5,
                                 zauto=True,
@@ -68,7 +70,7 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
     return fig
 
 
-# %% ../nbs/01_dash_components.ipynb 12
+# %% ../nbs/01_dash_components.ipynb 11
 # todo - turn this eventually into a function
 
 # TODO - make it in future so that clicking on a card updates the current census variable
@@ -94,7 +96,8 @@ def card_list(sg:SolomonGeo, # Input data object
         geo = sg.geo_levels[0]
 
     accordians = []
-    accordians.append(dcc.Markdown(children="## " + header))
+    # TODO this needs to be in a row above the accordians
+    #accordians.append(dcc.Markdown(children="## " + header))
     # TODO iter through keys
     for key in sg.census_vars:
         cards = []
@@ -129,15 +132,15 @@ def card_list(sg:SolomonGeo, # Input data object
                 
                 )])
             )
-        accordians.append([dbc.AccordionItem(
+        accordians.append(dbc.AccordionItem(
                  dbc.Row(cards),
                 title=key,
-            )])
+            ))
 
     # TODO return list of accordiants in a column?
     return dbc.Col(accordians)
 
-# %% ../nbs/01_dash_components.ipynb 15
+# %% ../nbs/01_dash_components.ipynb 14
 def gen_dd(location_list:[str], # a list of locations
            id:str, # Id of the dropdown
            place_holder:str = None, # a placeholder message to display

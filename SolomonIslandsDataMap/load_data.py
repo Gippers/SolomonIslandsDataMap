@@ -52,12 +52,12 @@ class SolomonGeo:
 
         # Measures contains a dictionary of the measure for each census variable, where the
         # key is the seondary name and the value is an array with the primary name and 
-        # the secondary name in a list. This is necessary to construct a dropdown.
+        # the secondary appended into a single string. This is necessary to construct a dropdown.
         measure = {}
         for key in vars:
             d2 = {}
-            for val in vars[key]:
-                d2[val] = [key, val]
+            for lab in vars[key]:
+                d2[key + ":" + lab] = lab
             measure[key] = d2
             
         self.measure = measure
