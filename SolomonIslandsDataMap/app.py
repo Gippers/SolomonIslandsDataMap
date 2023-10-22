@@ -273,6 +273,7 @@ def update_measure(new_var:str, # Selected variable
 @app.callback(
     Output(map_graph, 'figure'),
     Output(mytitle, 'children'),
+    Output(selectedBarGraph, 'figure'),
     Input(dropdown_geo, 'value'),
     Input(control_type, 'value'),
     Input('measureDropdown', 'value'),
@@ -288,8 +289,10 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     '''
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
+    var, meas = var_measure.split(':')
+
     if button_clicked == dropdown_geo.id:
-        # Update disaplayed geography based on 
+        # Update disaplayed geography 
         for geo in sol_geo.geo_levels:
             i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
             patched_figure['data'][i]['visible'] = geo_input == geo
@@ -300,18 +303,15 @@ def update_geography(geo_input:str, # User input from the geography dropdown
         # TODO will need to track this update also in var dropdown clicked
         # TODO this also needs to trigger cards
         print(var_measure)
-        var, meas = var_measure.split(':')
         for geo in sol_geo.geo_levels:
             i = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
             ar = sol_geo.get_df(geo_filter = geo, type_filter=data_type, var = var, measure = meas).values
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][i]['z'] = ar
+        
 
     elif button_clicked == 'measureDropdown':
-        # Update the z values in map to the data for the requested
-        # census variable
-        print(var_measure)
-        var, meas = var_measure.split(':')
+        # Update the z values in map to the data for the requested census variable
         for geo in sol_geo.geo_levels:
         # Ar updates the z value ie. data disaplyed each time
         # TODO this is fairly inefficient, as we are processing each time
@@ -320,13 +320,14 @@ def update_geography(geo_input:str, # User input from the geography dropdown
             ar = sol_geo.get_df(geo_filter = geo, type_filter=data_type, var = var, measure=meas).values
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][i]['z'] = ar
+        
+    # Create newly selected barplot
+    bg = gen_bar_plot(sol_geo, geo_input, var, meas, type_filter=data_type)
 
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
-    # TODO - potentially not with census updates though...
-    #update_kpis(selectedData = map_selection)
 
-    return patched_figure, '## Solomon Islands Data map - ' + geo_input
+    return patched_figure, '## Solomon Islands Data map - ' + geo_input, bg
 
 # %% ../nbs/02_app.ipynb 46
 # Run app
