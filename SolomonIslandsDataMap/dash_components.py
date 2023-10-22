@@ -79,7 +79,7 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
                     type_filter:str = 'Total', # The type aggregartion
                 )->type(go.Figure()): # Returns a graph object figure of a barplot
     # TODO setup so that the graph highlights the selected measure
-    figtext = 'Showing ' + measure + ' in '
+    figtext = 'Showing ' + variable + ' for '
     if locations is None:
         df = sol_geo.agg_df(geo_filter, variable, loc_filter = locations, type_filter = type_filter)
         df = pd.DataFrame(df).transpose()
@@ -98,7 +98,7 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
             name = loc,
         ))
     # TODO create dynamic text with Location name and Variable
-    fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text='Showing ' + measure + ' in ' + ', '.join(locations)
+    fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text=figtext
                       , xaxis={'categoryorder':'total descending'})
     return fig
 
