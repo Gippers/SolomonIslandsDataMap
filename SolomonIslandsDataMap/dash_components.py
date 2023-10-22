@@ -96,7 +96,8 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
             name = loc,
         ))
     # TODO create dynamic text with Location name and Variable
-    fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text='Put a title here!', xaxis={'categoryorder':'total descending'})
+    fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text='Showing ' + measure + ' in ' + ', '.join(locations)
+                      , xaxis={'categoryorder':'total descending'})
     return fig
 
 # %% ../nbs/01_dash_components.ipynb 15
@@ -130,9 +131,7 @@ def card_list(sg:SolomonGeo, # Input data object
     # TODO iter through keys
     for key in sg.census_vars:
         cards = []
-        print(key)
         for var in sg.census_vars[key]:
-            print(var)
             # Create an accordian with the header of the variable and such
             if loc == None:
                 df = sg.agg_df(geo_filter = geo,

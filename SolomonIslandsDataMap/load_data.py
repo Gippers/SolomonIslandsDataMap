@@ -246,6 +246,10 @@ def get_df(self:SolomonGeo,
     ret = ret.loc[ret['core']['type'] == type_filter, :]
     # TODO check that filter is valid
     if geo_filter is not None:
+        try:
+            assert(geo_filter in ['Ward', 'Constituency', 'Province'])
+        except:
+            ValueError("Geo filter must be one of: ['Ward', 'Constituency', 'Province']")
         ret = ret.loc[ret['core']['agg'] == geo_filter, :]
     # Return only the core data to minimise the html size
     ret = ret.drop(columns = 'core', level=0)
