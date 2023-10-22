@@ -277,12 +277,14 @@ def update_measure(new_var:str, # Selected variable
     Input(dropdown_geo, 'value'),
     Input(control_type, 'value'),
     Input('measureDropdown', 'value'),
+    Input('locDropdown', 'value'),
     allow_duplicate=True,
     prevent_initial_call=True
 )
 def update_geography(geo_input:str, # User input from the geography dropdown
                      data_type:str, # User input of type of data
                      var_measure:str, # A string contiaining the census variable and measure split by ':'
+                     loc_selection:str, # The selected location, may be none
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
     Updates the focus census variable or geography dispalayed on the map
@@ -322,7 +324,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
             patched_figure['data'][i]['z'] = ar
         
     # Create newly selected barplot
-    bg = gen_bar_plot(sol_geo, geo_input, var, meas, type_filter=data_type)
+    bg = gen_bar_plot(sol_geo, geo_input, var, meas, [loc_selection], data_type)
 
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
