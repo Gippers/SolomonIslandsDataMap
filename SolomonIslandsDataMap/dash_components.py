@@ -98,6 +98,8 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
             name = loc,
         ))
     # TODO create dynamic text with Location name and Variable
+    # TODO add standout text
+    # TODO should this be ordered? Hinders comparison. Can I order the dataset somewhere else?
     fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text=figtext
                       , xaxis={'categoryorder':'total descending'})
     return fig

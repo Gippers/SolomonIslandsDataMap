@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'geos', 'cen_vars', 'mytitle', 'map_graph', 'cards', 'selectedBarGraph',
            'dropdown_location', 'dropdown_geo', 'control_type', 'dd_var', 'dd_measure', 'navbar', 'SIDEBAR_STYLE',
-           'sidebar', 'map_click', 'update_kpis', 'update_geography', 'update_measure']
+           'sidebar', 'map_click', 'update_kpis', 'update_geography', 'update_measure', 'update_bargraph']
 
 # %% ../nbs/02_app.ipynb 2
 from nbdev.showdoc import *
@@ -266,25 +266,22 @@ def update_measure(new_var:str, # Selected variable
     return gen_dd(sol_geo.measure[new_var], 'measureDropdown', 
                   val = list(sol_geo.measure[new_var].keys())[0])
 
-# %% ../nbs/02_app.ipynb 36
+# %% ../nbs/02_app.ipynb 37
 # Callback allows components to interact
 
 # TODO put title in it's own callback
 @app.callback(
     Output(map_graph, 'figure'),
     Output(mytitle, 'children'),
-    Output(selectedBarGraph, 'figure'),
     Input(dropdown_geo, 'value'),
     Input(control_type, 'value'),
     Input('measureDropdown', 'value'),
-    Input('locDropdown', 'value'),
     allow_duplicate=True,
     prevent_initial_call=True
 )
 def update_geography(geo_input:str, # User input from the geography dropdown
                      data_type:str, # User input of type of data
                      var_measure:str, # A string contiaining the census variable and measure split by ':'
-                     loc_selection:str, # The selected location, may be none
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
     Updates the focus census variable or geography dispalayed on the map
@@ -323,15 +320,46 @@ def update_geography(geo_input:str, # User input from the geography dropdown
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][i]['z'] = ar
         
-    # Create newly selected barplot
-    bg = gen_bar_plot(sol_geo, geo_input, var, meas, [loc_selection], data_type)
 
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
 
-    return patched_figure, '## Solomon Islands Data map - ' + geo_input, bg
+    return patched_figure, '## Solomon Islands Data map - ' + geo_input
 
-# %% ../nbs/02_app.ipynb 46
+# %% ../nbs/02_app.ipynb 38
+# Callback allows components to interact
+
+# TODO put title in it's own callback
+@app.callback(
+    Output(selectedBarGraph, 'figure'),
+    Input(dropdown_geo, 'value'),
+    Input(control_type, 'value'),
+    Input('measureDropdown', 'value'),
+    Input('locDropdown', 'value'),
+    allow_duplicate=True,
+    prevent_initial_call=True
+)
+def update_bargraph(geo_input:str, # User input from the geography dropdown
+                     data_type:str, # User input of type of data
+                     var_measure:str, # A string contiaining the census variable and measure split by ':'
+                     loc_selection:str, # The selected location, may be none
+              )->(type(go.Figure())): # Returns a graph object figure after being updated and the dynamic title
+    '''
+    Updates the focus census variable or geography dispalayed on the map
+    '''
+    var, meas = var_measure.split(':')
+        
+    # Create newly selected barplot
+    locs = None
+    if loc_selection is not None: locs = [loc_selection]
+    bg = gen_bar_plot(sol_geo, geo_input, var, meas, locs, data_type)
+
+    # returned objects are assigned to the component property of the Output
+    # After updating fileter, we always reset map selection 
+
+    return  bg
+
+# %% ../nbs/02_app.ipynb 48
 # Run app
 if __name__=='__main__':
     try:
