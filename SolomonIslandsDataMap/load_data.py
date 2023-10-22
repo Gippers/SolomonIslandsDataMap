@@ -285,14 +285,12 @@ def agg_df(self:SolomonGeo,
     A getter method for the SolomonGeo class that calls get_df to get a spcific and then further 
     aggregates that dataset so that the proportion is the weighted proportion
     '''
-    df = self.get_df(geo_filter, var, measure, loc_filter, type_filter)
+    df = self.get_df(geo_filter, var, measure, loc_filter)
 
     if type_filter == 'Total':
         df = df.sum()
     elif type_filter == 'Proportion':
-        tot_df = self.get_df(geo_filter, var, measure, loc_filter, 'Total')
-        df = df * tot_df
-        df = df.sum() / tot_df.sum()
+        df = df.sum() / df.sum().sum() * 100
     else:
         raise ValueError('The type passed to the aggregate function must be one of the following: \'Total\', \'Proportion\'.')
     return df
