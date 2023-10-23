@@ -182,6 +182,7 @@ def gen_dd(location_list:[str], # a list of locations
            val:str = None, # The starting value of the dropdown
            clear:bool = False, # pick whether the ]
            height:int = 35, # height of the dropdown text
+           multi:bool = False, # Is the dropdown multi select
                         )->dcc.Dropdown: # Returns a dropdown
     '''
     Create the location dropdown from given list
@@ -193,5 +194,6 @@ def gen_dd(location_list:[str], # a list of locations
                         clearable=clear,
                         placeholder=place_holder, 
                         id = id, 
-                        optionHeight=height,)
+                        optionHeight=height,
+                        multi=multi)
     return dd

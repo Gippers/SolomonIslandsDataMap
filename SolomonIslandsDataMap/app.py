@@ -97,7 +97,8 @@ control_type = dmc.SegmentedControl(
 dd_var = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdown', 
                                     val = 'Key Statistics', height = 75))
 dd_measure = html.Div(children = gen_dd(sol_geo.measure['Key Statistics'], 'measureDropdown',
-                                      val = list(sol_geo.measure['Key Statistics'].keys())[0]))
+                                      val = list(sol_geo.measure['Key Statistics'].keys())[0],
+                                      multi = True))
 
 # %% ../nbs/02_app.ipynb 20
 navbar = dbc.NavbarSimple(
@@ -185,9 +186,11 @@ app.layout = dbc.Container([
     # TODO - make this a Row object with children, then use function to recontruct
     # a group of them
     Input(map_graph, 'clickData'),
+    State('locDropdown', 'value'),
     prevent_initial_call=True
 )
 def map_click(clickData:str, # The currently clicked location on the map
+                pre_locs:[str], # The previously selected locations
                 )->str: # Returns the new value for the dropdown
     # TODO workout how to make multi point selection work - hard todo - might need to find open source web example
     
@@ -211,7 +214,6 @@ def map_click(clickData:str, # The currently clicked location on the map
     # a group of them
     Input('locDropdown', 'value'),
     Input(control_type, 'value'),
-    #Input(dropdown_location, 'options'),
     prevent_initial_call=True,
     allow_duplicate=True,
 )

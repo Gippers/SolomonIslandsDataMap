@@ -1,13 +1,13 @@
 fastcore 
 pandas 
-plotly>=5.16.1 
+plotly>=5.17.0 
 nbformat>=4.2.0 
 geopandas 
 repo 
 GitPython 
 numpy 
 dash_bootstrap_components 
-dash==2.13.0
+dash==2.14.0
 gunicorn
 topojson
 dash-bootstrap-templates
