@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'app', 'server', 'geos', 'cen_vars', 'mytitle', 'map_graph', 'cards', 'selectedBarGraph',
            'selection', 'dropdown_location', 'dropdown_geo', 'control_type', 'dd_var', 'dd_measure', 'navbar',
-           'SIDEBAR_STYLE', 'sidebar', 'map_click', 'update_kpis', 'update_geography', 'update_measure', 'update_map',
+           'SIDEBAR_STYLE', 'sidebar', 'map_click', 'update_geography', 'update_measure', 'update_map',
            'update_bargraph']
 
 # %% ../nbs/02_app.ipynb 2
@@ -23,7 +23,7 @@ from git import Repo
 import pandas as pd
 import numpy as np
 from fastcore.test import *
-from dash import Dash, dcc, Output, Input, html, Patch, ctx  # pip install dash
+from dash import Dash, dcc, Output, Input, State, html, Patch, ctx  # pip install dash
 import dash_bootstrap_components as dbc    # pip install dash-bootstrap-components
 from dash_bootstrap_templates import load_figure_template
 import random
@@ -63,7 +63,8 @@ selection = dcc.Store(id = 'selection',data = {})
 # TODO options gets changed in callback?
 # TODO need to store locations in data class
 dropdown_location = html.Div(children = gen_dd(sol_geo.locations[sol_geo.geo_levels[0]], 
-                                                'locDropdown', clear = True, place_holder='Select Dropdown Location',))
+                                                'locDropdown', clear = True, place_holder='Select Dropdown Location',
+                                                multi = True))
                
 
 #dropdown_geo = dbc.Dropdown(options=geos,
@@ -97,8 +98,7 @@ control_type = dmc.SegmentedControl(
 dd_var = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdown', 
                                     val = 'Key Statistics', height = 75))
 dd_measure = html.Div(children = gen_dd(sol_geo.measure['Key Statistics'], 'measureDropdown',
-                                      val = list(sol_geo.measure['Key Statistics'].keys())[0],
-                                      multi = True))
+                                      val = list(sol_geo.measure['Key Statistics'].keys())[0]))
 
 # %% ../nbs/02_app.ipynb 20
 navbar = dbc.NavbarSimple(
@@ -175,8 +175,8 @@ app.layout = dbc.Container([
                     dbc.Col([mytitle,
                             map_graph,
                             selectedBarGraph,
-                            dbc.Row([cards])
-                            ], width = 10)#, style = {'margin-left':'15px', 'margin-top':'7px', 'margin-right':'15px'})
+                            #dbc.Row([cards])
+                            ], width = 10)
                      ], justify = 'center'),                    
                 ], fluid = True)
 
@@ -190,58 +190,36 @@ app.layout = dbc.Container([
     prevent_initial_call=True
 )
 def map_click(clickData:str, # The currently clicked location on the map
-                pre_locs:[str], # The previously selected locations
-                )->str: # Returns the new value for the dropdown
+                prev_locs:[str], # The previously selected locations
+                )->[str]: # Returns the new value for the dropdown
     # TODO workout how to make multi point selection work - hard todo - might need to find open source web example
     
     print("map clicked updating to:")
     if clickData is None:
         # TODO when none, maybe in future return current saved state, for now doing total
         # TODO add a heading and maybe put in an acordian
+        print("Click data was none")
         return None
     else:
         # The locations are list of dictionaries
-        locations = list(map(lambda x: x['location'], clickData['points']))
+        location = list(map(lambda x: x['location'], clickData['points']))[0]
+        print(location)
+        locations = []
+        if prev_locs: locations = prev_locs
         print(locations)
-        return locations[0]
+        # Check whether the new location is already in the prev locations
+        if location in locations:
+            # If it is, then remove it
+            locations.remove(location)
+        else:
+            # If it is not, then add it
+            locations.append(location)
+        print("Returning Location " + ', '.join(locations) )
+        return locations
         
 
 
-# %% ../nbs/02_app.ipynb 28
-@app.callback(
-    Output(cards, 'children'),
-    # TODO - make this a Row object with children, then use function to recontruct
-    # a group of them
-    Input('locDropdown', 'value'),
-    Input(control_type, 'value'),
-    prevent_initial_call=True,
-    allow_duplicate=True,
-)
-def update_kpis(locations:str, # The currently selected location. Including defualt of none
-                data_type:str, # The currently selected data type (Total or Proportion)
-                #dd_updated:[str], # The currently selected data type (Total or Proportion)
-                )->type(dbc.Card):
-    # TODO might be worth exploring if patching will help
-    '''
-    Based on updates to either te dropdown location (which is triggered by map clicks) or 
-    changes to the type of data dispalyed, update the cards
-    '''
-    print("triggered update cards")
-    #if the dropdown_locations options was just updated, then we overwrite
-    # TODO workout how to make multi point selection work - hard todo - might need to find open source web example
-    # filter dataframe by store location, then sum all orders of that store.
-    header_text = "Total"
-    if locations is not None:
-        header_text = locations
-        locations = [locations]
-    new_cards = card_list(sol_geo, 
-                            "Current Selection: "  + header_text,
-                            loc = locations, 
-                            type_filter = data_type)
-
-    return new_cards
-
-# %% ../nbs/02_app.ipynb 32
+# %% ../nbs/02_app.ipynb 31
 @app.callback(
     Output(dropdown_location, 'children'),
     Input(dropdown_geo, 'value'),
@@ -253,9 +231,9 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     '''
     Updates the dropdown_location dropdown based on the currently selected data aggregation.
     '''
-    return gen_dd(sol_geo.locations[geo_input], 'locDropdown', "Select a location", clear = True)
+    return gen_dd(sol_geo.locations[geo_input], 'locDropdown', "Select a location", clear = True, multi = True)
 
-# %% ../nbs/02_app.ipynb 35
+# %% ../nbs/02_app.ipynb 34
 @app.callback(
     Output(dd_measure, 'children'),
     Input('varDropdown', 'value'),
@@ -271,7 +249,7 @@ def update_measure(new_var:str, # Selected variable
     return gen_dd(sol_geo.measure[new_var], 'measureDropdown', 
                   val = list(sol_geo.measure[new_var].keys())[0])
 
-# %% ../nbs/02_app.ipynb 37
+# %% ../nbs/02_app.ipynb 36
 # TODO put title in it's own callback
 @app.callback(
     Output(map_graph, 'figure'),
@@ -329,7 +307,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
 
     return patched_figure, '## Solomon Islands Data map - ' + geo_input
 
-# %% ../nbs/02_app.ipynb 39
+# %% ../nbs/02_app.ipynb 38
 # Callback allows components to interact
 
 # TODO put title in it's own callback
@@ -345,7 +323,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
 def update_bargraph(geo_input:str, # User input from the geography dropdown
                      data_type:str, # User input of type of data
                      var_measure:str, # A string contiaining the census variable and measure split by ':'
-                     loc_selection:str, # The selected location, may be none
+                     loc_selection:[str], # The selected locations, may be none
               )->(type(go.Figure())): # Returns a graph object figure after being updated and the dynamic title
     '''
     Updates the focus census variable or geography dispalayed on the map
@@ -353,8 +331,14 @@ def update_bargraph(geo_input:str, # User input from the geography dropdown
     var, meas = var_measure.split(':')
         
     # Create newly selected barplot
+    print("input")
+    print(loc_selection)
     locs = None
-    if loc_selection is not None: locs = [loc_selection]
+    # Multi dropdown can return None or a list of None.
+    if loc_selection: 
+        locs = loc_selection
+    print("Going in to function")
+    print(locs)
     bg = gen_bar_plot(sol_geo, geo_input, var, meas, locs, data_type)
 
     # returned objects are assigned to the component property of the Output
@@ -362,7 +346,7 @@ def update_bargraph(geo_input:str, # User input from the geography dropdown
 
     return  bg
 
-# %% ../nbs/02_app.ipynb 49
+# %% ../nbs/02_app.ipynb 48
 # Run app
 if __name__=='__main__':
     try:
