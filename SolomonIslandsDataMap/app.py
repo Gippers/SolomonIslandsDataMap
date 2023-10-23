@@ -183,6 +183,7 @@ app.layout = dbc.Container([
 # %% ../nbs/02_app.ipynb 27
 @app.callback(
     Output('locDropdown', 'value'),
+    Output(map_graph, "clickData"),
     # TODO - make this a Row object with children, then use function to recontruct
     # a group of them
     Input(map_graph, 'clickData'),
