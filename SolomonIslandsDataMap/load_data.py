@@ -28,7 +28,6 @@ class SolomonGeo:
         geo_df    Geopandas dataframe containing geographies and census data
         geo_levels    A list of the types of available aggregations
         census_vars    A dictionary of census variables in the dataset 
-        measure    A dictionary of dictionaries of measures for each census variable in the dataset 
         data_type   Specifies whether the variable is a percentage or number
         locations A dictionary of locations accessed by the geography level
     '''
@@ -49,19 +48,6 @@ class SolomonGeo:
             else:
                 vars[col[0]].append(col[1])
         self.census_vars = vars
-
-        # Measures contains a dictionary of the measure for each census variable, where the
-        # key is the seondary name and the value is an array with the primary name and 
-        # the secondary appended into a single string. This is necessary to construct a dropdown.
-        measure = {}
-        for key in vars:
-            d2 = {}
-            for lab in vars[key]:
-                d2[key + ":" + lab] = lab
-            measure[key] = d2
-            
-        self.measure = measure
-
 
         # TODO should captialise first letter
         self.data_type = geo_df.loc[:, ('core', 'type')].unique()
