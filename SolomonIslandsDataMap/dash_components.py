@@ -104,7 +104,7 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
                       , xaxis={'categoryorder':'total descending'})
     return fig
 
-# %% ../nbs/01_dash_components.ipynb 15
+# %% ../nbs/01_dash_components.ipynb 16
 # todo - turn this eventually into a function
 
 # TODO - make it in future so that clicking on a card updates the current census variable
@@ -175,20 +175,23 @@ def card_list(sg:SolomonGeo, # Input data object
     # TODO return list of accordiants in a column?
     return dbc.Col(accordians)
 
-# %% ../nbs/01_dash_components.ipynb 19
+# %% ../nbs/01_dash_components.ipynb 20
 def gen_dd(location_list:[str], # a list of locations
            id:str, # Id of the dropdown
            place_holder:str = None, # a placeholder message to display
            val:str = None, # The starting value of the dropdown
-           clear:bool = False, # pick whether the 
+           clear:bool = False, # pick whether the ]
+           height:int = 35, # height of the dropdown text
                         )->dcc.Dropdown: # Returns a dropdown
     '''
     Create the location dropdown from given list
     '''
+    # TODO is this really necessary? I anm
     dd = dcc.Dropdown(options=location_list,
                         value=val,  # initial value displayed when page first loads
                         searchable=True,
                         clearable=clear,
                         placeholder=place_holder, 
-                        id = id)
+                        id = id, 
+                        optionHeight=height,)
     return dd
