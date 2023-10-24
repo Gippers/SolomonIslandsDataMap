@@ -51,6 +51,7 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
                                colorscale="deep",
                                 marker_line_width = 0.5,
                                 zauto=True,
+                                selectedpoints=None,
                 visible= True if value==cols_dd[0] else False))
         
     # Show figure
@@ -70,7 +71,7 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
     return fig
 
 
-# %% ../nbs/01_dash_components.ipynb 11
+# %% ../nbs/01_dash_components.ipynb 12
 def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
                     variable:str, # The variable to use to create the bar plot
@@ -104,7 +105,7 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
                       , xaxis={'categoryorder':'total descending'})
     return fig
 
-# %% ../nbs/01_dash_components.ipynb 16
+# %% ../nbs/01_dash_components.ipynb 17
 # todo - turn this eventually into a function
 
 # TODO - make it in future so that clicking on a card updates the current census variable
@@ -175,7 +176,7 @@ def card_list(sg:SolomonGeo, # Input data object
     # TODO return list of accordiants in a column?
     return dbc.Col(accordians)
 
-# %% ../nbs/01_dash_components.ipynb 20
+# %% ../nbs/01_dash_components.ipynb 21
 def gen_dd(location_list:[str], # a list of locations
            id:str, # Id of the dropdown
            place_holder:str = None, # a placeholder message to display
