@@ -30,7 +30,7 @@ import random
 import dash_mantine_components as dmc
 
 # %% ../nbs/02_app.ipynb 5
-sol_geo = SolomonGeo.load_pickle("/testData/")
+sol_geo = SolomonGeo.load_pickle("/testData/", github = True)
 geo_df = sol_geo.geo_df
 fig = define_map(sol_geo)
 

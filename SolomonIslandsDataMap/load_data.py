@@ -15,6 +15,7 @@ from fastcore.test import *
 import sys
 import topojson as tp
 import pickle
+from urllib.request import urlopen
 
 # %% ../nbs/00_load_data.ipynb 6
 class SolomonGeo:
@@ -159,20 +160,23 @@ class SolomonGeo:
     @classmethod
     def load_pickle(cls,
                     folder:str, #file path of the folder to save in
+                    github:bool = False, # Whether to load from github or local
                     file_name:str = 'sol_geo.pickle' # file name of the saved class
                  ):
         '''
         Initialise the object from a saved filepath
         '''
-        # TODO work out how to make this a class method
-        repo = Repo('.', search_parent_directories=True)
-        pw = str(repo.working_tree_dir) + folder + file_name
-        
-        with open(pw, 'rb') as f:
-            tmp_geo = pickle.load(f)
-
-        # TODO  guide said do below line, don't think relevant though
-        #cls.__dict__.update(tmp_dict) 
+        if github:
+            print('https://raw.githubusercontent.com/Gippers/SolomonIslandsDataMap/main' + folder + file_name)
+            tmp_geo = pickle.load(urlopen('https://raw.githubusercontent.com/Gippers/SolomonIslandsDataMap/main' + folder + file_name))
+        else:
+            # TODO work out how to make this a class method
+            repo = Repo('.', search_parent_directories=True)
+            pw = str(repo.working_tree_dir) + folder + file_name
+            
+            with open(pw, 'rb') as f:
+                tmp_geo = pickle.load(f)
+ 
         
         return cls(
             geo_df = gpd.GeoDataFrame(tmp_geo['geo_df'])
