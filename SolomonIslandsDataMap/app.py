@@ -29,12 +29,12 @@ from dash_bootstrap_templates import load_figure_template
 import random
 import dash_mantine_components as dmc
 
-# %% ../nbs/02_app.ipynb 5
+# %% ../nbs/02_app.ipynb 4
 sol_geo = SolomonGeo.load_pickle("/testData/", github = True)
 geo_df = sol_geo.geo_df
 fig = define_map(sol_geo)
 
-# %% ../nbs/02_app.ipynb 8
+# %% ../nbs/02_app.ipynb 7
 # Build your components
 # FYI the best themes seem to be: [Darkly, Flatly, Minty, Slate, JOURNAL]
 app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY])
@@ -46,7 +46,7 @@ cen_vars = sol_geo.census_vars
 NUM_GEOS = len(geos)
 
 
-# %% ../nbs/02_app.ipynb 10
+# %% ../nbs/02_app.ipynb 9
 mytitle = dcc.Markdown(children="## " + list(cen_vars.keys())[0] + " by " + geos[0]) # TODO This needs a default title
 map_graph = dcc.Graph(figure=define_map(sol_geo), selectedData=None,)
 # TODO entire accordian will need to be the child
@@ -61,34 +61,18 @@ selectedBarGraph = dcc.Graph(figure = gen_bar_plot(sol_geo, sol_geo.geo_levels[0
 # Selections tracks the currently selected map locations
 selection = dcc.Store(id = 'selection',data = {})
 
-# %% ../nbs/02_app.ipynb 13
-# TODO options gets changed in callback?
-# TODO need to store locations in data class
+# %% ../nbs/02_app.ipynb 12
 dropdown_location = html.Div(children = gen_dd(sol_geo.locations[sol_geo.geo_levels[0]], 
                                                 'locDropdown', clear = True, place_holder='Select Dropdown Location',
                                                 multi = True))
-               
 
-#dropdown_geo = dbc.Dropdown(options=geos,
-#                        value=geos[0],  # initial value displayed when page first loads
-#                        clearable=False)
 dropdown_geo = dmc.SegmentedControl(
                             id="segmented_geo",
                             value=geos[0],
                             data=geos,
                              orientation="vertical",
                             color = 'gray',
-                            fullWidth = True,
-                            # TODO - think there is a version issue with class_name on the server, need to fix
-                            #className="btn-group btn-primary",
-                            #class_name = "btn btn-primary"
-                            #color = dmc.theme.DEFAULT_COLORS["teal"][3]
-    # TODO this color functionality is beyond stupid...
-    # TODO definitely change to dbc, even though more complicated get consistent theme.s..
-                        ) # TODO consider redoing as theme is not consistent with this library
-# TODO based on the value selected above, make a dropdown with children set to starting list of
-# locations in that geo. on update of dropdown_geo, update children list then update value in main one.
-# then get rid of function
+                            fullWidth = True,) # TODO consider redoing as theme is not consistent with this library
 control_type = dmc.SegmentedControl(
                         id="segmented_type",
                         value=sol_geo.data_type[0],
@@ -102,7 +86,7 @@ dd_var = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdo
 dd_measure = html.Div(children = gen_dd(sol_geo.census_vars['Key Statistics'], 'measureDropdown',
                                       val = sol_geo.census_vars['Key Statistics'][0]))
 
-# %% ../nbs/02_app.ipynb 16
+# %% ../nbs/02_app.ipynb 15
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Census Data", href="#")),
@@ -124,7 +108,7 @@ navbar = dbc.NavbarSimple(
 )
 
 
-# %% ../nbs/02_app.ipynb 18
+# %% ../nbs/02_app.ipynb 17
 # Note, for now I am not using a sidebar style as I do not want to fix the width
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -167,7 +151,7 @@ sidebar = html.Div(
 )
 
 
-# %% ../nbs/02_app.ipynb 20
+# %% ../nbs/02_app.ipynb 19
 app.layout = dbc.Container([
                 dbc.Row([
                     navbar
@@ -182,7 +166,7 @@ app.layout = dbc.Container([
                      ], justify = 'center'),                    
                 ], fluid = True)
 
-# %% ../nbs/02_app.ipynb 23
+# %% ../nbs/02_app.ipynb 22
 @app.callback(
     Output('locDropdown', 'value'),
     Output(map_graph, "clickData"),
@@ -197,8 +181,7 @@ def map_click(clickData:dict, # The currently clicked location on the map
               selectedData:dict, # The currently selected locations on the map
                 prev_locs:[str], # The previously selected locations
                 )->[str]: # Returns the new value for the dropdown
-    # TODO workout how to make multi point selection work - hard todo - might need to find open source web example
-    # TODO need to handle lasso selection?
+    """This function updates the dropdown menu based on the map click data"""
     print("map clicked updating to:")
     if clickData is None and selectedData is None:
         # TODO when none, maybe in future return current saved state, for now doing total
@@ -230,7 +213,7 @@ def map_click(clickData:dict, # The currently clicked location on the map
         
 
 
-# %% ../nbs/02_app.ipynb 25
+# %% ../nbs/02_app.ipynb 24
 @app.callback(
     Output(map_graph, "figure", allow_duplicate=True),
     # TODO - make this a Row object with children, then use function to recontruct
@@ -243,10 +226,10 @@ def map_click(clickData:dict, # The currently clicked location on the map
 def map_selections(locations:[str], # The previously selected locations
                 geo_input:str, # The currently selected geography
                 )->[str]: # Returns the new value for the dropdown
-    # TODO need to handle lasso selection?
-
-    # Update the selected data on the map for the selected locations
-    # Selections is an array of integers indicating the index of the selected points
+    '''
+    Update the selected data on the map for the selected locations
+    Selections is an array of integers indicating the index of the selected points
+    '''
     patched_figure = Patch()
     ct = np.where(sol_geo.geo_levels == geo_input)[0][0] # Tracks the trace number
     pot_locs = map_graph.figure['data'][ct]['locations']
@@ -265,7 +248,7 @@ def map_selections(locations:[str], # The previously selected locations
         
 
 
-# %% ../nbs/02_app.ipynb 29
+# %% ../nbs/02_app.ipynb 28
 @app.callback(
     Output(dropdown_location, 'children'),
     Input(dropdown_geo, 'value'),
@@ -279,7 +262,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     '''
     return gen_dd(sol_geo.locations[geo_input], 'locDropdown', "Select a location", clear = True, multi = True)
 
-# %% ../nbs/02_app.ipynb 32
+# %% ../nbs/02_app.ipynb 31
 @app.callback(
     Output(dd_measure, 'children'),
     Input('varDropdown', 'value'),
@@ -295,7 +278,36 @@ def update_measure(new_var:str, # Selected variable
     return gen_dd(sol_geo.census_vars[new_var], 'measureDropdown', 
                   val = sol_geo.census_vars[new_var][0])
 
-# %% ../nbs/02_app.ipynb 34
+# %% ../nbs/02_app.ipynb 33
+@app.callback(
+    Output('measureDropdown', 'value'),
+    Output(selectedBarGraph, "clickData"),
+    Input(selectedBarGraph, 'clickData'),
+    State('varDropdown', 'value'),
+    prevent_initial_call=True,
+    allow_duplicate=True,
+)
+def map_click(clickData:dict, # The currently clicked location on bar graph
+                variable:str, # The currently selected variable
+                )->[str]: # Returns the new value for the dropdown
+    """This function updates the dropdown menu based on the bar graph click data"""
+
+    if clickData is None:
+        print("Click data was none")
+        return None
+    else:
+        # The measure are list of dictionaries
+        print(clickData)
+        selection = list(map(lambda x: x['x'], clickData['points']))[0]
+        print(selection)
+    
+        # returned objects are assigned to the component property of the Output
+        # After updating fileter, we always reset map selection 
+        return selection, None
+        
+
+
+# %% ../nbs/02_app.ipynb 35
 @app.callback(
     Output(map_graph, 'figure', allow_duplicate=True),
     Output(mytitle, 'children'),
@@ -353,7 +365,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
 
     return patched_figure, '## Solomon Islands Data map - ' + geo_input
 
-# %% ../nbs/02_app.ipynb 37
+# %% ../nbs/02_app.ipynb 38
 # Callback allows components to interact
 @app.callback(
     Output(selectedBarGraph, 'figure'),
@@ -391,7 +403,7 @@ def update_bargraph(geo_input:str, # User input from the geography dropdown
 
     return  bg
 
-# %% ../nbs/02_app.ipynb 47
+# %% ../nbs/02_app.ipynb 48
 # Run app
 if __name__=='__main__':
     try:
