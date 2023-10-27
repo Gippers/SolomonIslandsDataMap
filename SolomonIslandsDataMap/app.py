@@ -297,9 +297,7 @@ def map_click(clickData:dict, # The currently clicked location on bar graph
         return None
     else:
         # The measure are list of dictionaries
-        print(clickData)
         selection = list(map(lambda x: x['x'], clickData['points']))[0]
-        print(selection)
     
         # returned objects are assigned to the component property of the Output
         # After updating fileter, we always reset map selection 
