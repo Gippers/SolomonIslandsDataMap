@@ -35,9 +35,7 @@ geo_df = sol_geo.geo_df
 fig = define_map(sol_geo)
 
 # %% ../nbs/02_app.ipynb 7
-# Build your components
-# FYI the best themes seem to be: [Darkly, Flatly, Minty, Slate, JOURNAL]
-app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY])
+app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY], use_pages=True)
 server = app.server
 load_figure_template("minty")
 
@@ -93,6 +91,7 @@ navbar = dbc.NavbarSimple(
         dbc.DropdownMenu(
             children=[
                 dbc.DropdownMenuItem("More pages coming soon", header=True),
+                
                 dbc.DropdownMenuItem("Population Projection", href="#"),
             ],
             nav=True,
