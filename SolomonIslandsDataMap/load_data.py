@@ -16,6 +16,7 @@ import sys
 import topojson as tp
 import pickle
 from urllib.request import urlopen
+import boto3
 
 # %% ../nbs/00_load_data.ipynb 6
 class SolomonGeo:
@@ -67,69 +68,55 @@ class SolomonGeo:
     def read_test(cls,
                  ): # A solmon geo class TODO work out how to return self here... (can't?)
         '''
-        Initialise the object using the local testing data
+        Initialise the object from files using the local testing data
         '''
-        # TODO might need to further abstract this concatenation process
-        df, geo = cls.extract_from_file('2009')
 
-        gdf = cls.transform('2009', df, geo)
+        repo = Repo('.', search_parent_directories=True)
+        pw = str(repo.working_tree_dir) + "/testData/"
+        df = pd.read_csv(pw + 'sol_census_all_2009.csv')
+        aggs = df.loc[:, 'agg'].unique()
+        geos = []
+        for agg in aggs:
+            geo = gpd.read_file(pw + 'sol_geo_' + agg.lower() + '.json')
+            # Add an agg column, as the data and geometry need to be joined by id and agg
+            geo.loc[:, 'agg'] = agg
+            geos.append(geo)
 
+        gdf = cls.transform(df, geos)
         return cls(
             geo_df = gdf
         )
-
+    
     @classmethod
-    def extract_from_file(cls, 
-                            year:str, # The year of that data, only relevant for census data
-                 ) -> (pd.DataFrame, 
-                      gpd.GeoDataFrame): # Returns input pandas and geopandas datasets
+    def transform(cls, 
+                    df:pd.DataFrame, # The dataframe containing census data
+                    l_geos:[gpd.GeoDataFrame], # A list of geopandas dataframes containing 
+                                                # the geographies 
+                 ) -> gpd.GeoDataFrame: # Returns combined dataset
         '''
-        Extract and return input datasets from file. Assumes correct format of input dataset
-        # TODO specify characteristics of dataset
-        # TODO - refact load, too many of the cleaning functions are being done during the loading
+        Extract and return input datasets from file. Assumes correct format of input dataset, then
+        Transform given raw input dataset into a cleaned and combined geopandas dataframe
         '''
-        repo = Repo('.', search_parent_directories=True)
-        pw = str(repo.working_tree_dir) + "/testData/"
-        df = pd.read_csv(pw + 'sol_census_all_' + year + '.csv')
-        aggs = df.loc[:, 'agg'].unique()
+        # TODO - if I add more years, loop per year
+
         geos = gpd.GeoDataFrame()
-        for agg in aggs:
-            geo = gpd.read_file(pw + 'sol_geo_' + agg.lower() + '.json')
+        for geo in l_geos:
             # Before combining, need to rename like columns
             # Rename columns and keep only necessary ones, Note that id can be province id, contsituency id etc.
             geo.columns = geo.columns.str.replace(r'^[a-zA-Z]+name$', 'geo_name', case = False, regex = True)
             # TODO this assumes the id key column is the first one (which so far it is...)
             geo.rename(columns = {geo.columns[0]:'id'}, inplace=True)
 
-            # keep only the id and geometry columns
-            geo = geo.loc[:, ['id', 'geometry']] 
-
-            # Add an agg column, as the data and geometry need to be joined by id and agg
-            geo.loc[:, 'agg'] = agg
+            geo = geo.loc[:, ['id', 'agg', 'geometry']] 
 
             # simplify the geography, use topo to preserver the topology between shapes
             topo = tp.Topology(geo, prequantize=False)
             geo = topo.toposimplify(360/43200).to_gdf()
 
             geos = pd.concat([geos, geo])
-
-        return (
-            df, 
-            geos
-        )
-
-    @classmethod
-    def transform(cls, 
-            year:str, # The year of that data, only relevant for census data
-            df:pd.DataFrame, # Uncleaned input census dataset
-            geo:gpd.GeoDataFrame, # Uncleaned input geospatial dataset
-           )-> gpd.GeoDataFrame: # The geopandas dataset for given aggregation
-        '''
-        Tranform given raw input dataset into a cleaned and combined geopandas dataframe
-        '''
+            
         # Clean the geospatial dataframe
-        # Add a column that indicates the year
-        geo.loc[:, 'year'] = year
+        geos.loc[:, 'year'] = '2009'
         
         # Clean the census data
         df = df.dropna()
@@ -140,7 +127,7 @@ class SolomonGeo:
         df = df.astype({'id': 'str'})
         
         # Merge the data together
-        geo_df = geo.merge(df, on=['id', 'agg']).set_index("geo_name") # , 'geo_name'
+        geo_df = geos.merge(df, on=['id', 'agg']).set_index("geo_name") # , 'geo_name'
 
         # Convert into a multiindex dataframe, with hiearchical columns
         try:
@@ -156,6 +143,7 @@ class SolomonGeo:
                              core columns: geometry, id, agg, year, type.")
         # Turn the transformed dataset
         return geo_df
+
 
     @classmethod
     def load_pickle(cls,

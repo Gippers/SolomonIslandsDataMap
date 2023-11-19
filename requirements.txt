@@ -3,11 +3,10 @@ nbdev>=1.1.14
 pandas 
 plotly>=5.17.0 
 nbformat>=4.2.0 
-geopandas 
-repo 
+geopandas
 GitPython 
 numpy 
-dash_bootstrap_components 
+dash-bootstrap-components 
 dash==2.14.0
 gunicorn
 topojson
