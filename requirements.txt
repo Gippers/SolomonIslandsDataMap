@@ -12,3 +12,5 @@ gunicorn
 topojson
 dash-bootstrap-templates
 dash-mantine-components
+python-dotenv
+boto3
