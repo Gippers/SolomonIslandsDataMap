@@ -37,6 +37,7 @@ runs:
     - name: "Setup .env file"
       env:
         ENV: ${{ secrets.ENV }}
+      shell: bash
       run: |
         echo "${{ ENV }}" > .env
     - name: Test with nbdev
