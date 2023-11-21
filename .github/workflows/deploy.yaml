@@ -15,4 +15,4 @@ jobs:
     - name: 'My first step - check out repository'
       uses: actions/checkout@v4
     - name: 'use local repo'
-      uses: ./actions/nbdev-ci # https://docs.github.com/en/actions/learn-github-actions/finding-and-customizing-actions
+      uses: SolomonIslandsDataMap/actions/nbdev-ci # https://docs.github.com/en/actions/learn-github-actions/finding-and-customizing-actions
