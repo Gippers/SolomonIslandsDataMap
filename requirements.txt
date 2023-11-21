@@ -13,4 +13,4 @@ topojson
 dash-bootstrap-templates
 dash-mantine-components
 python-dotenv
-boto3
+boto3>=1.29.3
