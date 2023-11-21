@@ -11,13 +11,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-    - name: 'Create env file'
-        run: |
-          touch .env
-          echo ACCESS_KEY=${{ secrets.ACCESS_KEY }} >> .env
-          echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
-          echo REGION_NAME=${{ secrets.REGION_NAME }} >> .env
-          cat .env
-    - name: 'Run deploy'
-      uses: fastai/workflows/quarto-ghp@master
+    env:
+      ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+      SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+      REGION_NAME: ${{ secrets.REGION_NAME }}
+    steps: [fastai/workflows/quarto-ghp@master]
