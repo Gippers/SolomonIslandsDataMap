@@ -11,4 +11,4 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps: [uses: ./actions/nbdev-ci@master] # https://docs.github.com/en/actions/learn-github-actions/finding-and-customizing-actions
+    steps: [uses: ./actions/nbdev-ci] # https://docs.github.com/en/actions/learn-github-actions/finding-and-customizing-actions
