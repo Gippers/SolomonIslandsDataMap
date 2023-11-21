@@ -12,10 +12,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps: 
+    - name: "Setup .env file"
+      run: |
+        echo "${{ secrets.ENV }}" > .env
     - name: "Deploy to GitHub Pages"
       uses: fastai/workflows/quarto-ghp@master
       env:
         ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
         SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
         REGION_NAME: ${{ secrets.REGION_NAME }}
-        
+
