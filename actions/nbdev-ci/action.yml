@@ -35,8 +35,10 @@ runs:
         cache: "pip"
         cache-dependency-path: settings.ini
     - name: "Setup .env file"
+      secrets:
+        ENV: ${{ secrets.ENV }}
       run: |
-        echo "${{ secrets.ENV }}" > .env
+        echo "${{ ENV }}" > .env
     - name: Test with nbdev
       env:
         USE_PRE: ${{ inputs.pre }}
