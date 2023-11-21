@@ -4,8 +4,8 @@ on:  [workflow_dispatch, pull_request, push]
 jobs:
   test:
     runs-on: ubuntu-latest
-      name: 'nbdev-ci'
-      description: 'Test with nbdev'
+      #name: 'nbdev-ci'
+      #description: 'Test with nbdev'
       inputs:
         pre:
           description: 'Install prerelease nbdev/execnb from master?'
