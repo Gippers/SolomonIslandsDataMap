@@ -12,9 +12,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps: 
-      name: 'nbdev-ci'
-      description: 'Test with nbdev'
-      inputs:
+    # The below is from https://github.com/fastai/workflows/blob/master/nbdev-ci/action.yml
+    # May need to be updated in future
+    - name: 'nbdev-ci'
+    - description: 'Test with nbdev'
+    - inputs:
         pre:
           description: 'Install prerelease nbdev/execnb from master?'
           required: false
@@ -36,7 +38,7 @@ jobs:
           required: false
           default: true
 
-      runs:
+    - runs:
         using: "composite"
         steps:
           - uses: actions/checkout@v3
