@@ -12,4 +12,5 @@ jobs:
         echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
         echo REGION_NAME=${{ secrets.REGION_NAME }} >> .env
         cat .env
-    - [uses: fastai/workflows/nbdev-ci@master]
+    - name: 'Run tests'
+      uses: fastai/workflows/nbdev-ci@master
