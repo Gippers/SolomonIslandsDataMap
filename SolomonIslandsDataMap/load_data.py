@@ -22,7 +22,7 @@ import os
 
 load_dotenv()
 
-# %% ../nbs/00_load_data.ipynb 9
+# %% ../nbs/00_load_data.ipynb 8
 class SolomonGeo:
     # TODO work out how to format the attributes
     # Look at nbdev docs maybe?
@@ -163,6 +163,7 @@ class SolomonGeo:
             # Creating the low level functional client
             client = session.client(
                 's3',
+                endpoint_url='https://s3.ap-southeast-2.amazonaws.com',
                 aws_access_key_id = os.getenv("ACCESS_KEY"),
                 aws_secret_access_key = os.getenv("SECRET_ACCESS_KEY"),
                 region_name = os.getenv("REGION_NAME"),
@@ -171,7 +172,7 @@ class SolomonGeo:
             # Create the S3 object
             obj = client.get_object(
                 Bucket = 'hobby-data',
-                Key = file_name
+                Key = file_name, 
             )
 
             # Fetch the list of existing buckets
@@ -195,7 +196,7 @@ class SolomonGeo:
         )
         
 
-# %% ../nbs/00_load_data.ipynb 14
+# %% ../nbs/00_load_data.ipynb 13
 @patch
 def save_pickle(self:SolomonGeo,
               folder:str, #file path of the folder to save in
@@ -212,7 +213,7 @@ def save_pickle(self:SolomonGeo,
     f.close()
 
 
-# %% ../nbs/00_load_data.ipynb 18
+# %% ../nbs/00_load_data.ipynb 17
 @patch
 def get_geojson(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the geojson to the requested aggregation 
@@ -228,7 +229,7 @@ def get_geojson(self:SolomonGeo,
     # Return only the core data to minimise the html size
     return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
 
-# %% ../nbs/00_load_data.ipynb 20
+# %% ../nbs/00_load_data.ipynb 19
 @patch
 def get_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
@@ -273,7 +274,7 @@ def get_df(self:SolomonGeo,
         
     return pd.DataFrame(ret)
 
-# %% ../nbs/00_load_data.ipynb 23
+# %% ../nbs/00_load_data.ipynb 22
 @patch
 def agg_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
