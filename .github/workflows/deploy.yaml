@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
     - uses: fastai/workflows/quarto-ghp@master
-    env:
-      ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
-      SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-      REGION_NAME: ${{ secrets.REGION_NAME }}
-      
+    - name: "Deploy to GitHub Pages"
+      env:
+        ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+        SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+        REGION_NAME: ${{ secrets.REGION_NAME }}
