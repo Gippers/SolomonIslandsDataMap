@@ -2,6 +2,16 @@ name: CI
 on:  [workflow_dispatch, pull_request, push]
 
 jobs:
+  create-envfile:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: 'Create env file'
+        run: |
+          touch .env
+          echo ACCESS_KEY=${{ secrets.ACCESS_KEY }} >> .env
+          echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
+          echo REGION_NAME=${{ secrets.REGION_NAME }} >> .env
+          cat .env
   test:
     runs-on: ubuntu-latest
     steps: [uses: fastai/workflows/nbdev-ci@master]

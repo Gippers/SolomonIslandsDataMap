@@ -17,8 +17,13 @@ import topojson as tp
 import pickle
 from urllib.request import urlopen
 import boto3
+from botocore.config import Config
+from dotenv import load_dotenv
+import os
 
-# %% ../nbs/00_load_data.ipynb 6
+load_dotenv()
+
+# %% ../nbs/00_load_data.ipynb 8
 class SolomonGeo:
     # TODO work out how to format the attributes
     # Look at nbdev docs maybe?
@@ -147,16 +152,35 @@ class SolomonGeo:
 
     @classmethod
     def load_pickle(cls,
-                    folder:str, #file path of the folder to save in
-                    github:bool = False, # Whether to load from github or local
+                    folder:str = "/testData/", #file path of the folder to save in
+                    aws:bool = False, # Whether to load from github or local
                     file_name:str = 'sol_geo.pickle' # file name of the saved class
                  ):
         '''
-        Initialise the object from a saved filepath
+        Initialise the object from aws
         '''
-        if github:
-            print('https://raw.githubusercontent.com/Gippers/SolomonIslandsDataMap/main' + folder + file_name)
-            tmp_geo = pickle.load(urlopen('https://raw.githubusercontent.com/Gippers/SolomonIslandsDataMap/main' + folder + file_name))
+        if aws:
+            # Creating the low level functional client
+            client = boto3.client(
+                's3',
+                aws_access_key_id = os.getenv("ACCESS_KEY"),
+                aws_secret_access_key = os.getenv("SECRET_ACCESS_KEY"),
+                region_name = os.getenv("REGION_NAME")
+            )
+
+            # Create the S3 object
+            obj = client.get_object(
+                Bucket = 'hobby-data',
+                Key = file_name
+            )
+
+            # Fetch the list of existing buckets
+            
+            try:
+                tmp_geo = pickle.load(obj['Body'])
+            except:
+                raise ValueError("Issue dowloading pickle file from AWS.")
+                
         else:
             # TODO work out how to make this a class method
             repo = Repo('.', search_parent_directories=True)
@@ -171,14 +195,14 @@ class SolomonGeo:
         )
         
 
-# %% ../nbs/00_load_data.ipynb 11
+# %% ../nbs/00_load_data.ipynb 13
 @patch
 def save_pickle(self:SolomonGeo,
               folder:str, #file path of the folder to save in
                 file_name:str = 'sol_geo.pickle' # file name of the saved class
              ):
     '''
-    Save a pickle of the SolomonGeo class
+    Save a pickle of the SolomonGeo class in backblaze b2
     '''
     repo = Repo('.', search_parent_directories=True)
     pw = str(repo.working_tree_dir) + folder + file_name
@@ -188,7 +212,7 @@ def save_pickle(self:SolomonGeo,
     f.close()
 
 
-# %% ../nbs/00_load_data.ipynb 15
+# %% ../nbs/00_load_data.ipynb 17
 @patch
 def get_geojson(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the geojson to the requested aggregation 
@@ -204,7 +228,7 @@ def get_geojson(self:SolomonGeo,
     # Return only the core data to minimise the html size
     return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
 
-# %% ../nbs/00_load_data.ipynb 17
+# %% ../nbs/00_load_data.ipynb 19
 @patch
 def get_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
@@ -249,7 +273,7 @@ def get_df(self:SolomonGeo,
         
     return pd.DataFrame(ret)
 
-# %% ../nbs/00_load_data.ipynb 20
+# %% ../nbs/00_load_data.ipynb 22
 @patch
 def agg_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 

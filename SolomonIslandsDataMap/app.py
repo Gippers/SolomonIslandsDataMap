@@ -18,19 +18,15 @@ except:
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio # Unless this is used graphs will not be dynamic?
-import json
-from git import Repo
-import pandas as pd
 import numpy as np
 from fastcore.test import *
 from dash import Dash, dcc, Output, Input, State, html, Patch, ctx  # pip install dash
 import dash_bootstrap_components as dbc    # pip install dash-bootstrap-components
 from dash_bootstrap_templates import load_figure_template
-import random
 import dash_mantine_components as dmc
 
 # %% ../nbs/02_app.ipynb 4
-sol_geo = SolomonGeo.load_pickle("/testData/", github = True)
+sol_geo = SolomonGeo.load_pickle("/testData/", aws = True)
 geo_df = sol_geo.geo_df
 fig = define_map(sol_geo)
 
