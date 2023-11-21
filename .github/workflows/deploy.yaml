@@ -15,8 +15,8 @@ jobs:
     # The below is from https://github.com/fastai/workflows/blob/master/nbdev-ci/action.yml
     # May need to be updated in future
     - name: 'nbdev-ci'
-    - description: 'Test with nbdev'
-    - inputs:
+      description: 'Test with nbdev'
+      inputs:
         pre:
           description: 'Install prerelease nbdev/execnb from master?'
           required: false
@@ -37,8 +37,7 @@ jobs:
           description: "Install PyTorch CPU instead of PyTorch Cuda.  Has no effect if PyTorch isn't a requirement.  Enabled by defaut."
           required: false
           default: true
-
-    - runs:
+      runs:
         using: "composite"
         steps:
           - uses: actions/checkout@v3
