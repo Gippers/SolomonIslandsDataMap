@@ -35,7 +35,7 @@ runs:
         cache: "pip"
         cache-dependency-path: settings.ini
     - name: "Setup .env file"
-      secrets:
+      env:
         ENV: ${{ secrets.ENV }}
       run: |
         echo "${{ ENV }}" > .env
