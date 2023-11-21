@@ -15,4 +15,4 @@ jobs:
       ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
       SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
       REGION_NAME: ${{ secrets.REGION_NAME }}
-    steps: [fastai/workflows/quarto-ghp@master]
+    steps: [uses: fastai/workflows/quarto-ghp@master]
