@@ -19,4 +19,4 @@ jobs:
           echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
           echo REGION_NAME=${{ secrets.REGION_NAME }} >> .env
           cat .env
-    - [uses: fastai/workflows/quarto-ghp@master]
+    [uses: fastai/workflows/quarto-ghp@master]
