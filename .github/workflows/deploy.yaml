@@ -11,4 +11,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps: [uses: ./actions/nbdev-ci] # https://docs.github.com/en/actions/learn-github-actions/finding-and-customizing-actions
+    steps: 
+    - name: 'My first step - check out repository'
+      uses: actions/checkout@v4
+    - name: 'use local repo'
+      uses: ./actions/nbdev-ci # https://docs.github.com/en/actions/learn-github-actions/finding-and-customizing-actions
