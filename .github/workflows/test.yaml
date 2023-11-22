@@ -83,13 +83,16 @@ jobs:
           ENV: ${{ secrets.ENV }}
         shell: bash
         run: |
-          echo "${{ secrets.ENV }}" > .env
+          echo "$ENV" > .env
       - name: Test with nbdev
         env:
           USE_PRE: ${{ inputs.pre }}
           SKIP_TEST: ${{ inputs.skip_test }}
           FLAGS: ${{ inputs.flags }}
           TORCH_CPU: "${{ inputs.torch_cpu }}"
+          ACCESS_KEY:  ${{ secrets.ACCESS_KEY }}
+          SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}   
+          REGION_NAME: ${{ secrets.REGION_NAME }}
         shell: bash
         run: |
           cat .env
