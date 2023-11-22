@@ -22,7 +22,7 @@ import os
 
 load_dotenv()
 
-# %% ../nbs/00_load_data.ipynb 8
+# %% ../nbs/00_load_data.ipynb 9
 class SolomonGeo:
     # TODO work out how to format the attributes
     # Look at nbdev docs maybe?
@@ -158,15 +158,24 @@ class SolomonGeo:
         '''
         Initialise the object from aws
         '''
+        # TODO work out a better way to do this in future
+        ACCESS_KEY = os.getenv("ACCESS_KEY")
+        SECRET_ACCCESS_KEY = os.getenv("SECRET_ACCESS_KEY")
+        REGION_NAME = os.getenv("REGION_NAME")
+        if len(ACCESS_KEY) == 0:
+            # If not in .env, then use environment variables
+            ACCESS_KEY = os.environ["ACCESS_KEY"]
+            SECRET_ACCCESS_KEY = os.environ["SECRET_ACCESS_KEY"]
+            REGION_NAME = os.environ["REGION_NAME"]
         if aws:
             session = boto3.Session(region_name='ap-southeast-2')
             # Creating the low level functional client
             client = session.client(
                 's3',
                 endpoint_url='https://s3.ap-southeast-2.amazonaws.com',
-                aws_access_key_id = os.getenv("ACCESS_KEY"),
-                aws_secret_access_key = os.getenv("SECRET_ACCESS_KEY"),
-                region_name = os.getenv("REGION_NAME"),
+                aws_access_key_id = ACCESS_KEY,
+                aws_secret_access_key = SECRET_ACCCESS_KEY,
+                region_name = REGION_NAME,
             )
 
             # Create the S3 object
@@ -196,7 +205,7 @@ class SolomonGeo:
         )
         
 
-# %% ../nbs/00_load_data.ipynb 13
+# %% ../nbs/00_load_data.ipynb 14
 @patch
 def save_pickle(self:SolomonGeo,
               folder:str, #file path of the folder to save in
@@ -213,7 +222,7 @@ def save_pickle(self:SolomonGeo,
     f.close()
 
 
-# %% ../nbs/00_load_data.ipynb 17
+# %% ../nbs/00_load_data.ipynb 18
 @patch
 def get_geojson(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the geojson to the requested aggregation 
@@ -229,7 +238,7 @@ def get_geojson(self:SolomonGeo,
     # Return only the core data to minimise the html size
     return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
 
-# %% ../nbs/00_load_data.ipynb 19
+# %% ../nbs/00_load_data.ipynb 20
 @patch
 def get_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
@@ -274,7 +283,7 @@ def get_df(self:SolomonGeo,
         
     return pd.DataFrame(ret)
 
-# %% ../nbs/00_load_data.ipynb 22
+# %% ../nbs/00_load_data.ipynb 23
 @patch
 def agg_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 

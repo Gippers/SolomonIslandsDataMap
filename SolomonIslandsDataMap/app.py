@@ -24,6 +24,7 @@ from dash import Dash, dcc, Output, Input, State, html, Patch, ctx  # pip instal
 import dash_bootstrap_components as dbc    # pip install dash-bootstrap-components
 from dash_bootstrap_templates import load_figure_template
 import dash_mantine_components as dmc
+import os
 
 # %% ../nbs/02_app.ipynb 4
 sol_geo = SolomonGeo.load_pickle("/testData/", aws = True)
@@ -38,7 +39,6 @@ load_figure_template("minty")
 geos = sol_geo.geo_levels
 cen_vars = sol_geo.census_vars
 NUM_GEOS = len(geos)
-
 
 # %% ../nbs/02_app.ipynb 9
 mytitle = dcc.Markdown(children="## " + list(cen_vars.keys())[0] + " by " + geos[0]) # TODO This needs a default title
