@@ -80,14 +80,19 @@ jobs:
           cache-dependency-path: settings.ini
       - name: "Setup .env file"
         env:
-          ENV: ${{ secrets.ENV }}
+          ACCESS_KEY:  ${{ secrets.ACCESS_KEY }}
+          SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}   
+          REGION_NAME: ${{ secrets.REGION_NAME }}
         shell: bash
         run: |
-          echo "$ENV" > .env
-          ls
+          touch .env
+          echo ACCESS_KEY="$ACCESS_KEY" >> .env
+          echo SECRET_ACCESS_KEY="$SECRET_ACCESS_KEY" >> .env
+          echo REGION_NAME="$REGION_NAME" >> .env
+          ls -la
           cat .env
           pwd
-          echo "$ENV"
+          echo "$ACCESS_KEY"
       - name: Test with nbdev
         env:
           USE_PRE: ${{ inputs.pre }}
