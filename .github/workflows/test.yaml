@@ -1,6 +1,6 @@
 name: CI
 on:  
-  [workflow_dispatch, pull_request, push]:
+  workflow_dispatch:
     inputs:
       pre:
         description: 'Install prerelease nbdev/execnb from master?'
@@ -22,6 +22,51 @@ on:
         description: "Install PyTorch CPU instead of PyTorch Cuda.  Has no effect if PyTorch isn't a requirement.  Enabled by defaut."
         required: false
         default: true
+  pull_request:
+    inputs:
+      pre:
+        description: 'Install prerelease nbdev/execnb from master?'
+        required: false
+        default: ''
+      version:
+        description: 'Version of python to set up'
+        required: false
+        default: '3.9'
+      skip_test:
+        description: 'Skip tests?'
+        required: false
+        default: ''
+      flags:
+        description: 'Space separated list of nbdev test flags to run that are normally ignored'
+        required: false
+        default: ''
+      torch_cpu:
+        description: "Install PyTorch CPU instead of PyTorch Cuda.  Has no effect if PyTorch isn't a requirement.  Enabled by defaut."
+        required: false
+        default: true
+  push:
+    inputs:
+      pre:
+        description: 'Install prerelease nbdev/execnb from master?'
+        required: false
+        default: ''
+      version:
+        description: 'Version of python to set up'
+        required: false
+        default: '3.9'
+      skip_test:
+        description: 'Skip tests?'
+        required: false
+        default: ''
+      flags:
+        description: 'Space separated list of nbdev test flags to run that are normally ignored'
+        required: false
+        default: ''
+      torch_cpu:
+        description: "Install PyTorch CPU instead of PyTorch Cuda.  Has no effect if PyTorch isn't a requirement.  Enabled by defaut."
+        required: false
+        default: true
+
 
 jobs:
   test:
