@@ -84,7 +84,7 @@ jobs:
           SKIP_TEST: ${{ inputs.skip_test }}
           FLAGS: ${{ inputs.flags }}
           TORCH_CPU: "${{ inputs.torch_cpu }}"
-          ACCESS_KEY:  ${{ secrets.ACCESS_KEY }}
+          ACCESS_KEY:  ${{ secrets.ACCESS_KEY }} # I added env to this step
           SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}   
           REGION_NAME: ${{ secrets.REGION_NAME }}
         shell: bash
