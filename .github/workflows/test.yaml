@@ -78,17 +78,6 @@ jobs:
           python-version: ${{ inputs.version }}
           cache: "pip"
           cache-dependency-path: settings.ini
-      - name: "Setup .env file"
-        shell: bash
-        run: |
-          touch .env
-          echo ACCESS_KEY=${{ secrets.ACCESS_KEY }} >> .env
-          echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
-          echo REGION_NAME=${{ secrets.REGION_NAME }} >> .env
-          ls -la
-          cat .env
-          pwd
-          echo "$ACCESS_KEY"
       - name: Test with nbdev
         env:
           USE_PRE: ${{ inputs.pre }}
@@ -100,8 +89,6 @@ jobs:
           REGION_NAME: ${{ secrets.REGION_NAME }}
         shell: bash
         run: |
-          cat .env
-          pwd
           set -ux
           python -m pip install --upgrade pip
           if [ $USE_PRE ]; then

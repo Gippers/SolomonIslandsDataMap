@@ -6,7 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
     - uses: fastai/workflows/nbdev-ci@master
-      with: 
+      env: 
         ACCESS_KEY:  ${{ secrets.ACCESS_KEY }}
         SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}   
         REGION_NAME: ${{ secrets.REGION_NAME }}
+      secrets: inherit
+      
