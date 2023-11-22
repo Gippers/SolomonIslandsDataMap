@@ -83,7 +83,7 @@ jobs:
           ENV: ${{ secrets.ENV }}
         shell: bash
         run: |
-          echo "${{ ENV }}" > .env
+          echo "${{ secrets.ENV }}" > .env
       - name: Test with nbdev
         env:
           USE_PRE: ${{ inputs.pre }}
@@ -92,6 +92,7 @@ jobs:
           TORCH_CPU: "${{ inputs.torch_cpu }}"
         shell: bash
         run: |
+          cat .env
           set -ux
           python -m pip install --upgrade pip
           if [ $USE_PRE ]; then
