@@ -79,16 +79,12 @@ jobs:
           cache: "pip"
           cache-dependency-path: settings.ini
       - name: "Setup .env file"
-        env:
-          ACCESS_KEY:  ${{ secrets.ACCESS_KEY }}
-          SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}   
-          REGION_NAME: ${{ secrets.REGION_NAME }}
         shell: bash
         run: |
           touch .env
-          echo ACCESS_KEY="$ACCESS_KEY" >> .env
-          echo SECRET_ACCESS_KEY="$SECRET_ACCESS_KEY" >> .env
-          echo REGION_NAME="$REGION_NAME" >> .env
+          echo ACCESS_KEY=${{ secrets.ACCESS_KEY }} >> .env
+          echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
+          echo REGION_NAME=${{ secrets.REGION_NAME }} >> .env
           ls -la
           cat .env
           pwd
