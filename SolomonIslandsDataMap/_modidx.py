@@ -40,5 +40,7 @@ d = { 'settings': { 'branch': 'main',
                                                  'SolomonIslandsDataMap.load_data.SolomonGeo.save_pickle': ( 'load_data.html#solomongeo.save_pickle',
                                                                                                              'SolomonIslandsDataMap/load_data.py'),
                                                  'SolomonIslandsDataMap.load_data.SolomonGeo.transform': ( 'load_data.html#solomongeo.transform',
-                                                                                                           'SolomonIslandsDataMap/load_data.py')},
+                                                                                                           'SolomonIslandsDataMap/load_data.py'),
+                                                 'SolomonIslandsDataMap.load_data.s3_client': ( 'load_data.html#s3_client',
+                                                                                                'SolomonIslandsDataMap/load_data.py')},
             'SolomonIslandsDataMap.pages.table': {}}}
