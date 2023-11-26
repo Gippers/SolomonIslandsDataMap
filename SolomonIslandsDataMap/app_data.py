@@ -9,10 +9,12 @@ try:
     from SolomonIslandsDataMap.app_data import sidebar
     from SolomonIslandsDataMap.pages.map_page import *
     from SolomonIslandsDataMap.pages.table_page import *
+    from SolomonIslandsDataMap.pages.app_data import sidebar
 except: 
     from app_data import sidebar
     from pages.map_page import *
     from pages.table_page import *
+    from pages.app_data import sidebar
 
 import plotly.express as px
 import plotly.graph_objects as go

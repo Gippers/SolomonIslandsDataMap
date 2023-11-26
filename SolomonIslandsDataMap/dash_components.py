@@ -45,7 +45,7 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
         z_vals = z_vals.reshape((z_vals.shape[0],))
         traces.append(go.Choroplethmapbox(
                                 geojson=sol_df.get_geojson(geo_filter = value),
-                               locations=sol_df.get_df(geo_filter = value).index,
+                               locations=sol_df.locations[value],
                                # TODO undo hardcoding
                                z = z_vals,
                                colorscale="deep",
@@ -90,6 +90,7 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
     else:
         df = sol_geo.get_df(geo_filter, variable, loc_filter = locations, type_filter = type_filter)
         figtext += ', '.join(locations)
+        df.index = locations
     fig = go.Figure()
     measures = list(df.columns)
     for loc in locations:
