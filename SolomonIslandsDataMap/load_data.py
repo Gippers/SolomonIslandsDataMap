@@ -93,7 +93,7 @@ class SolomonGeo:
     def read_test(cls,
                  ): # A solmon geo class TODO work out how to return self here... (can't?)
         '''
-        Initialise the object from files using the local testing data
+        Contsructor that initialises the object from files using the local testing data
         '''
 
         repo = Repo('.', search_parent_directories=True)
@@ -107,27 +107,67 @@ class SolomonGeo:
             geo.loc[:, 'agg'] = agg
             geos.append(geo)
 
-        gdf = cls.transform(df, geos)
+        gdf = cls.__transform(df, geos)
         return cls(
             geo_df = gdf
         )
+    
+    @classmethod
+    def load_pickle(cls,
+                    folder:str = "/testData/", #file path of the folder to save in
+                    aws:bool = True, # Whether to load from github or local
+                    file_name:str = 'sol_geo.pickle' # file name of the saved class
+                 ):
+        '''
+        A constuctor that initialises the object from aws pickle
+        '''
+        # Create a connection to AWS server
+        client = s3_client()
+
+        if aws:
+            # Create the S3 object
+            obj = client.get_object(
+                Bucket = 'hobby-data',
+                Key = file_name, 
+            )
+
+            # Read in the pickle
+            try:
+                tmp_geo = pickle.load(obj['Body'])
+            except:
+                raise ValueError("Issue dowloading pickle file from AWS.")
+                
+        else:
+            # TODO work out how to make this a class method
+            repo = Repo('.', search_parent_directories=True)
+            pw = str(repo.working_tree_dir) + folder + file_name
+            
+            with open(pw, 'rb') as f:
+                tmp_geo = pickle.load(f)
+ 
+        
+        return cls(
+            geo_df = gpd.GeoDataFrame(tmp_geo['geo_df'])
+        )
+        
     
     @classmethod
     def gen_stored(cls,
                   json_sol:dict, # The JSON serialised geopandas dataframe
                  ): # A solmon geo class TODO work out how to return self here... (can't?)
         '''
-        A constructore that creates a JSON serialised SolomonGeo object from a stored geopandas dataframe.
+        A constructor that creates a JSON serialised SolomonGeo object from a stored geopandas dataframe.
         The purpose of this is to allow the object to be stored JSON serialised in a DCC.Store object in 
         the browser before being deserialised and as an object.
         '''
         gdf = gpd.GeoDataFrame(json_sol)
+        gdf.index.name = 'pk'
         return cls(
             geo_df = gdf
         )
     
     @classmethod
-    def transform(cls, 
+    def __transform(cls, 
                     df:pd.DataFrame, # The dataframe containing census data
                     l_geos:[gpd.GeoDataFrame], # A list of geopandas dataframes containing 
                                                 # the geographies 
@@ -166,12 +206,16 @@ class SolomonGeo:
         df = df.astype({'id': 'str'})
         
         # Merge the data together
-        geo_df = geos.merge(df, on=['id', 'agg']).set_index("geo_name") # , 'geo_name'
+        geo_df = geos.merge(df, on=['id', 'agg'])
+
+        # Index is unique by type and geoname
+        geo_df['pk'] = geo_df['geo_name'] + "_" + geo_df["type"] 
+        geo_df = geo_df.set_index("pk") 
 
         # Convert into a multiindex dataframe, with hiearchical columns
         try:
             geo_df = geo_df.rename(columns = {'geometry':'core: geometry', 
-                                          'id':'core: id', 'agg':'core: agg', 
+                                          'id':'core: id', 'agg':'core: agg', 'geo_name':'core: location',
                                           'year':'core: year', 'type':'core: type'})
             cols = geo_df.columns.str.extract(r'(.*): (.+)', expand=True)
             geo_df.columns = pd.MultiIndex.from_arrays((cols[0], cols[1]))
@@ -184,46 +228,9 @@ class SolomonGeo:
         return geo_df
 
 
-    @classmethod
-    def load_pickle(cls,
-                    folder:str = "/testData/", #file path of the folder to save in
-                    aws:bool = True, # Whether to load from github or local
-                    file_name:str = 'sol_geo.pickle' # file name of the saved class
-                 ):
-        '''
-        Initialise the object from aws
-        '''
-        # Create a connection to AWS server
-        client = s3_client()
+    
 
-        if aws:
-            # Create the S3 object
-            obj = client.get_object(
-                Bucket = 'hobby-data',
-                Key = file_name, 
-            )
-
-            # Read in the pickle
-            try:
-                tmp_geo = pickle.load(obj['Body'])
-            except:
-                raise ValueError("Issue dowloading pickle file from AWS.")
-                
-        else:
-            # TODO work out how to make this a class method
-            repo = Repo('.', search_parent_directories=True)
-            pw = str(repo.working_tree_dir) + folder + file_name
-            
-            with open(pw, 'rb') as f:
-                tmp_geo = pickle.load(f)
- 
-        
-        return cls(
-            geo_df = gpd.GeoDataFrame(tmp_geo['geo_df'])
-        )
-        
-
-# %% ../nbs/00_load_data.ipynb 16
+# %% ../nbs/00_load_data.ipynb 17
 @patch
 def save_pickle(self:SolomonGeo,
                 aws:bool = True, # Whether to save to aws or locally
@@ -253,7 +260,7 @@ def save_pickle(self:SolomonGeo,
       f.close()
 
 
-# %% ../nbs/00_load_data.ipynb 20
+# %% ../nbs/00_load_data.ipynb 21
 @patch
 def get_geojson(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the geojson to the requested aggregation 
@@ -269,7 +276,7 @@ def get_geojson(self:SolomonGeo,
     # Return only the core data to minimise the html size
     return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
 
-# %% ../nbs/00_load_data.ipynb 22
+# %% ../nbs/00_load_data.ipynb 23
 @patch
 def get_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
@@ -294,11 +301,12 @@ def get_df(self:SolomonGeo,
         except:
             ValueError("Geo filter must be one of: ['Ward', 'Constituency', 'Province']")
         ret = ret.loc[ret['core']['agg'] == geo_filter, :]
-    # Return only the core data to minimise the html size
-    ret = ret.drop(columns = 'core', level=0)
 
     if loc_filter is not None:
-        ret = ret.loc[ret.index.isin(loc_filter), :]
+        ret = ret.loc[ret['core']['location'].isin(loc_filter), :]
+
+    # Return no core data to minimise the html size
+    ret = ret.drop(columns = 'core', level=0)
 
     # Keep only selected column if required
     if measure is not None:
@@ -314,7 +322,7 @@ def get_df(self:SolomonGeo,
         
     return pd.DataFrame(ret)
 
-# %% ../nbs/00_load_data.ipynb 25
+# %% ../nbs/00_load_data.ipynb 26
 @patch
 def agg_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
