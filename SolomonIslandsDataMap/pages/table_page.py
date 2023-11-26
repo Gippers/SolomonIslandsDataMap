@@ -16,10 +16,13 @@ from dash import Dash, dcc, Output, Input, State, html, Patch, ctx, register_pag
 import dash_bootstrap_components as dbc    
 
 # %% ../../nbs/04_table_page.ipynb 3
-register_page(__name__, 
-                    path='/datatable',
-                    title='Data Table',
-                    name='Data Table')
+try:
+    register_page(__name__, 
+                        path='/datatable',
+                        title='Data Table',
+                        name='Data Table')
+except:
+    pass
 
 # %% ../../nbs/04_table_page.ipynb 6
 mytitle = dcc.Markdown(children="## This is a placeholder test!!") # TODO This needs a default title
