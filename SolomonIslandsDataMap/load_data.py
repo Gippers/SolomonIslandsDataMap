@@ -113,6 +113,20 @@ class SolomonGeo:
         )
     
     @classmethod
+    def gen_stored(cls,
+                  json_sol:dict, # The JSON serialised geopandas dataframe
+                 ): # A solmon geo class TODO work out how to return self here... (can't?)
+        '''
+        A constructore that creates a JSON serialised SolomonGeo object from a stored geopandas dataframe.
+        The purpose of this is to allow the object to be stored JSON serialised in a DCC.Store object in 
+        the browser before being deserialised and as an object.
+        '''
+        gdf = gpd.GeoDataFrame(json_sol)
+        return cls(
+            geo_df = gdf
+        )
+    
+    @classmethod
     def transform(cls, 
                     df:pd.DataFrame, # The dataframe containing census data
                     l_geos:[gpd.GeoDataFrame], # A list of geopandas dataframes containing 
