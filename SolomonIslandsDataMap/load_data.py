@@ -18,7 +18,9 @@ import pickle
 from urllib.request import urlopen
 import boto3
 from dotenv import load_dotenv
+from dash import dcc
 import os
+import copy
 
 load_dotenv()
 
@@ -261,27 +263,37 @@ def save_pickle(self:SolomonGeo,
 
 
 # %% ../nbs/00_load_data.ipynb 21
-# TODO - weird method, it returns now two different things for two different functions
 @patch
 def get_geojson(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the geojson to the requested aggregation 
-                min_file:bool = True, # choose whether to return a minimal file
                ) -> dict: # Geo JSON formatted dataset
     '''
     A getter method for the SolomonGeo class that returns a Geo JSON formatted dataset
     '''
     ret = self.geo_df
     # Only need geojson from one half of the dataset
-    if min_file:
-        ret = ret.loc[ret['core']['type'] == self.type_default, :]
+    ret = ret.loc[ret['core']['type'] == self.type_default, :]
     if geo_filter is not None:
         ret = ret.loc[ret['core']['agg'] == geo_filter, :]
     # Return only the core data to minimise the html size
-    if min_file:
-        ret = json.loads(ret.loc[:, ('core', 'geometry')].to_json())
-    return ret
+    return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
 
-# %% ../nbs/00_load_data.ipynb 23
+# %% ../nbs/00_load_data.ipynb 24
+@patch
+def get_store(self:SolomonGeo, 
+            ) -> dcc.Store: # Geo JSON formatted dataset
+    '''
+    A getter method that returns a dcc.Store object with the data of the `SolomonGeo` class
+    converted to json for storing with dash.
+    '''
+    df = copy.copy(self.geo_df)
+    cols = df.columns.droplevel(1) + ": " + df.columns.droplevel(0)
+    cols = cols.tolist()
+    cols[0] = 'geometry' # rename geometry as it is required for the geojson
+    df.columns = cols
+    return dcc.Store(id="geo_df", data={"geojson": df.to_json()})
+
+# %% ../nbs/00_load_data.ipynb 26
 @patch
 def get_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
@@ -327,7 +339,7 @@ def get_df(self:SolomonGeo,
         
     return pd.DataFrame(ret)
 
-# %% ../nbs/00_load_data.ipynb 26
+# %% ../nbs/00_load_data.ipynb 29
 @patch
 def agg_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 

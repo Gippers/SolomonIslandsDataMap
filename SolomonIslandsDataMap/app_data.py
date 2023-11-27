@@ -31,7 +31,7 @@ cen_vars = sol_geo.census_vars
 NUM_GEOS = len(geos)
 
 # %% ../nbs/02_app_data.ipynb 9
-stored_data = dcc.Store(id="geo_df", data={"geojson": sol_geo.get_geojson(min_file = False)})
+stored_data = sol_geo.get_store()
 
 # %% ../nbs/02_app_data.ipynb 11
 dropdown_location = html.Div(children = gen_dd(sol_geo.locations[sol_geo.geo_levels[0]], 
