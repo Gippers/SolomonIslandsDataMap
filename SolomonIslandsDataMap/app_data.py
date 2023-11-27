@@ -31,9 +31,9 @@ cen_vars = sol_geo.census_vars
 NUM_GEOS = len(geos)
 
 # %% ../nbs/02_app_data.ipynb 9
-stored_data = dcc.Store(id='geo_df', data={"data-frame": geo_df.to_dict("series")})
+stored_data = dcc.Store(id="geo_df", data={"geojson": sol_geo.get_geojson(min_file = False)})
 
-# %% ../nbs/02_app_data.ipynb 12
+# %% ../nbs/02_app_data.ipynb 11
 dropdown_location = html.Div(children = gen_dd(sol_geo.locations[sol_geo.geo_levels[0]], 
                                                 'locDropdown', clear = True, place_holder='Select Dropdown Location',
                                                 multi = True))
@@ -58,7 +58,7 @@ dd_var = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdo
 dd_measure = html.Div(children = gen_dd(sol_geo.census_vars['Key Statistics'], 'measureDropdown',
                                       val = sol_geo.census_vars['Key Statistics'][0]))
 
-# %% ../nbs/02_app_data.ipynb 14
+# %% ../nbs/02_app_data.ipynb 13
 # Note, for now I am not using a sidebar style as I do not want to fix the width
 # TODO fix the width of the sidebar, particular on different screens
 SIDEBAR_STYLE = {
@@ -102,7 +102,7 @@ sidebar = html.Div(
 )
 
 
-# %% ../nbs/02_app_data.ipynb 16
+# %% ../nbs/02_app_data.ipynb 15
 # TODO - not sure whether this should be imported from app_data or built here.
 # if building it here causes it to reload each time, I should probably move it later
 # TODO downside of having it here is that it is a little more seperated.

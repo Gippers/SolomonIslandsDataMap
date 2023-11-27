@@ -153,7 +153,7 @@ class SolomonGeo:
     
     @classmethod
     def gen_stored(cls,
-                  json_sol:dict, # The JSON serialised geopandas dataframe
+                  json_sol:dict, # A geojson dataset
                  ): # A solmon geo class TODO work out how to return self here... (can't?)
         '''
         A constructor that creates a JSON serialised SolomonGeo object from a stored geopandas dataframe.
@@ -261,20 +261,25 @@ def save_pickle(self:SolomonGeo,
 
 
 # %% ../nbs/00_load_data.ipynb 21
+# TODO - weird method, it returns now two different things for two different functions
 @patch
 def get_geojson(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the geojson to the requested aggregation 
+                min_file:bool = True, # choose whether to return a minimal file
                ) -> dict: # Geo JSON formatted dataset
     '''
     A getter method for the SolomonGeo class that returns a Geo JSON formatted dataset
     '''
     ret = self.geo_df
     # Only need geojson from one half of the dataset
-    ret = ret.loc[ret['core']['type'] == self.type_default, :]
+    if min_file:
+        ret = ret.loc[ret['core']['type'] == self.type_default, :]
     if geo_filter is not None:
         ret = ret.loc[ret['core']['agg'] == geo_filter, :]
     # Return only the core data to minimise the html size
-    return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
+    if min_file:
+        ret = json.loads(ret.loc[:, ('core', 'geometry')].to_json())
+    return ret
 
 # %% ../nbs/00_load_data.ipynb 23
 @patch

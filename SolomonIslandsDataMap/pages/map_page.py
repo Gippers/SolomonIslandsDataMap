@@ -113,7 +113,7 @@ def map_selections(locations:[str], # The previously selected locations
     Update the selected data on the map for the selected locations
     Selections is an array of integers indicating the index of the selected points
     '''
-    sol_geo = SolomonGeo.gen_stored(dict_sol)
+    sol_geo = SolomonGeo.gen_stored(dict_sol['geojson'])
     patched_figure = Patch()
     ct = np.where(sol_geo.geo_levels == geo_input)[0][0] # Tracks the trace number
     pot_locs = map_graph.figure['data'][ct]['locations']
@@ -146,7 +146,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     '''
     Updates the dropdown_location dropdown based on the currently selected data aggregation.
     '''
-    sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
+    sol_geo = SolomonGeo.gen_stored(dict_sol['geojson']) # reload the data
     return gen_dd(sol_geo.locations[geo_input], 'locDropdown', "Select a location", clear = True, multi = True)
 
 # %% ../../nbs/03_map_page.ipynb 19
@@ -163,7 +163,7 @@ def update_measure(new_var:str, # Selected variable
     '''
     Updates the dropdown_location dropdown based on the currently selected data aggregation.
     '''
-    sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
+    sol_geo = SolomonGeo.gen_stored(dict_sol['geojson']) # reload the data
     # When a variable is selected, the measure will be set as the first one
     return gen_dd(sol_geo.census_vars[new_var], 'measureDropdown', 
                   val = sol_geo.census_vars[new_var][0])
@@ -220,7 +220,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
 
-    sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
+    sol_geo = SolomonGeo.gen_stored(dict_sol['geojson']) # reload the data
 
 
     if button_clicked == dropdown_geo.id or button_clicked == dropdown_location.id:
@@ -280,7 +280,7 @@ def update_bargraph(geo_input:str, # User input from the geography dropdown
     '''
     Updates the focus census variable or geography dispalayed on the map
     '''
-    sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
+    sol_geo = SolomonGeo.gen_stored(dict_sol['geojson']) # reload the data
 
     # Create newly selected barplot
     print("input")
