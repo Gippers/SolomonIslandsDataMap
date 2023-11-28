@@ -232,15 +232,21 @@ def update_map(geo_input:str, # User input from the geography dropdown
             patched_figure['data'][tn]['visible'] = geo_input == geo
         
     elif button_clicked == control_type.id:
-        # Update the type of data displayed on map
-        # TODO currently displayed data will need to be tracked. Can't be tracked in object, use hidden 
-        # TODO will need to track this update also in var dropdown clicked
-        # TODO this also needs to trigger cards
+        # Update the type of data displayed on map and the hover template
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
             ar = sol_geo.get_df(geo_filter = geo, type_filter=data_type, var = variable, measure = measure).values
             ar = ar.reshape((ar.shape[0],))
+            if data_type == 'Total':
+                ht = '%{customdata} <extra>%{z}</extra>'
+            elif data_type == 'Proportion':
+                ht = '%{customdata} <extra>%{z:.0%}</extra>'
+            else:
+                ValueError("Data type of map not recognised and note accounted for")
             patched_figure['data'][tn]['z'] = ar
+            patched_figure['data'][tn]['hovertemplate'] = ht
+
+            
         
 
     elif button_clicked == 'measureDropdown':
