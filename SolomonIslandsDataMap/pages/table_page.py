@@ -11,22 +11,18 @@ try:
     from SolomonIslandsDataMap.dash_components import *
 except: 
     from dash_components import *
-import plotly.express as px
-import plotly.graph_objects as go
-import plotly.io as pio # Unless this is used graphs will not be dynamic?
-import numpy as np
 from fastcore.test import *
-from dash import Dash, dcc, Output, Input, State, html, Patch, ctx, register_page  # pip install dash
-import dash_bootstrap_components as dbc    # pip install dash-bootstrap-components
-from dash_bootstrap_templates import load_figure_template
-import dash_mantine_components as dmc
-import os
+from dash import Dash, dcc, Output, Input, State, html, Patch, ctx, register_page  
+import dash_bootstrap_components as dbc    
 
 # %% ../../nbs/04_table_page.ipynb 3
-register_page(__name__, 
-                    path='/datatable',
-                    title='Data Table',
-                    name='Data Table')
+try:
+    register_page(__name__, 
+                        path='/datatable',
+                        title='Data Table',
+                        name='Data Table')
+except:
+    pass
 
 # %% ../../nbs/04_table_page.ipynb 6
 mytitle = dcc.Markdown(children="## This is a placeholder test!!") # TODO This needs a default title
@@ -34,6 +30,4 @@ mytitle = dcc.Markdown(children="## This is a placeholder test!!") # TODO This n
 # %% ../../nbs/04_table_page.ipynb 7
 def layout():
     return dbc.Container([mytitle,
-                        map_graph,
-                        selectedBarGraph,
                         ])

@@ -45,13 +45,16 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
         z_vals = z_vals.reshape((z_vals.shape[0],))
         traces.append(go.Choroplethmapbox(
                                 geojson=sol_df.get_geojson(geo_filter = value),
-                               locations=sol_df.get_df(geo_filter = value).index,
+                               locations=sol_df.locations[value],
+                               customdata = sol_df.locations[value],
                                # TODO undo hardcoding
                                z = z_vals,
                                colorscale="deep",
                                 marker_line_width = 0.5,
                                 zauto=True,
                                 selectedpoints=None,
+                                hovertemplate = '%{customdata} <extra>%{z}</extra>',
+                                #hovertemplate = '%{customdata} <extra>%{z:.0%}</extra>',
                 visible= True if value==cols_dd[0] else False))
         
     # Show figure
@@ -64,8 +67,6 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
                         mapbox_zoom = 5,
                         mapbox_center={"lat": -9.565766, "lon": 162.012453},
                         margin={"r":0,"t":0,"l":0,"b":0},
-                        # TODO in future consider going back to multiselect, currently too hard
-                        #clickmode = 'event+select',
     )
     
     return fig
@@ -90,6 +91,7 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
     else:
         df = sol_geo.get_df(geo_filter, variable, loc_filter = locations, type_filter = type_filter)
         figtext += ', '.join(locations)
+        df.index = locations
     fig = go.Figure()
     measures = list(df.columns)
     for loc in locations:
