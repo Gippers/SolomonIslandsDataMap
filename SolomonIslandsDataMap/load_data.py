@@ -100,7 +100,7 @@ class SolomonGeo:
 
         repo = Repo('.', search_parent_directories=True)
         pw = str(repo.working_tree_dir) + "/testData/"
-        df = pd.read_csv(pw + 'sol_census_all_2009.csv')
+        df = pd.read_csv(pw + 'sol_census_all_2009_v2.csv')
         aggs = df.loc[:, 'agg'].unique()
         geos = []
         for agg in aggs:

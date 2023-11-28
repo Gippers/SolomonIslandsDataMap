@@ -240,7 +240,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
             if data_type == 'Total':
                 ht = '%{customdata} <extra>%{z}</extra>'
             elif data_type == 'Proportion':
-                ht = '%{customdata} <extra>%{z:.0%}</extra>'
+                ht = '%{customdata} <extra>%{z:.1%}</extra>'
             else:
                 ValueError("Data type of map not recognised and note accounted for")
             patched_figure['data'][tn]['z'] = ar
