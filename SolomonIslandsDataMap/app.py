@@ -15,7 +15,7 @@ import plotly.graph_objects as go
 import plotly.io as pio # Unless this is used graphs will not be dynamic?
 import numpy as np
 from fastcore.test import *
-from dash import page_container, Dash, dcc, Output, Input, State, html, Patch, ctx  # pip install dash
+from dash import page_container, Dash, dcc, Output, Input, State, html, Patch, page_registry, ctx  # pip install dash
 import dash_bootstrap_components as dbc    # pip install dash-bootstrap-components
 from dash_bootstrap_templates import load_figure_template
 from git import Repo
@@ -36,16 +36,16 @@ except:
 server = app.server
 load_figure_template("minty")
 
-# %% ../nbs/05_app.ipynb 8
+# %% ../nbs/05_app.ipynb 10
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Census Data", href="#")),
         dbc.DropdownMenu(
             children=[
-                dbc.DropdownMenuItem("More pages coming soon", header=True),
+                #dbc.DropdownMenuItem("More pages coming soon", header=True),
                 
-                dbc.DropdownMenuItem("Population Projection", href="#"),
-                # TODO populate this with the pages
+                dbc.DropdownMenuItem('Data Map', href=pages['Data Map']),
+                dbc.DropdownMenuItem('Data Table', href=pages['Data Table']),
             ],
             nav=True,
             in_navbar=True,
@@ -60,7 +60,7 @@ navbar = dbc.NavbarSimple(
 )
 
 
-# %% ../nbs/05_app.ipynb 12
+# %% ../nbs/05_app.ipynb 14
 app.layout = dbc.Container([
                 dbc.Row([
                     navbar
@@ -71,7 +71,7 @@ app.layout = dbc.Container([
                      ], justify = 'center'),                    
                 ], fluid = True)
 
-# %% ../nbs/05_app.ipynb 14
+# %% ../nbs/05_app.ipynb 16
 # Run app
 if __name__=='__main__':
     try:

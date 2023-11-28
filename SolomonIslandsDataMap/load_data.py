@@ -164,11 +164,7 @@ class SolomonGeo:
 
         Note that storing and the reloading, will result in dropping the geometry.
         '''
-        #gdf = gpd.read_file(json_sol['geojson']).set_geometry('geometry')
         gdf = gpd.GeoDataFrame(json_sol['geojson'])
-        print(gdf)
-        #gdf = gdf.rename(columns = {'geometry':'core: geometry', 'id': 'pk'})
-        #gdf = gdf.set_index('pk')
         cols = gdf.columns.str.extract(r'(.*): (.+)', expand=True)
         gdf.columns = pd.MultiIndex.from_arrays((cols[0], cols[1]))
         gdf.columns.names = [None]*2
