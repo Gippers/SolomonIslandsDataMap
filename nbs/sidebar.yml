@@ -4,7 +4,7 @@ website:
       - index.ipynb
       - 00_load_data.ipynb
       - 01_dash_components.ipynb
-      - 02_app.ipynb
-      - section: pages
-        contents:
-          - pages/03_table.ipynb
+      - 02_app_data.ipynb
+      - 03_map_page.ipynb
+      - 04_table_page.ipynb
+      - 05_app.ipynb
