@@ -295,9 +295,7 @@ def get_store(self:SolomonGeo,
             ) -> dcc.Store: # Geo JSON formatted dataset
     '''
     A getter method that returns a dcc.Store object with the data of the `SolomonGeo` class
-    converted to json for storing with dash.
-    On storing, we drop the geometry as it won't store as json. Note that you can get around this
-    by using a geojson, but this increases reload time by a lot. 
+    converted to a dictionary for storing with dash. 
     '''
     df = copy.copy(self.geo_df)
     cols = df.columns.droplevel(1) + ": " + df.columns.droplevel(0)
@@ -306,7 +304,7 @@ def get_store(self:SolomonGeo,
     df.drop(columns = 'core: geometry', inplace=True)
     return dcc.Store(id="geo_df", data={"geojson": df.to_dict()})
 
-# %% ../nbs/00_load_data.ipynb 26
+# %% ../nbs/00_load_data.ipynb 27
 @patch
 def get_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
@@ -352,7 +350,7 @@ def get_df(self:SolomonGeo,
         
     return pd.DataFrame(ret)
 
-# %% ../nbs/00_load_data.ipynb 29
+# %% ../nbs/00_load_data.ipynb 30
 @patch
 def agg_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 

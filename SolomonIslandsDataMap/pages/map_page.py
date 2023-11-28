@@ -68,7 +68,7 @@ def map_click(clickData:dict, # The currently clicked location on the map
         # TODO when none, maybe in future return current saved state, for now doing total
         # TODO add a heading and maybe put in an acordian
         print("Click data was none")
-        return None
+        return prev_locs, None, None
     else:
         # The locations are list of dictionaries
         if selectedData is not None:
@@ -174,17 +174,19 @@ def update_measure(new_var:str, # Selected variable
     Output(selectedBarGraph, "clickData"),
     Input(selectedBarGraph, 'clickData'),
     State('varDropdown', 'value'),
+    State('geo_df', 'data'),
     prevent_initial_call=True,
     allow_duplicate=True,
 )
 def bar_click(clickData:dict, # The currently clicked location on bar graph
                 variable:str, # The currently selected variable
+                dict_sol:dict, # The dataset in dictionary form
                 )->[str]: # Returns the new value for the dropdown
     """This function updates the dropdown menu based on the bar graph click data"""
-
+    sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
     if clickData is None:
         print("Click data was none")
-        return None
+        return sol_geo.census_vars[variable][0], None
     else:
         # The measure are list of dictionaries
         selection = list(map(lambda x: x['x'], clickData['points']))[0]
