@@ -84,7 +84,7 @@ class SolomonGeo:
         # save a list of locations as a dictionary access by geography level
         locations = {}
         for geo in self.geo_levels:
-            locations[geo] = geo_df.loc[geo_df['core']['agg'] == geo].index.unique().sort_values()
+            locations[geo] = geo_df.loc[geo_df['core']['agg'] == geo, ('core', 'location')].unique()
         self.locations = locations
         # TODO: need a list of column sub headings: get from column name split by `:`
 
@@ -161,10 +161,14 @@ class SolomonGeo:
         A constructor that creates a JSON serialised SolomonGeo object from a stored geopandas dataframe.
         The purpose of this is to allow the object to be stored JSON serialised in a DCC.Store object in 
         the browser before being deserialised and as an object.
+
+        Note that storing and the reloading, will result in dropping the geometry.
         '''
-        gdf = gpd.read_file(json_sol['geojson']).set_geometry('geometry')
-        gdf = gdf.rename(columns = {'geometry':'core: geometry', 'id': 'pk'})
-        gdf = gdf.set_index('pk')
+        #gdf = gpd.read_file(json_sol['geojson']).set_geometry('geometry')
+        gdf = gpd.GeoDataFrame(json_sol['geojson'])
+        print(gdf)
+        #gdf = gdf.rename(columns = {'geometry':'core: geometry', 'id': 'pk'})
+        #gdf = gdf.set_index('pk')
         cols = gdf.columns.str.extract(r'(.*): (.+)', expand=True)
         gdf.columns = pd.MultiIndex.from_arrays((cols[0], cols[1]))
         gdf.columns.names = [None]*2
@@ -282,6 +286,7 @@ def get_geojson(self:SolomonGeo,
     if geo_filter is not None:
         ret = ret.loc[ret['core']['agg'] == geo_filter, :]
     # Return only the core data to minimise the html size
+    #return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
     return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
 
 # %% ../nbs/00_load_data.ipynb 24
@@ -291,13 +296,15 @@ def get_store(self:SolomonGeo,
     '''
     A getter method that returns a dcc.Store object with the data of the `SolomonGeo` class
     converted to json for storing with dash.
+    On storing, we drop the geometry as it won't store as json. Note that you can get around this
+    by using a geojson, but this increases reload time by a lot. 
     '''
     df = copy.copy(self.geo_df)
     cols = df.columns.droplevel(1) + ": " + df.columns.droplevel(0)
     cols = cols.tolist()
-    cols[0] = 'geometry' # rename geometry as it is required for the geojson
     df.columns = cols
-    return dcc.Store(id="geo_df", data={"geojson": df.to_json()})
+    df.drop(columns = 'core: geometry', inplace=True)
+    return dcc.Store(id="geo_df", data={"geojson": df.to_dict()})
 
 # %% ../nbs/00_load_data.ipynb 26
 @patch

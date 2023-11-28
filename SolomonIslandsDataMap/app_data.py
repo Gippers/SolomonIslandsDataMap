@@ -18,11 +18,13 @@ from fastcore.test import *
 from dash import dcc, html
 import dash_bootstrap_components as dbc 
 import dash_mantine_components as dmc
+from dash_bootstrap_templates import load_figure_template
 
 # %% ../nbs/02_app_data.ipynb 5
-# TODO data should be stored in store (or ) then loaded into pages.
 sol_geo = SolomonGeo.load_pickle(aws = True)
 geo_df = sol_geo.geo_df
+
+load_figure_template("minty")
 
 geos = sol_geo.geo_levels
 cen_vars = sol_geo.census_vars
