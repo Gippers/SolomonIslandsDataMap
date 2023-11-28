@@ -278,6 +278,7 @@ def get_geojson(self:SolomonGeo,
     ret = self.geo_df
     # Only need geojson from one half of the dataset
     ret = ret.loc[ret['core']['type'] == self.type_default, :]
+    ret = ret.set_index(ret.loc[:, ('core', 'location')]) # Change index to location for matching
     if geo_filter is not None:
         ret = ret.loc[ret['core']['agg'] == geo_filter, :]
     # Return only the core data to minimise the html size
