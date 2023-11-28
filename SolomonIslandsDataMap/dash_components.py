@@ -54,7 +54,7 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
                                 zauto=True,
                                 selectedpoints=None,
                                 hovertemplate = '%{customdata} <extra>%{z}</extra>',
-                                #hovertemplate = '%{customdata} <extra>%{z:.0%}</extra>',
+                                #hovertemplate = '%{customdata} <extra>%{z:.1%}</extra>',
                 visible= True if value==cols_dd[0] else False))
         
     # Show figure
