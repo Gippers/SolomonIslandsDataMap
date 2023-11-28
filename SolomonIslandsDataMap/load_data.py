@@ -162,7 +162,12 @@ class SolomonGeo:
         The purpose of this is to allow the object to be stored JSON serialised in a DCC.Store object in 
         the browser before being deserialised and as an object.
         '''
-        gdf = gpd.GeoDataFrame(json_sol)
+        gdf = gpd.read_file(json_sol['geojson']).set_geometry('geometry')
+        gdf = gdf.rename(columns = {'geometry':'core: geometry', 'id': 'pk'})
+        gdf = gdf.set_index('pk')
+        cols = gdf.columns.str.extract(r'(.*): (.+)', expand=True)
+        gdf.columns = pd.MultiIndex.from_arrays((cols[0], cols[1]))
+        gdf.columns.names = [None]*2
         gdf.index.name = 'pk'
         return cls(
             geo_df = gdf
