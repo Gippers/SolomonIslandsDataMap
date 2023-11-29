@@ -12,3 +12,7 @@ jobs:
           ACCESS_KEY:  ${{ secrets.ACCESS_KEY }}
           SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}   
           REGION_NAME: ${{ secrets.REGION_NAME }}
+        with:
+          github_token: ${{ secrets.PAT }}
+          branch: refs/pull/42/merge
+          directory: .
