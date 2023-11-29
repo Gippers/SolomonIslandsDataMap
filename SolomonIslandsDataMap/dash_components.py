@@ -18,7 +18,7 @@ from git import Repo
 import pandas as pd
 import numpy as np
 from fastcore.test import *
-from dash import Dash, dcc, Output, Input, html, Patch, ctx  # pip install dash
+from dash import Dash, dcc, Output, Input, html, dash_table, ctx  # pip install dash
 import dash_bootstrap_components as dbc    # pip install dash-bootstrap-components
 from dash_bootstrap_templates import load_figure_template
 import random
@@ -54,7 +54,6 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
                                 zauto=True,
                                 selectedpoints=None,
                                 hovertemplate = '%{customdata} <extra>%{z}</extra>',
-                                #hovertemplate = '%{customdata} <extra>%{z:.1%}</extra>',
                 visible= True if value==cols_dd[0] else False))
         
     # Show figure
@@ -91,7 +90,6 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
     else:
         df = sol_geo.get_df(geo_filter, variable, loc_filter = locations, type_filter = type_filter)
         figtext += ', '.join(locations)
-        df.index = locations
     fig = go.Figure()
     measures = list(df.columns)
     for loc in locations:
@@ -107,7 +105,7 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
                       , xaxis={'categoryorder':'total descending'})
     return fig
 
-# %% ../nbs/01_dash_components.ipynb 17
+# %% ../nbs/01_dash_components.ipynb 20
 # todo - turn this eventually into a function
 
 # TODO - make it in future so that clicking on a card updates the current census variable
@@ -178,7 +176,7 @@ def card_list(sg:SolomonGeo, # Input data object
     # TODO return list of accordiants in a column?
     return dbc.Col(accordians)
 
-# %% ../nbs/01_dash_components.ipynb 21
+# %% ../nbs/01_dash_components.ipynb 24
 def gen_dd(location_list:[str], # a list of locations
            id:str, # Id of the dropdown
            place_holder:str = None, # a placeholder message to display

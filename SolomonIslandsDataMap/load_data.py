@@ -24,7 +24,7 @@ import copy
 
 load_dotenv()
 
-# %% ../nbs/00_load_data.ipynb 9
+# %% ../nbs/00_load_data.ipynb 10
 def s3_client()-> boto3.client:
     '''Return a connection to teh AWS s3 client'''
     ACCESS_KEY = os.getenv("ACCESS_KEY")
@@ -45,7 +45,7 @@ def s3_client()-> boto3.client:
         region_name = REGION_NAME,
     )
 
-# %% ../nbs/00_load_data.ipynb 11
+# %% ../nbs/00_load_data.ipynb 12
 class SolomonGeo:
     # TODO work out how to format the attributes
     # Look at nbdev docs maybe?
@@ -235,9 +235,7 @@ class SolomonGeo:
         return geo_df
 
 
-    
-
-# %% ../nbs/00_load_data.ipynb 17
+# %% ../nbs/00_load_data.ipynb 20
 @patch
 def save_pickle(self:SolomonGeo,
                 aws:bool = True, # Whether to save to aws or locally
@@ -267,7 +265,7 @@ def save_pickle(self:SolomonGeo,
       f.close()
 
 
-# %% ../nbs/00_load_data.ipynb 21
+# %% ../nbs/00_load_data.ipynb 23
 @patch
 def get_geojson(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the geojson to the requested aggregation 
@@ -285,7 +283,7 @@ def get_geojson(self:SolomonGeo,
     #return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
     return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
 
-# %% ../nbs/00_load_data.ipynb 24
+# %% ../nbs/00_load_data.ipynb 26
 @patch
 def get_store(self:SolomonGeo, 
             ) -> dcc.Store: # Geo JSON formatted dataset
@@ -300,7 +298,7 @@ def get_store(self:SolomonGeo,
     df.drop(columns = 'core: geometry', inplace=True)
     return dcc.Store(id="geo_df", data={"geojson": df.to_dict()})
 
-# %% ../nbs/00_load_data.ipynb 27
+# %% ../nbs/00_load_data.ipynb 29
 @patch
 def get_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
@@ -317,7 +315,8 @@ def get_df(self:SolomonGeo,
     to display on the map. 
     '''
     ret = self.geo_df
-    ret = ret.loc[ret['core']['type'] == type_filter, :]
+    ret = ret.loc[ret['core']['type'] == type_filter, :] 
+    ret = ret.set_index(ret.loc[:, ('core', 'location')]) # Change index to location as it's more desriptive
     # TODO check that filter is valid
     if geo_filter is not None:
         try:
@@ -346,7 +345,7 @@ def get_df(self:SolomonGeo,
         
     return pd.DataFrame(ret)
 
-# %% ../nbs/00_load_data.ipynb 30
+# %% ../nbs/00_load_data.ipynb 32
 @patch
 def agg_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
