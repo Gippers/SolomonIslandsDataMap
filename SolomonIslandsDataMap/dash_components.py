@@ -119,7 +119,8 @@ def gen_dash_table(sol_geo:SolomonGeo, # Solomon geo object containing census da
 
     dt = dash_table.DataTable(
         df.to_dict('records'),
-        [{"name": i, "id": i} for i in df.columns]
+        [{"name": i, "id": i} for i in df.columns],
+        id = 'dt',
     )
 
     return dt

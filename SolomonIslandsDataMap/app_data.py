@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dropdown_geo',
            'control_type', 'dd_var', 'dd_measure', 'SIDEBAR_STYLE', 'sidebar', 'mytitle', 'map_graph',
-           'selectedBarGraph']
+           'selectedBarGraph', 'data_table']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -112,3 +112,6 @@ map_graph = dcc.Graph(figure=define_map(sol_geo), selectedData=None,)
 selectedBarGraph = dcc.Graph(figure = gen_bar_plot(sol_geo, sol_geo.geo_levels[0], 
                                                "Key Statistics", 'Total Households'),
                             id = 'bar_graph')
+
+# %% ../nbs/02_app_data.ipynb 17
+data_table = gen_dash_table(sol_geo, 'Ward', "Main source of household income in last 12 months", 'Wages Salary')
