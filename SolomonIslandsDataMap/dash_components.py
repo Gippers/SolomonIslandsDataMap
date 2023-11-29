@@ -116,6 +116,7 @@ def gen_dash_table(sol_geo:SolomonGeo, # Solomon geo object containing census da
     '''Creates a basic data table using dash table'''
     figtext = 'Showing ' + variable + ' by ' + geo_filter
     df = sol_geo.get_df(geo_filter, variable, loc_filter = locations, type_filter = type_filter)
+    df.insert(0, geo_filter, df.index) # Put geo locations at the front
 
     dt = dash_table.DataTable(
         df.to_dict('records'),
