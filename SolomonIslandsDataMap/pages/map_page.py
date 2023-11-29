@@ -14,7 +14,7 @@ try:
         , control_type, dd_var, dd_measure, dropdown_geo
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
-    from dash_components import *
+    from dash_components import gen_bar_plot, gen_dd
     from app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
         , control_type, dd_var, dd_measure, dropdown_geo
     from load_data import SolomonGeo
