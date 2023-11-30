@@ -8,12 +8,12 @@ __all__ = ['mytitle', 'layout']
 from nbdev.showdoc import *
 # TODO work out how to get around below hack
 try:
-    from SolomonIslandsDataMap.dash_components import gen_dash_table, gen_dd
-    from SolomonIslandsDataMap.app_data import mytitle, data_table, stored_data, dropdown_location \
+    from SolomonIslandsDataMap.dash_components import gen_dash_grid, gen_dd
+    from SolomonIslandsDataMap.app_data import mytitle, data_grid, stored_data, dropdown_location \
         , control_type, dd_var, dd_measure, dropdown_geo
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
-    from dash_components import gen_dash_table, gen_dd
+    from dash_components import gen_dash_grid, gen_dd
     from app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
         , control_type, dd_var, dd_measure, dropdown_geo
     from load_data import SolomonGeo
@@ -36,5 +36,5 @@ mytitle = dcc.Markdown(children="## This is a placeholder test!!") # TODO This n
 # %% ../../nbs/04_table_page.ipynb 7
 def layout():
     return dbc.Container([mytitle,
-                          data_table,
+                          data_grid,
                         ])
