@@ -43,7 +43,9 @@ for page in page_registry.values():
     
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink("Census Data", href="#")),
+        # TODO make this a dbc tab with calbback to make it active
+        dbc.NavItem(dbc.NavLink('Data Map', href=pages['Data Map'], active=True)),
+        dbc.NavItem(dbc.NavLink('Data Table', href=pages['Data Table'])),
         dbc.DropdownMenu(
             children=[
                 #dbc.DropdownMenuItem("More pages coming soon", header=True),
@@ -53,7 +55,7 @@ navbar = dbc.NavbarSimple(
             ],
             nav=True,
             in_navbar=True,
-            label="More",
+            label="Select Page",
         ),
     ],
     brand="Solomon Islands Data Map",

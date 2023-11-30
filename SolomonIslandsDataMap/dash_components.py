@@ -114,15 +114,20 @@ def gen_dash_grid(sol_geo:SolomonGeo, # Solomon geo object containing census dat
                     locations:[str] = None, # Desired location within aggregation
                     type_filter:str = 'Total', # The type aggregartion
                 )->dag.AgGrid: # Returns a graph object figure of a barplot
-    '''Creates a basic data table using dash table'''
+    '''Creates a basic data table using dash grid'''
     figtext = 'Showing ' + variable + ' by ' + geo_filter
     df = sol_geo.get_df(geo_filter, variable, loc_filter = locations, type_filter = type_filter)
     df.insert(0, geo_filter, df.index) # Put geo locations at the front
-
+    
+    # pre define the column definitions, with extra speficiations for the locations
+    colDef = [{"field": geo_filter, "headerName": geo_filter, "sortable": True, "filter": True, "lockPinned": True, "cellClass": "lock-pinned"}]                    
+    colDef += [{"field": i, "headerName": i, "sortable": True} for i in df.columns[1:]]
     dt = dag.AgGrid(
         id = 'grid',
         rowData = df.to_dict('records'),
-        columnDefs = [{"field": i, "headerName": i, "sortable": True} for i in df.columns],
+        columnDefs = colDef,
+        dashGridOptions = {"domLayout": "autoHeight"},
+        style = {"height": None}
     )
 
     return dt
