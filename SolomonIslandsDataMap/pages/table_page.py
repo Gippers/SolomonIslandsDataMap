@@ -38,6 +38,7 @@ mytitle = dcc.Markdown(children="## This is a placeholder test!!") # TODO This n
 def layout():
     return dbc.Container([mytitle,
                           data_grid,
+                          stored_data,
                         ])
 
 # %% ../../nbs/04_table_page.ipynb 10
@@ -60,6 +61,8 @@ def update_grid(geo_input:str, # User input from the geography dropdown
     '''
     Updates the focus census variable or geography dispalayed on the map
     '''
+    # TODO add proportion functionality
+    # TODO add add an option for first call to be a default rebuild
     # TODO decide wether to implment patch later
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
@@ -72,9 +75,9 @@ def update_grid(geo_input:str, # User input from the geography dropdown
         # TODO in future update row highlighting
         print("locationsleected")
         
-    elif button_clicked == control_type.id or button_clicked == dropdown_geo.id:
+    elif button_clicked == control_type.id or button_clicked == dropdown_geo.id or button_clicked == variable.id:
         # Rebuild the table given updated selection
-        patched_figure = sol_geo.gen_table(sol_geo, geo_input,variable, measure, type_filter = data_type)
+        patched_figure = gen_dash_grid(sol_geo, geo_input,variable, measure, type_filter = data_type)
 
 
     elif button_clicked == 'measureDropdown':

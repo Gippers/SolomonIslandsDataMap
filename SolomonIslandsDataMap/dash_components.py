@@ -107,6 +107,7 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
     return fig
 
 # %% ../nbs/01_dash_components.ipynb 17
+# TODO should this method be appended to sol_geo??
 def gen_dash_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
                     variable:str, # The variable to use to create the bar plot
