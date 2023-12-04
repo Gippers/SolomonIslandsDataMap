@@ -87,4 +87,4 @@ def update_grid(geo_input:str, # User input from the geography dropdown
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
 
-    return patched_figure, '##' + variable + " by " + geo_input
+    return patched_figure, '## ' + variable + " by " + geo_input
