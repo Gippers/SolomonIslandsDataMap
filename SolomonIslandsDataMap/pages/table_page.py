@@ -36,8 +36,10 @@ title = dcc.Markdown(children="## This is a placeholder test!!") # TODO This nee
 
 # %% ../../nbs/04_table_page.ipynb 7
 def layout():
-    return dbc.Container([title,
-                          download_button,
+    return dbc.Container([dbc.Row([
+                            dbc.Col(title, width = 8),
+                            dbc.Col(download_button, width = {"size": 2})
+                                  ]),
                           data_grid,
                           stored_data,
                         ])
