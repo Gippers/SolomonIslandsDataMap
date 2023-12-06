@@ -2,8 +2,8 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dropdown_geo',
-           'control_type', 'dd_var', 'dd_measure', 'SIDEBAR_STYLE', 'sidebar', 'mytitle', 'map_graph',
-           'selectedBarGraph']
+           'control_type', 'dd_var', 'dd_measure', 'data_grid', 'grid_rows', 'download_button', 'SIDEBAR_STYLE',
+           'sidebar', 'mytitle', 'map_graph', 'selectedBarGraph']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -58,7 +58,14 @@ dd_var = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdo
 dd_measure = html.Div(children = gen_dd(sol_geo.census_vars['Key Statistics'], 'measureDropdown',
                                       val = sol_geo.census_vars['Key Statistics'][0]))
 
-# %% ../nbs/02_app_data.ipynb 13
+# %% ../nbs/02_app_data.ipynb 12
+data_grid = dbc.Container(
+                children = gen_dash_grid(sol_geo, sol_geo.geo_levels[0], "Key Statistics", 'Total Households')
+            )
+grid_rows = dcc.Input(id="grid-rows", type="number", min=1, max=len(sol_geo.locations['Province']), value=10)
+download_button = dbc.Button("Download", id="csv-button", outline=True, n_clicks=0, color = "primary")
+
+# %% ../nbs/02_app_data.ipynb 14
 # Note, for now I am not using a sidebar style as I do not want to fix the width
 # TODO fix the width of the sidebar, particular on different screens
 SIDEBAR_STYLE = {
@@ -90,8 +97,9 @@ sidebar = html.Div(
                 html.Br(),
                 html.P("Data Type"), 
                 control_type,
-                #html.Br(),
-                #dcc.Dropdown(id = 'three')
+                html.Br(),
+                html.P("Dash Grid Rows"), 
+                grid_rows, # TODO add an info button here explaining that it is only for the dash grid
 
             ],
             vertical=True,
@@ -102,7 +110,7 @@ sidebar = html.Div(
 )
 
 
-# %% ../nbs/02_app_data.ipynb 15
+# %% ../nbs/02_app_data.ipynb 16
 # TODO - not sure whether this should be imported from app_data or built here.
 # if building it here causes it to reload each time, I should probably move it later
 # TODO downside of having it here is that it is a little more seperated.

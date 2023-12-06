@@ -6,9 +6,9 @@ __all__ = ['repo', 'fp', 'server', 'pages', 'navbar']
 # %% ../nbs/05_app.ipynb 2
 from nbdev.showdoc import *
 try:
-    from SolomonIslandsDataMap.app_data import sidebar
+    from SolomonIslandsDataMap.app_data import sidebar, stored_data
 except: 
-    from app_data import sidebar
+    from app_data import sidebar, stored_data
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -43,7 +43,9 @@ for page in page_registry.values():
     
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink("Census Data", href="#")),
+        # TODO make this a dbc tab with calbback to make it active
+        dbc.NavItem(dbc.NavLink('Data Map', href=pages['Data Map'], active=True)),
+        dbc.NavItem(dbc.NavLink('Data Table', href=pages['Data Table'])),
         dbc.DropdownMenu(
             children=[
                 #dbc.DropdownMenuItem("More pages coming soon", header=True),
@@ -53,7 +55,7 @@ navbar = dbc.NavbarSimple(
             ],
             nav=True,
             in_navbar=True,
-            label="More",
+            label="Select Page",
         ),
     ],
     brand="Solomon Islands Data Map",
@@ -71,8 +73,9 @@ app.layout = dbc.Container([
                 ]),
                 dbc.Row(
                     [dbc.Col(sidebar, width = 2),
-                    dbc.Col(page_container, width = 10)
-                     ], justify = 'center'),                    
+                    dbc.Col(page_container, width = 10),
+                     ], justify = 'center'),  
+                     stored_data,                  
                 ], fluid = True)
 
 # %% ../nbs/05_app.ipynb 13
