@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Functions that load the data for the map.">
+
+<title>SolomonIslandsDataMap - Load Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="SolomonIslandsDataMap - Load Data">
+<meta property="og:description" content="Functions that load the data for the map.">
+<meta property="og:site-name" content="SolomonIslandsDataMap">
+<meta name="twitter:title" content="SolomonIslandsDataMap - Load Data">
+<meta name="twitter:description" content="Functions that load the data for the map.">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">SolomonIslandsDataMap</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools ms-auto">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./load_data.html">Load Data</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Solomon Islands Data Map</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./load_data.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Load Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dash_components.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Generate Map</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">App Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./map_page.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Map Page</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./table_page.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Table Page</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Generate Map</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#solomon-geospatial-data" id="toc-solomon-geospatial-data" class="nav-link active" data-scroll-target="#solomon-geospatial-data">Solomon Geospatial Data</a>
+  <ul class="collapse">
+  <li><a href="#census-data" id="toc-census-data" class="nav-link" data-scroll-target="#census-data">Census Data</a></li>
+  <li><a href="#test-that-the-.env-variables-exist" id="toc-test-that-the-.env-variables-exist" class="nav-link" data-scroll-target="#test-that-the-.env-variables-exist">Test that the .env variables exist</a></li>
+  </ul></li>
+  <li><a href="#function-for-connecting-to-aws-s3-client" id="toc-function-for-connecting-to-aws-s3-client" class="nav-link" data-scroll-target="#function-for-connecting-to-aws-s3-client">Function for connecting to AWS S3 client</a></li>
+  <li><a href="#solomongeo-data-class" id="toc-solomongeo-data-class" class="nav-link" data-scroll-target="#solomongeo-data-class">SolomonGeo Data Class</a>
+  <ul class="collapse">
+  <li><a href="#constructors-for-solomongeo-class" id="toc-constructors-for-solomongeo-class" class="nav-link" data-scroll-target="#constructors-for-solomongeo-class">Constructors for SolomonGeo class</a>
+  <ul class="collapse">
+  <li><a href="#solomongeo.load_pickle" id="toc-solomongeo.load_pickle" class="nav-link" data-scroll-target="#solomongeo.load_pickle">SolomonGeo.load_pickle</a></li>
+  </ul></li>
+  <li><a href="#save-solomongeo" id="toc-save-solomongeo" class="nav-link" data-scroll-target="#save-solomongeo">Save SolomonGeo</a>
+  <ul class="collapse">
+  <li><a href="#solomongeo.save_pickle" id="toc-solomongeo.save_pickle" class="nav-link" data-scroll-target="#solomongeo.save_pickle">SolomonGeo.save_pickle</a></li>
+  <li><a href="#solomongeo.save_pickle-1" id="toc-solomongeo.save_pickle-1" class="nav-link" data-scroll-target="#solomongeo.save_pickle-1">SolomonGeo.save_pickle</a></li>
+  </ul></li>
+  <li><a href="#get-geo-json" id="toc-get-geo-json" class="nav-link" data-scroll-target="#get-geo-json">Get Geo JSON</a>
+  <ul class="collapse">
+  <li><a href="#solomongeo.get_geojson" id="toc-solomongeo.get_geojson" class="nav-link" data-scroll-target="#solomongeo.get_geojson">SolomonGeo.get_geojson</a></li>
+  </ul></li>
+  <li><a href="#store-json" id="toc-store-json" class="nav-link" data-scroll-target="#store-json">Store JSON</a>
+  <ul class="collapse">
+  <li><a href="#solomongeo.get_store" id="toc-solomongeo.get_store" class="nav-link" data-scroll-target="#solomongeo.get_store">SolomonGeo.get_store</a></li>
+  </ul></li>
+  <li><a href="#get-dataframe" id="toc-get-dataframe" class="nav-link" data-scroll-target="#get-dataframe">Get Dataframe</a>
+  <ul class="collapse">
+  <li><a href="#solomongeo.get_df" id="toc-solomongeo.get_df" class="nav-link" data-scroll-target="#solomongeo.get_df">SolomonGeo.get_df</a></li>
+  </ul></li>
+  <li><a href="#aggregate-dataframe" id="toc-aggregate-dataframe" class="nav-link" data-scroll-target="#aggregate-dataframe">Aggregate Dataframe</a>
+  <ul class="collapse">
+  <li><a href="#show_doc" id="toc-show_doc" class="nav-link" data-scroll-target="#show_doc">show_doc</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#testing" id="toc-testing" class="nav-link" data-scroll-target="#testing">Testing</a>
+  <ul class="collapse">
+  <li><a href="#save-and-load" id="toc-save-and-load" class="nav-link" data-scroll-target="#save-and-load">Save and Load</a></li>
+  </ul></li>
+  <li><a href="#todo-check-that-all-proportions-are-less-than-0" id="toc-todo-check-that-all-proportions-are-less-than-0" class="nav-link" data-scroll-target="#todo-check-that-all-proportions-are-less-than-0">TODO check that all proportions are less than 0</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/Gippers/SolomonIslandsDataMap/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Load Data</h1>
+</div>
+
+<div>
+  <div class="description">
+    Functions that load the data for the map.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<p><strong>Contents</strong></p>
+<p><code>Solomon Geospatial Data</code> - <a href="https://Gippers.github.io/SolomonIslandsDataMap/load_data.html#solomongeo"><code>SolomonGeo</code></a>: A class that cleans the solomon islandas census and geography data - <a href="https://Gippers.github.io/SolomonIslandsDataMap/load_data.html#solomongeo.read_test"><code>SolomonGeo.read_test</code></a>: Loads and transforms the test data - <a href="https://Gippers.github.io/SolomonIslandsDataMap/load_data.html#solomongeo.get_geojson"><code>SolomonGeo.get_geojson</code></a>: Returns the geo_df as a geojson datatset</p>
+<section id="solomon-geospatial-data" class="level2">
+<h2 class="anchored" data-anchor-id="solomon-geospatial-data">Solomon Geospatial Data</h2>
+<blockquote class="blockquote">
+<p>Load the geography and census data ### Geography Data Solomons islands geography data is organised at the levels - adm0 - The country as as whole, Solomon Islands - adm1 - Also referred to as the province e.g.&nbsp;Honiara, Malaita - adm2 - The Consituency e.g.&nbsp;Central Honiara - adm3 - Ward, the smallest geography I am reporting. E.g. Cruz</p>
+</blockquote>
+<section id="census-data" class="level3">
+<h3 class="anchored" data-anchor-id="census-data">Census Data</h3>
+<p>Solomon islands census data has been used from the 2009 and 2019 census. For the respective census: 2009 - We have the total population in for each of the administration regions 2019 - There is only data available down to the province level</p>
+</section>
+<section id="test-that-the-.env-variables-exist" class="level3">
+<h3 class="anchored" data-anchor-id="test-that-the-.env-variables-exist">Test that the .env variables exist</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test that the environment variables can be loaded</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>test(ACCESS_KEY, <span class="va">None</span>, nequals)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>test(SECRET_ACCCESS_KEY, <span class="va">None</span>, nequals)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>test(REGION_NAME, <span class="va">None</span>, nequals)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>test_eq(REGION_NAME, <span class="st">'ap-southeast-2'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="function-for-connecting-to-aws-s3-client" class="level2">
+<h2 class="anchored" data-anchor-id="function-for-connecting-to-aws-s3-client">Function for connecting to AWS S3 client</h2>
+</section>
+<section id="solomongeo-data-class" class="level1">
+<h1>SolomonGeo Data Class</h1>
+<p>This data class manipulates and stores the geospatial and regular data relating to each geography. It includes the necessary data and methods to manipulate that data to build the resulting dash app.</p>
+<section id="constructors-for-solomongeo-class" class="level2">
+<h2 class="anchored" data-anchor-id="constructors-for-solomongeo-class">Constructors for SolomonGeo class</h2>
+<p>These constudctors are used to build the SolomonGeo objects from various inputs</p>
+<hr>
+<p><a href="https://github.com/Gippers/SolomonIslandsDataMap/blob/main/SolomonIslandsDataMap/load_data.py#L118" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="solomongeo.load_pickle" class="level3">
+<h3 class="anchored" data-anchor-id="solomongeo.load_pickle">SolomonGeo.load_pickle</h3>
+<blockquote class="blockquote">
+<pre><code> SolomonGeo.load_pickle (folder:str='/testData/', aws:bool=True,
+                         file_name:str='sol_geo.pickle')</code></pre>
+</blockquote>
+<p>A constuctor that initialises the object from aws pickle</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>folder</td>
+<td>str</td>
+<td>/testData/</td>
+<td>file path of the folder to save in</td>
+</tr>
+<tr class="even">
+<td>aws</td>
+<td>bool</td>
+<td>True</td>
+<td>Whether to load from github or local</td>
+</tr>
+<tr class="odd">
+<td>file_name</td>
+<td>str</td>
+<td>sol_geo.pickle</td>
+<td>file name of the saved class</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="save-solomongeo" class="level2">
+<h2 class="anchored" data-anchor-id="save-solomongeo">Save SolomonGeo</h2>
+<p>Save as a pickled object</p>
+<hr>
+<p><a href="https://github.com/Gippers/SolomonIslandsDataMap/blob/main/SolomonIslandsDataMap/load_data.py#L240" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="solomongeo.save_pickle" class="level3">
+<h3 class="anchored" data-anchor-id="solomongeo.save_pickle">SolomonGeo.save_pickle</h3>
+<blockquote class="blockquote">
+<pre><code> SolomonGeo.save_pickle (aws:bool=True, folder:str='/testData/',
+                         file_name:str='sol_geo.pickle')</code></pre>
+</blockquote>
+<p>Save a pickle of the SolomonGeo class in backblaze b2</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>aws</td>
+<td>bool</td>
+<td>True</td>
+<td>Whether to save to aws or locally</td>
+</tr>
+<tr class="even">
+<td>folder</td>
+<td>str</td>
+<td>/testData/</td>
+<td>file path of the folder to save in, only necesasry for local saving</td>
+</tr>
+<tr class="odd">
+<td>file_name</td>
+<td>str</td>
+<td>sol_geo.pickle</td>
+<td>file name of the saved class</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><a href="https://github.com/Gippers/SolomonIslandsDataMap/blob/main/SolomonIslandsDataMap/load_data.py#L240" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="solomongeo.save_pickle-1" class="level3">
+<h3 class="anchored" data-anchor-id="solomongeo.save_pickle-1">SolomonGeo.save_pickle</h3>
+<blockquote class="blockquote">
+<pre><code> SolomonGeo.save_pickle (aws:bool=True, folder:str='/testData/',
+                         file_name:str='sol_geo.pickle')</code></pre>
+</blockquote>
+<p>Save a pickle of the SolomonGeo class in backblaze b2</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>aws</td>
+<td>bool</td>
+<td>True</td>
+<td>Whether to save to aws or locally</td>
+</tr>
+<tr class="even">
+<td>folder</td>
+<td>str</td>
+<td>/testData/</td>
+<td>file path of the folder to save in, only necesasry for local saving</td>
+</tr>
+<tr class="odd">
+<td>file_name</td>
+<td>str</td>
+<td>sol_geo.pickle</td>
+<td>file name of the saved class</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="get-geo-json" class="level2">
+<h2 class="anchored" data-anchor-id="get-geo-json">Get Geo JSON</h2>
+<p>A getter method for the geometry portion of the dataset that returns a geoJson formated geography.</p>
+<p>It only includes the geography and location name as id</p>
+<hr>
+<p><a href="https://github.com/Gippers/SolomonIslandsDataMap/blob/main/SolomonIslandsDataMap/load_data.py#L270" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="solomongeo.get_geojson" class="level3">
+<h3 class="anchored" data-anchor-id="solomongeo.get_geojson">SolomonGeo.get_geojson</h3>
+<blockquote class="blockquote">
+<pre><code> SolomonGeo.get_geojson (geo_filter:str=None)</code></pre>
+</blockquote>
+<p>A getter method for the SolomonGeo class that returns a Geo JSON formatted dataset</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>geo_filter</td>
+<td>str</td>
+<td>None</td>
+<td>Filters the geojson to the requested aggregation</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>dict</strong></td>
+<td></td>
+<td><strong>Geo JSON formatted dataset</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="store-json" class="level2">
+<h2 class="anchored" data-anchor-id="store-json">Store JSON</h2>
+<p>A getter method that returns a dcc.Store object with the data of the <a href="https://Gippers.github.io/SolomonIslandsDataMap/load_data.html#solomongeo"><code>SolomonGeo</code></a> class converted to a dictionary for storing with dash. We use a dictionary instead of geojson as the time to convert dictionary back to geopandas is much faster than geojson. (0.01s vs 1.2s) This makes the map much more snappy and responsive</p>
+<p>On storing, we drop the geometry as it won’t store as json. Note that you can get around this by using a geojson, but this increases reload time by a lot.</p>
+<hr>
+<p><a href="https://github.com/Gippers/SolomonIslandsDataMap/blob/main/SolomonIslandsDataMap/load_data.py#L288" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="solomongeo.get_store" class="level3">
+<h3 class="anchored" data-anchor-id="solomongeo.get_store">SolomonGeo.get_store</h3>
+<blockquote class="blockquote">
+<pre><code> SolomonGeo.get_store ()</code></pre>
+</blockquote>
+<p>A getter method that returns a dcc.Store object with the data of the <a href="https://Gippers.github.io/SolomonIslandsDataMap/load_data.html#solomongeo"><code>SolomonGeo</code></a> class converted to a dictionary for storing with dash.</p>
+</section>
+</section>
+<section id="get-dataframe" class="level2">
+<h2 class="anchored" data-anchor-id="get-dataframe">Get Dataframe</h2>
+<p>Returns a particular subset of the geo_df for further anaylsis</p>
+<hr>
+<p><a href="https://github.com/Gippers/SolomonIslandsDataMap/blob/main/SolomonIslandsDataMap/load_data.py#L303" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="solomongeo.get_df" class="level3">
+<h3 class="anchored" data-anchor-id="solomongeo.get_df">SolomonGeo.get_df</h3>
+<blockquote class="blockquote">
+<pre><code> SolomonGeo.get_df (geo_filter:str=None, var:str=None, measure:str=None,
+                    loc_filter:[&lt;class'str'&gt;]=None,
+                    type_filter:str='Total', agg_flag=False)</code></pre>
+</blockquote>
+<p>A getter method for the SolomonGeo class that returns a pandas dataset containg the id variable and the total population variable. This is the minimal data required to display on the map.</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>geo_filter</td>
+<td>str</td>
+<td>None</td>
+<td>Filters the dataframe to the requested geography</td>
+</tr>
+<tr class="even">
+<td>var</td>
+<td>str</td>
+<td>None</td>
+<td>Selects an upper level</td>
+</tr>
+<tr class="odd">
+<td>measure</td>
+<td>str</td>
+<td>None</td>
+<td>Selects the lower level variable, if var 1 is used, measure must be used.</td>
+</tr>
+<tr class="even">
+<td>loc_filter</td>
+<td>[&lt;class ‘str’&gt;]</td>
+<td>None</td>
+<td>Filters one of more locations</td>
+</tr>
+<tr class="odd">
+<td>type_filter</td>
+<td>str</td>
+<td>Total</td>
+<td>Return either number of proportion</td>
+</tr>
+<tr class="even">
+<td>agg_flag</td>
+<td>bool</td>
+<td>False</td>
+<td>Whether to return the dataset aggregated for the given selection</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>DataFrame</strong></td>
+<td></td>
+<td><strong>Pandas Dataframe containing population data</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="aggregate-dataframe" class="level2">
+<h2 class="anchored" data-anchor-id="aggregate-dataframe">Aggregate Dataframe</h2>
+<p>Returns an aggregate pandas series</p>
+<hr>
+<p><a href="https://github.com/fastai/nbdev/blob/master/nbdev/showdoc.py#LNone" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="show_doc" class="level3">
+<h3 class="anchored" data-anchor-id="show_doc">show_doc</h3>
+<blockquote class="blockquote">
+<pre><code> show_doc (sym, renderer=None, name:Optional[str]=None, title_level:int=3)</code></pre>
+</blockquote>
+<p>Show signature and docstring for <code>sym</code></p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sym</td>
+<td></td>
+<td></td>
+<td>Symbol to document</td>
+</tr>
+<tr class="even">
+<td>renderer</td>
+<td>NoneType</td>
+<td>None</td>
+<td>Optional renderer (defaults to markdown)</td>
+</tr>
+<tr class="odd">
+<td>name</td>
+<td>str | None</td>
+<td>None</td>
+<td>Optionally override displayed name of <code>sym</code></td>
+</tr>
+<tr class="even">
+<td>title_level</td>
+<td>int</td>
+<td>3</td>
+<td>Heading level to use for symbol name</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="testing" class="level1">
+<h1>Testing</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sol_geo <span class="op">=</span> SolomonGeo.read_test()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sol_geo.geo_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th colspan="6" data-quarto-table-cell-role="th" data-halign="left">core</th>
+<th data-quarto-table-cell-role="th">Key Statistics</th>
+<th colspan="3" data-quarto-table-cell-role="th" data-halign="left">Main source of household drinking water</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">Household money received from remittances</th>
+<th colspan="8" data-quarto-table-cell-role="th" data-halign="left">Main source of household income in last 12 months</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">geometry</th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">agg</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">location</th>
+<th data-quarto-table-cell-role="th">type</th>
+<th data-quarto-table-cell-role="th">Total Households</th>
+<th data-quarto-table-cell-role="th">metered SIWA drinking water</th>
+<th data-quarto-table-cell-role="th">communal standpipe</th>
+<th data-quarto-table-cell-role="th">private water tank</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">1000 - 1499 S.I. dollars</th>
+<th data-quarto-table-cell-role="th">more than 1500 S.I. dollars</th>
+<th data-quarto-table-cell-role="th">No income</th>
+<th data-quarto-table-cell-role="th">Wages Salary</th>
+<th data-quarto-table-cell-role="th">Own business</th>
+<th data-quarto-table-cell-role="th">Sale fish crop craft</th>
+<th data-quarto-table-cell-role="th">Land lease</th>
+<th data-quarto-table-cell-role="th">House rent</th>
+<th data-quarto-table-cell-role="th">Remittances</th>
+<th data-quarto-table-cell-role="th">Other source</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th">pk</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Choiseul_Total</td>
+<td>MULTIPOLYGON (((157.56463 -7.49272, 157.56005 ...</td>
+<td>1</td>
+<td>Province</td>
+<td>2009</td>
+<td>Choiseul</td>
+<td>Total</td>
+<td>4712</td>
+<td>2.0000</td>
+<td>1416.0000</td>
+<td>1137.0000</td>
+<td>...</td>
+<td>209.0000</td>
+<td>179.0000</td>
+<td>88.0000</td>
+<td>892.0000</td>
+<td>206.0000</td>
+<td>2443.0000</td>
+<td>6.0000</td>
+<td>16.0000</td>
+<td>206.0000</td>
+<td>855.0000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Choiseul_Proportion</td>
+<td>MULTIPOLYGON (((157.56463 -7.49272, 157.56005 ...</td>
+<td>1</td>
+<td>Province</td>
+<td>2009</td>
+<td>Choiseul</td>
+<td>Proportion</td>
+<td>1</td>
+<td>0.0004</td>
+<td>0.3005</td>
+<td>0.2413</td>
+<td>...</td>
+<td>0.0444</td>
+<td>0.0380</td>
+<td>0.0187</td>
+<td>0.1893</td>
+<td>0.0437</td>
+<td>0.5185</td>
+<td>0.0013</td>
+<td>0.0034</td>
+<td>0.0437</td>
+<td>0.1815</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Honiara_Total</td>
+<td>MULTIPOLYGON (((159.91806 -9.42379, 159.92354 ...</td>
+<td>10</td>
+<td>Province</td>
+<td>2009</td>
+<td>Honiara</td>
+<td>Total</td>
+<td>8981</td>
+<td>6771.0000</td>
+<td>351.0000</td>
+<td>861.0000</td>
+<td>...</td>
+<td>203.0000</td>
+<td>395.0000</td>
+<td>75.0000</td>
+<td>6984.0000</td>
+<td>783.0000</td>
+<td>393.0000</td>
+<td>54.0000</td>
+<td>179.0000</td>
+<td>48.0000</td>
+<td>465.0000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Honiara_Proportion</td>
+<td>MULTIPOLYGON (((159.91806 -9.42379, 159.92354 ...</td>
+<td>10</td>
+<td>Province</td>
+<td>2009</td>
+<td>Honiara</td>
+<td>Proportion</td>
+<td>1</td>
+<td>0.7539</td>
+<td>0.0391</td>
+<td>0.0959</td>
+<td>...</td>
+<td>0.0226</td>
+<td>0.0440</td>
+<td>0.0084</td>
+<td>0.7776</td>
+<td>0.0872</td>
+<td>0.0438</td>
+<td>0.0060</td>
+<td>0.0199</td>
+<td>0.0053</td>
+<td>0.0518</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Western_Total</td>
+<td>MULTIPOLYGON (((158.25148 -8.78861, 158.24885 ...</td>
+<td>2</td>
+<td>Province</td>
+<td>2009</td>
+<td>Western</td>
+<td>Total</td>
+<td>13762</td>
+<td>37.0000</td>
+<td>4151.0000</td>
+<td>4596.0000</td>
+<td>...</td>
+<td>530.0000</td>
+<td>478.0000</td>
+<td>182.0000</td>
+<td>3732.0000</td>
+<td>618.0000</td>
+<td>7518.0000</td>
+<td>8.0000</td>
+<td>48.0000</td>
+<td>410.0000</td>
+<td>1246.0000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Vanikoro_Proportion</td>
+<td>MULTIPOLYGON (((166.98326 -11.67945, 166.98258...</td>
+<td>915</td>
+<td>Ward</td>
+<td>2009</td>
+<td>Vanikoro</td>
+<td>Proportion</td>
+<td>1</td>
+<td>0.0038</td>
+<td>0.6278</td>
+<td>0.0338</td>
+<td>...</td>
+<td>0.0075</td>
+<td>0.0000</td>
+<td>0.0489</td>
+<td>0.0489</td>
+<td>0.0639</td>
+<td>0.4699</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.3684</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Tikopia_Total</td>
+<td>MULTIPOLYGON (((168.84036 -12.28504, 168.82691...</td>
+<td>916</td>
+<td>Ward</td>
+<td>2009</td>
+<td>Tikopia</td>
+<td>Total</td>
+<td>262</td>
+<td>0.0000</td>
+<td>255.0000</td>
+<td>1.0000</td>
+<td>...</td>
+<td>10.0000</td>
+<td>4.0000</td>
+<td>39.0000</td>
+<td>19.0000</td>
+<td>2.0000</td>
+<td>87.0000</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>26.0000</td>
+<td>89.0000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Tikopia_Proportion</td>
+<td>MULTIPOLYGON (((168.84036 -12.28504, 168.82691...</td>
+<td>916</td>
+<td>Ward</td>
+<td>2009</td>
+<td>Tikopia</td>
+<td>Proportion</td>
+<td>1</td>
+<td>0.0000</td>
+<td>0.9733</td>
+<td>0.0038</td>
+<td>...</td>
+<td>0.0382</td>
+<td>0.0153</td>
+<td>0.1489</td>
+<td>0.0725</td>
+<td>0.0076</td>
+<td>0.3321</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.0992</td>
+<td>0.3397</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Neo_Total</td>
+<td>MULTIPOLYGON (((165.81001 -10.65326, 165.79693...</td>
+<td>917</td>
+<td>Ward</td>
+<td>2009</td>
+<td>Neo</td>
+<td>Total</td>
+<td>301</td>
+<td>0.0000</td>
+<td>1.0000</td>
+<td>22.0000</td>
+<td>...</td>
+<td>3.0000</td>
+<td>4.0000</td>
+<td>4.0000</td>
+<td>22.0000</td>
+<td>5.0000</td>
+<td>251.0000</td>
+<td>0.0000</td>
+<td>3.0000</td>
+<td>7.0000</td>
+<td>9.0000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Neo_Proportion</td>
+<td>MULTIPOLYGON (((165.81001 -10.65326, 165.79693...</td>
+<td>917</td>
+<td>Ward</td>
+<td>2009</td>
+<td>Neo</td>
+<td>Proportion</td>
+<td>1</td>
+<td>0.0000</td>
+<td>0.0033</td>
+<td>0.0731</td>
+<td>...</td>
+<td>0.0100</td>
+<td>0.0133</td>
+<td>0.0133</td>
+<td>0.0731</td>
+<td>0.0166</td>
+<td>0.8339</td>
+<td>0.0000</td>
+<td>0.0100</td>
+<td>0.0233</td>
+<td>0.0299</td>
+</tr>
+</tbody>
+</table>
+
+<p>486 rows × 72 columns</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>sol_geo.locations</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>{'Province': array(['Choiseul', 'Honiara', 'Western', 'Isabel', 'Central',
+        'Rennell-Bell', 'Guadalcanal', 'Malaita', 'Makira-Ulawa', 'Temotu'],
+       dtype=object),
+ 'Constituency': array(['West Guadalcanal', 'Temotu Vatu', 'South Guadalcanal',
+        'East Guadalcanal', 'Hograno-Kia-Havulei', 'East-Central',
+        'Marigne-Kokota', 'North West Choiseul', 'East AreAre',
+        'North West Guadalcanl', 'East Choiseul', 'West Areare',
+        'Small Malaita', 'Malaita Outer Island', 'East Malaita',
+        'Auki-Langalanga', 'East Kwaio', 'South Choiseul', 'West Kwaio',
+        "West Kwara'ae", "Central Kwara'ae", 'Rennell-Bellona', 'Marovo',
+        'Temotu Pele', 'Temotu-Nende', 'North New Georgia', 'Fataleka',
+        'East Honiara', 'South New Georgia-Rendova', 'Central Honiara',
+        'West Honiara', 'North Malaita', 'Lau-Mbaelela', 'Baegu-Asifola',
+        'Nggela', 'Ulawa-Ugi', 'West New Georgia-Vonavona',
+        'Central Guadalcanal', 'Savo-Russull Islands',
+        'North Vella la Vella', 'West Makira', 'South Vella la Vella',
+        'Central Makira', 'Ranongga-Simbo', 'East Makira',
+        'Gizo-Kolombangara', 'Shortland Islands', 'Gao-Bugotu',
+        'North-East', 'North Guadalcanal'], dtype=object),
+ 'Ward': array(['Nggosi', 'Mbumburu', 'Rove - Lengakiki', 'Cruz', 'Vavaea',
+        'Vuhokesa', 'Mataniko', "Kola'A", 'Kukum', 'Waghina', 'Naha',
+        'Vura', 'Panatina', 'Katupika', 'Vasiduki', 'Viviru', 'Babatana',
+        'Tepakaza', 'Batava', 'Tavula', 'Polo', 'Bangara', 'Susuka',
+        'Senga', 'Kerepangara', 'Kirugela', 'Outer Shortlands',
+        'Inner Shortlands', 'Simbo', 'North Ranongga', 'Central Ranongga',
+        'South Ranongga', 'Vonunu', 'Bilua', 'Dovele', 'Iringgila', 'Gizo',
+        'South Kolombangara', 'Vonavona', 'Kusaghe', 'Munda',
+        'Nusa Roviana', 'Roviana Lagoon', 'South Rendova', 'North Rendova',
+        'Kolombaghea', 'Buini Tusu', 'Nono', 'Nggatokae', 'North Vangunu',
+        'Noro', 'North Kolombangara', 'Kia', 'Havulei', 'Kokota',
+        'Hovukoilo', 'Buala', 'Tirotonga', 'Koviloko', 'Kmaga', 'Kaloka',
+        'Tatamba', 'Sigana', 'Japuana', 'Kolomola', 'Kolotubi', 'Susubona',
+        'Samasodu', 'Sandfly-Buenavista', 'West Gela', 'East Gela',
+        'Tulagi', 'South West Gela', 'South East Gela', 'North East Gela',
+        'North West Gela', 'Mbanika', 'Pavuvu', 'Lovukol', 'North Savo',
+        'South Savo', 'East Te Nggano', 'West Te Nggano', 'Lughu',
+        'Kangava', 'Tetau Nangoto', 'Mugihenua', 'Matangi', 'East Ghongau',
+        'West Ghongau', "Sa'Aiho", 'Tandai', 'Saghalu', 'Savulei',
+        'Tangarare', 'Wanderer Bay', 'Duidui', 'Vatukulau', 'Talise',
+        'Avuavu', 'Moli', 'Tetekanji', 'Birao', 'Valasi', 'Kolokarako',
+        'Longgu', 'Aola', 'Paripao', 'East Tasimboko', 'Vulolo', 'Malango',
+        'West Ghaobata', 'East Ghaobata', 'Auki', 'Aimela', 'Buma',
+        'Fauabu', 'West Baegu \xa0- Fatale', 'Mandalua - Folotana',
+        'Foondo - Gwaiau', "Malu'U", 'Matakwalao', 'Takwa', 'East Baegu',
+        'Fouenda', 'Sulufou - Kwarande', 'Sububenu- Burianias', 'Nafinua',
+        'Faumamanu - Kwai', 'Gulalafou', 'Waneagu - Taelanasin', 'Aiaisi',
+        'Areare', 'Raroisuu', 'Aba - Asimeuru', 'Asimae', 'Mareho', 'Tai',
+        'Kwarekwareo', 'Siesie', 'Weagu Silana Sina',
+        'Kwaimela - Radefasu', 'Langalanga', 'Luaniua', 'Pelau',
+        'Sikaiana', 'North Ulawa', 'South Ulawa', 'West Ulawa',
+        'Ugi And Pio', 'Arosi South', 'Arosi West', 'Arosi North',
+        'Arosi East', 'Bauro West', 'Bauro Central', 'Bauro East',
+        'Wainoni West', 'Wainoni East', 'Star Harbour North', 'Santa Ana',
+        'Santa Catalina', 'Star Harbour South', 'Rawo', 'Weather Coast',
+        'Haununu', 'Fenualoa', 'Polynesian Outer Islands', 'Nipua-Nopoli',
+        'Lipe-Temua', 'Manuopo', 'Nenumpo', 'Nevenema', 'Luva Station',
+        'Graciosa Bay', 'Nea-Noole', 'North East Santa Cruz',
+        'Nanggu-Lord Howe', 'Duff Islands', 'Utupua', 'Vanikoro',
+        'Tikopia', 'Neo'], dtype=object)}</code></pre>
+</div>
+</div>
+<section id="save-and-load" class="level2">
+<h2 class="anchored" data-anchor-id="save-and-load">Save and Load</h2>
+<p>Test that the newly created solomon geo object can be saved to aws</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sol_geo.save_pickle()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Test that we can connect to the aws s3 bucket</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the S3 object</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>obj <span class="op">=</span> s3_client().get_object(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    Bucket <span class="op">=</span> <span class="st">'hobby-data'</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    Key <span class="op">=</span> <span class="st">'test.txt'</span>, </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in the pickle</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> obj[<span class="st">'Body'</span>].read()</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span>:</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"Issue dowloading test file from AWS."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>SolomonGeo.load_pickle(<span class="st">'/testData/'</span>, aws<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;__main__.SolomonGeo&gt;</code></pre>
+</div>
+</div>
+<p>Test that gen_stored creates a copy correctly from a json serialised dataframe</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>stored_geo <span class="op">=</span> sol_geo.get_store()</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> I need to potentially created a function to check if two objects are the same</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>restored_geo <span class="op">=</span> SolomonGeo.gen_stored(stored_geo.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>restored_geo.get_df(geo_filter <span class="op">=</span> <span class="st">'Constituency'</span>, loc_filter<span class="op">=</span>[<span class="st">'Nggela'</span>, <span class="st">'East AreAre'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Key Statistics</th>
+<th colspan="9" data-quarto-table-cell-role="th" data-halign="left">Main source of household drinking water</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">Household money received from remittances</th>
+<th colspan="8" data-quarto-table-cell-role="th" data-halign="left">Main source of household income in last 12 months</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Total Households</th>
+<th data-quarto-table-cell-role="th">metered SIWA drinking water</th>
+<th data-quarto-table-cell-role="th">communal standpipe</th>
+<th data-quarto-table-cell-role="th">private water tank</th>
+<th data-quarto-table-cell-role="th">communal water tank</th>
+<th data-quarto-table-cell-role="th">well - protected</th>
+<th data-quarto-table-cell-role="th">well - unprotected</th>
+<th data-quarto-table-cell-role="th">river or stream</th>
+<th data-quarto-table-cell-role="th">bottled water</th>
+<th data-quarto-table-cell-role="th">other source of drinking water</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">1000 - 1499 S.I. dollars</th>
+<th data-quarto-table-cell-role="th">more than 1500 S.I. dollars</th>
+<th data-quarto-table-cell-role="th">No income</th>
+<th data-quarto-table-cell-role="th">Wages Salary</th>
+<th data-quarto-table-cell-role="th">Own business</th>
+<th data-quarto-table-cell-role="th">Sale fish crop craft</th>
+<th data-quarto-table-cell-role="th">Land lease</th>
+<th data-quarto-table-cell-role="th">House rent</th>
+<th data-quarto-table-cell-role="th">Remittances</th>
+<th data-quarto-table-cell-role="th">Other source</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th">(core, location)</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">East AreAre</td>
+<td>1105</td>
+<td>1.0</td>
+<td>815.0</td>
+<td>12.0</td>
+<td>9.0</td>
+<td>1.0</td>
+<td>3.0</td>
+<td>223.0</td>
+<td>0.0</td>
+<td>41.0</td>
+<td>...</td>
+<td>41.0</td>
+<td>15.0</td>
+<td>37.0</td>
+<td>89.0</td>
+<td>101.0</td>
+<td>650.0</td>
+<td>0.0</td>
+<td>2.0</td>
+<td>31.0</td>
+<td>195.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Nggela</td>
+<td>3315</td>
+<td>26.0</td>
+<td>1557.0</td>
+<td>258.0</td>
+<td>437.0</td>
+<td>52.0</td>
+<td>13.0</td>
+<td>868.0</td>
+<td>1.0</td>
+<td>103.0</td>
+<td>...</td>
+<td>25.0</td>
+<td>59.0</td>
+<td>49.0</td>
+<td>558.0</td>
+<td>327.0</td>
+<td>1878.0</td>
+<td>0.0</td>
+<td>4.0</td>
+<td>75.0</td>
+<td>424.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>2 rows × 66 columns</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> create a test to check that two object are the same. Probably need to write defualt behaviour into</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># object. Maybe use fastcore test_eq</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#test_eq(stored_geo.geo_df, sol_geo.geo_df)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Test filtering of down to multiple locations</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#test_eq(sol_geo.get_df(geo_filter = 'constituency')['total_pop'].sum(), const_df['total_pop'].sum())</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>sol_geo.get_df(geo_filter <span class="op">=</span> <span class="st">'Constituency'</span>, loc_filter<span class="op">=</span>[<span class="st">'Nggela'</span>, <span class="st">'East AreAre'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Key Statistics</th>
+<th colspan="9" data-quarto-table-cell-role="th" data-halign="left">Main source of household drinking water</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">Household money received from remittances</th>
+<th colspan="8" data-quarto-table-cell-role="th" data-halign="left">Main source of household income in last 12 months</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Total Households</th>
+<th data-quarto-table-cell-role="th">metered SIWA drinking water</th>
+<th data-quarto-table-cell-role="th">communal standpipe</th>
+<th data-quarto-table-cell-role="th">private water tank</th>
+<th data-quarto-table-cell-role="th">communal water tank</th>
+<th data-quarto-table-cell-role="th">well - protected</th>
+<th data-quarto-table-cell-role="th">well - unprotected</th>
+<th data-quarto-table-cell-role="th">river or stream</th>
+<th data-quarto-table-cell-role="th">bottled water</th>
+<th data-quarto-table-cell-role="th">other source of drinking water</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">1000 - 1499 S.I. dollars</th>
+<th data-quarto-table-cell-role="th">more than 1500 S.I. dollars</th>
+<th data-quarto-table-cell-role="th">No income</th>
+<th data-quarto-table-cell-role="th">Wages Salary</th>
+<th data-quarto-table-cell-role="th">Own business</th>
+<th data-quarto-table-cell-role="th">Sale fish crop craft</th>
+<th data-quarto-table-cell-role="th">Land lease</th>
+<th data-quarto-table-cell-role="th">House rent</th>
+<th data-quarto-table-cell-role="th">Remittances</th>
+<th data-quarto-table-cell-role="th">Other source</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th">(core, location)</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">East AreAre</td>
+<td>1105</td>
+<td>1.0</td>
+<td>815.0</td>
+<td>12.0</td>
+<td>9.0</td>
+<td>1.0</td>
+<td>3.0</td>
+<td>223.0</td>
+<td>0.0</td>
+<td>41.0</td>
+<td>...</td>
+<td>41.0</td>
+<td>15.0</td>
+<td>37.0</td>
+<td>89.0</td>
+<td>101.0</td>
+<td>650.0</td>
+<td>0.0</td>
+<td>2.0</td>
+<td>31.0</td>
+<td>195.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Nggela</td>
+<td>3315</td>
+<td>26.0</td>
+<td>1557.0</td>
+<td>258.0</td>
+<td>437.0</td>
+<td>52.0</td>
+<td>13.0</td>
+<td>868.0</td>
+<td>1.0</td>
+<td>103.0</td>
+<td>...</td>
+<td>25.0</td>
+<td>59.0</td>
+<td>49.0</td>
+<td>558.0</td>
+<td>327.0</td>
+<td>1878.0</td>
+<td>0.0</td>
+<td>4.0</td>
+<td>75.0</td>
+<td>424.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>2 rows × 66 columns</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> work out how to check save and load are the same as a test</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Might need to wreite and equality function</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> should do a count check for the geojson similar to this</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>sol_geo.geo_df[sol_geo.geo_df[<span class="st">'core'</span>][<span class="st">'agg'</span>] <span class="op">==</span> <span class="st">'Constituency'</span>].count()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>core                                               geometry                100
+                                                   id                      100
+                                                   agg                     100
+                                                   year                    100
+                                                   location                100
+                                                                          ... 
+Main source of household income in last 12 months  Sale fish crop craft    100
+                                                   Land lease              100
+                                                   House rent              100
+                                                   Remittances             100
+                                                   Other source            100
+Length: 72, dtype: int64</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="todo-check-that-all-proportions-are-less-than-0" class="level1">
+<h1>TODO check that all proportions are less than 0</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> filter and test equality?</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>test <span class="op">=</span> sol_geo.get_geojson(geo_filter <span class="op">=</span> <span class="st">'ward'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The sum after merging and filtering should equal the sum from the raw dataset.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>test_eq(sol_geo.agg_df(geo_filter <span class="op">=</span> <span class="st">'Constituency'</span>,var <span class="op">=</span> <span class="st">'Key Statistics'</span>, measure <span class="op">=</span> <span class="st">'Total Households'</span>)[<span class="dv">0</span>], </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>        const_df.loc[const_df[<span class="st">'type'</span>] <span class="op">==</span> <span class="st">'Total'</span>].loc[const_df[<span class="st">'agg'</span>] <span class="op">==</span> <span class="st">'Constituency'</span>][<span class="st">'Key Statistics: Total Households'</span>].<span class="bu">sum</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_5839/1266885615.py:1: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  test_eq(sol_geo.agg_df(geo_filter = 'Constituency',var = 'Key Statistics', measure = 'Total Households')[0],</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>sol_geo.agg_df(geo_filter <span class="op">=</span> <span class="st">'Constituency'</span>, var<span class="op">=</span><span class="st">'Key Statistics'</span>, measure <span class="op">=</span> <span class="st">'Total Households'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>Total Households    91251
+dtype: int64</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sol_geo.get_df(geo_filter <span class="op">=</span> <span class="st">'Constituency'</span>, var<span class="op">=</span><span class="st">'Key Statistics'</span>, measure <span class="op">=</span> <span class="st">'Total Households'</span>, loc_filter<span class="op">=</span>[<span class="st">'West Guadalcanal'</span>]).values[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>array([1671])</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>sol_geo.geo_df[<span class="st">'core'</span>].<span class="bu">filter</span>(items <span class="op">=</span> [<span class="st">'id'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">pk</th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Choiseul_Total</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Choiseul_Proportion</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Honiara_Total</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Honiara_Proportion</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Western_Total</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Vanikoro_Proportion</td>
+<td>915</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Tikopia_Total</td>
+<td>916</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Tikopia_Proportion</td>
+<td>916</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Neo_Total</td>
+<td>917</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Neo_Proportion</td>
+<td>917</td>
+</tr>
+</tbody>
+</table>
+
+<p>486 rows × 1 columns</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> -test that they all sum to one</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>test_agg <span class="op">=</span> sol_geo.agg_df(geo_filter <span class="op">=</span> <span class="st">'Constituency'</span>, type_filter<span class="op">=</span><span class="st">'Proportion'</span>, var <span class="op">=</span> <span class="st">"Main source of household drinking water"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>test_eq(test_agg.<span class="bu">sum</span>(), <span class="fl">100.0</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>test_agg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>metered SIWA drinking water        9.168119
+communal standpipe                35.114136
+private water tank                12.471096
+communal water tank               10.619062
+well - protected                   2.081073
+well - unprotected                 1.781898
+river or stream                   24.543293
+bottled water                      0.611500
+other source of drinking water     3.609823
+dtype: float64</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>test_agg.<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>100.0</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

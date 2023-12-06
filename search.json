@@ -1,0 +1,296 @@
+[
+  {
+    "objectID": "map_page.html",
+    "href": "map_page.html",
+    "title": "Map Page",
+    "section": "",
+    "text": "Setup some of the key data contiaining objects"
+  },
+  {
+    "objectID": "map_page.html#customize-the-layout",
+    "href": "map_page.html#customize-the-layout",
+    "title": "Map Page",
+    "section": "Customize the Layout",
+    "text": "Customize the Layout\n\nsource\n\nlayout\n\n layout ()"
+  },
+  {
+    "objectID": "map_page.html#update-location-dropdown-value-based-on-map-click",
+    "href": "map_page.html#update-location-dropdown-value-based-on-map-click",
+    "title": "Map Page",
+    "section": "Update location dropdown value based on map click",
+    "text": "Update location dropdown value based on map click\nThis callback also will trigger an update to the selected card data"
+  },
+  {
+    "objectID": "map_page.html#update-map-selections",
+    "href": "map_page.html#update-map-selections",
+    "title": "Map Page",
+    "section": "Update map selections",
+    "text": "Update map selections"
+  },
+  {
+    "objectID": "map_page.html#update-the-location-options-based-on-geography-selected",
+    "href": "map_page.html#update-the-location-options-based-on-geography-selected",
+    "title": "Map Page",
+    "section": "Update the location options based on geography selected",
+    "text": "Update the location options based on geography selected\n\nsource\n\nupdate_geography\n\n update_geography (geo_input:str, dict_sol:dict)\n\nUpdates the dropdown_location dropdown based on the currently selected data aggregation.\n\n\n\n\n\n\n\n\n\nType\nDetails\n\n\n\n\ngeo_input\nstr\nUser input from the geography dropdown\n\n\ndict_sol\ndict\nThe dataset in dictionary form\n\n\nReturns\n[&lt;class ‘str’&gt;]\nReturns a new list of locations to display"
+  },
+  {
+    "objectID": "map_page.html#update-the-variable-dropdowns-based-on-the-selection-of-the-overall-variable",
+    "href": "map_page.html#update-the-variable-dropdowns-based-on-the-selection-of-the-overall-variable",
+    "title": "Map Page",
+    "section": "Update the variable dropdowns based on the selection of the overall variable",
+    "text": "Update the variable dropdowns based on the selection of the overall variable"
+  },
+  {
+    "objectID": "map_page.html#update-the-measure-selection-from-clicks-on-the-bar-graph",
+    "href": "map_page.html#update-the-measure-selection-from-clicks-on-the-bar-graph",
+    "title": "Map Page",
+    "section": "Update the measure selection from clicks on the bar graph",
+    "text": "Update the measure selection from clicks on the bar graph\n\nUpdate map based on inputs\n\n\nUpdate the selected part of the map based on the dropdown\n\n\nUpdate Selected Bar Graph based on inputs\n\nsource\n\n\nupdate_bargraph\n\n update_bargraph (geo_input:str, data_type:str, measure:str,\n                  loc_selection:[&lt;class'str'&gt;], init_load:{},\n                  variable:str, dict_sol:dict)\n\nUpdates the focus census variable or geography dispalayed on the map\n\n\n\n\n\n\n\n\n\nType\nDetails\n\n\n\n\ngeo_input\nstr\nUser input from the geography dropdown\n\n\ndata_type\nstr\nUser input of type of data\n\n\nmeasure\nstr\nA string contiaining the census variable and measure split by ‘:’\n\n\nloc_selection\n[&lt;class ‘str’&gt;]\nThe selected locations, may be none\n\n\ninit_load\n{}\nAn empty dictionary always, triggers initial load\n\n\nvariable\nstr\nThe state of the variable dropdown\n\n\ndict_sol\ndict\nThe dataset in dictionary form\n\n\nReturns\nFigure\nReturns a graph object figure after being updated and the dynamic title\n\n\n\nOn click, update the contents of the kpi’s"
+  },
+  {
+    "objectID": "load_data.html",
+    "href": "load_data.html",
+    "title": "Load Data",
+    "section": "",
+    "text": "Contents\nSolomon Geospatial Data - SolomonGeo: A class that cleans the solomon islandas census and geography data - SolomonGeo.read_test: Loads and transforms the test data - SolomonGeo.get_geojson: Returns the geo_df as a geojson datatset"
+  },
+  {
+    "objectID": "load_data.html#solomon-geospatial-data",
+    "href": "load_data.html#solomon-geospatial-data",
+    "title": "Load Data",
+    "section": "Solomon Geospatial Data",
+    "text": "Solomon Geospatial Data\n\nLoad the geography and census data ### Geography Data Solomons islands geography data is organised at the levels - adm0 - The country as as whole, Solomon Islands - adm1 - Also referred to as the province e.g. Honiara, Malaita - adm2 - The Consituency e.g. Central Honiara - adm3 - Ward, the smallest geography I am reporting. E.g. Cruz\n\n\nCensus Data\nSolomon islands census data has been used from the 2009 and 2019 census. For the respective census: 2009 - We have the total population in for each of the administration regions 2019 - There is only data available down to the province level\n\n\nTest that the .env variables exist\n\n# Test that the environment variables can be loaded\ntest(ACCESS_KEY, None, nequals)\ntest(SECRET_ACCCESS_KEY, None, nequals)\ntest(REGION_NAME, None, nequals)\ntest_eq(REGION_NAME, 'ap-southeast-2')"
+  },
+  {
+    "objectID": "load_data.html#function-for-connecting-to-aws-s3-client",
+    "href": "load_data.html#function-for-connecting-to-aws-s3-client",
+    "title": "Load Data",
+    "section": "Function for connecting to AWS S3 client",
+    "text": "Function for connecting to AWS S3 client"
+  },
+  {
+    "objectID": "load_data.html#constructors-for-solomongeo-class",
+    "href": "load_data.html#constructors-for-solomongeo-class",
+    "title": "Load Data",
+    "section": "Constructors for SolomonGeo class",
+    "text": "Constructors for SolomonGeo class\nThese constudctors are used to build the SolomonGeo objects from various inputs\n\nsource\n\nSolomonGeo.load_pickle\n\n SolomonGeo.load_pickle (folder:str='/testData/', aws:bool=True,\n                         file_name:str='sol_geo.pickle')\n\nA constuctor that initialises the object from aws pickle\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nfolder\nstr\n/testData/\nfile path of the folder to save in\n\n\naws\nbool\nTrue\nWhether to load from github or local\n\n\nfile_name\nstr\nsol_geo.pickle\nfile name of the saved class"
+  },
+  {
+    "objectID": "load_data.html#save-solomongeo",
+    "href": "load_data.html#save-solomongeo",
+    "title": "Load Data",
+    "section": "Save SolomonGeo",
+    "text": "Save SolomonGeo\nSave as a pickled object\n\nsource\n\nSolomonGeo.save_pickle\n\n SolomonGeo.save_pickle (aws:bool=True, folder:str='/testData/',\n                         file_name:str='sol_geo.pickle')\n\nSave a pickle of the SolomonGeo class in backblaze b2\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\naws\nbool\nTrue\nWhether to save to aws or locally\n\n\nfolder\nstr\n/testData/\nfile path of the folder to save in, only necesasry for local saving\n\n\nfile_name\nstr\nsol_geo.pickle\nfile name of the saved class\n\n\n\n\nsource\n\n\nSolomonGeo.save_pickle\n\n SolomonGeo.save_pickle (aws:bool=True, folder:str='/testData/',\n                         file_name:str='sol_geo.pickle')\n\nSave a pickle of the SolomonGeo class in backblaze b2\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\naws\nbool\nTrue\nWhether to save to aws or locally\n\n\nfolder\nstr\n/testData/\nfile path of the folder to save in, only necesasry for local saving\n\n\nfile_name\nstr\nsol_geo.pickle\nfile name of the saved class"
+  },
+  {
+    "objectID": "load_data.html#get-geo-json",
+    "href": "load_data.html#get-geo-json",
+    "title": "Load Data",
+    "section": "Get Geo JSON",
+    "text": "Get Geo JSON\nA getter method for the geometry portion of the dataset that returns a geoJson formated geography.\nIt only includes the geography and location name as id\n\nsource\n\nSolomonGeo.get_geojson\n\n SolomonGeo.get_geojson (geo_filter:str=None)\n\nA getter method for the SolomonGeo class that returns a Geo JSON formatted dataset\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\ngeo_filter\nstr\nNone\nFilters the geojson to the requested aggregation\n\n\nReturns\ndict\n\nGeo JSON formatted dataset"
+  },
+  {
+    "objectID": "load_data.html#store-json",
+    "href": "load_data.html#store-json",
+    "title": "Load Data",
+    "section": "Store JSON",
+    "text": "Store JSON\nA getter method that returns a dcc.Store object with the data of the SolomonGeo class converted to a dictionary for storing with dash. We use a dictionary instead of geojson as the time to convert dictionary back to geopandas is much faster than geojson. (0.01s vs 1.2s) This makes the map much more snappy and responsive\nOn storing, we drop the geometry as it won’t store as json. Note that you can get around this by using a geojson, but this increases reload time by a lot.\n\nsource\n\nSolomonGeo.get_store\n\n SolomonGeo.get_store ()\n\nA getter method that returns a dcc.Store object with the data of the SolomonGeo class converted to a dictionary for storing with dash."
+  },
+  {
+    "objectID": "load_data.html#get-dataframe",
+    "href": "load_data.html#get-dataframe",
+    "title": "Load Data",
+    "section": "Get Dataframe",
+    "text": "Get Dataframe\nReturns a particular subset of the geo_df for further anaylsis\n\nsource\n\nSolomonGeo.get_df\n\n SolomonGeo.get_df (geo_filter:str=None, var:str=None, measure:str=None,\n                    loc_filter:[&lt;class'str'&gt;]=None,\n                    type_filter:str='Total', agg_flag=False)\n\nA getter method for the SolomonGeo class that returns a pandas dataset containg the id variable and the total population variable. This is the minimal data required to display on the map.\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\ngeo_filter\nstr\nNone\nFilters the dataframe to the requested geography\n\n\nvar\nstr\nNone\nSelects an upper level\n\n\nmeasure\nstr\nNone\nSelects the lower level variable, if var 1 is used, measure must be used.\n\n\nloc_filter\n[&lt;class ‘str’&gt;]\nNone\nFilters one of more locations\n\n\ntype_filter\nstr\nTotal\nReturn either number of proportion\n\n\nagg_flag\nbool\nFalse\nWhether to return the dataset aggregated for the given selection\n\n\nReturns\nDataFrame\n\nPandas Dataframe containing population data"
+  },
+  {
+    "objectID": "load_data.html#aggregate-dataframe",
+    "href": "load_data.html#aggregate-dataframe",
+    "title": "Load Data",
+    "section": "Aggregate Dataframe",
+    "text": "Aggregate Dataframe\nReturns an aggregate pandas series\n\nsource\n\nshow_doc\n\n show_doc (sym, renderer=None, name:Optional[str]=None, title_level:int=3)\n\nShow signature and docstring for sym\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nsym\n\n\nSymbol to document\n\n\nrenderer\nNoneType\nNone\nOptional renderer (defaults to markdown)\n\n\nname\nstr | None\nNone\nOptionally override displayed name of sym\n\n\ntitle_level\nint\n3\nHeading level to use for symbol name"
+  },
+  {
+    "objectID": "load_data.html#save-and-load",
+    "href": "load_data.html#save-and-load",
+    "title": "Load Data",
+    "section": "Save and Load",
+    "text": "Save and Load\nTest that the newly created solomon geo object can be saved to aws\n\nsol_geo.save_pickle()\n\nTest that we can connect to the aws s3 bucket\n\n# Create the S3 object\nobj = s3_client().get_object(\n    Bucket = 'hobby-data',\n    Key = 'test.txt', \n)\n\n# Read in the pickle\ntry:\n    data = obj['Body'].read()\nexcept:\n    raise ValueError(\"Issue dowloading test file from AWS.\")\n\n\nSolomonGeo.load_pickle('/testData/', aws=True)\n\n&lt;__main__.SolomonGeo&gt;\n\n\nTest that gen_stored creates a copy correctly from a json serialised dataframe\n\nstored_geo = sol_geo.get_store()\n# TODO I need to potentially created a function to check if two objects are the same\n\n\nrestored_geo = SolomonGeo.gen_stored(stored_geo.data)\n\n\nrestored_geo.get_df(geo_filter = 'Constituency', loc_filter=['Nggela', 'East AreAre'])\n\n\n\n\n\n\n\n\nKey Statistics\nMain source of household drinking water\n...\nHousehold money received from remittances\nMain source of household income in last 12 months\n\n\n\nTotal Households\nmetered SIWA drinking water\ncommunal standpipe\nprivate water tank\ncommunal water tank\nwell - protected\nwell - unprotected\nriver or stream\nbottled water\nother source of drinking water\n...\n1000 - 1499 S.I. dollars\nmore than 1500 S.I. dollars\nNo income\nWages Salary\nOwn business\nSale fish crop craft\nLand lease\nHouse rent\nRemittances\nOther source\n\n\n(core, location)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEast AreAre\n1105\n1.0\n815.0\n12.0\n9.0\n1.0\n3.0\n223.0\n0.0\n41.0\n...\n41.0\n15.0\n37.0\n89.0\n101.0\n650.0\n0.0\n2.0\n31.0\n195.0\n\n\nNggela\n3315\n26.0\n1557.0\n258.0\n437.0\n52.0\n13.0\n868.0\n1.0\n103.0\n...\n25.0\n59.0\n49.0\n558.0\n327.0\n1878.0\n0.0\n4.0\n75.0\n424.0\n\n\n\n\n2 rows × 66 columns\n\n\n\n\n# TODO create a test to check that two object are the same. Probably need to write defualt behaviour into\n# object. Maybe use fastcore test_eq\n#test_eq(stored_geo.geo_df, sol_geo.geo_df)\n\nTest filtering of down to multiple locations\n\n#test_eq(sol_geo.get_df(geo_filter = 'constituency')['total_pop'].sum(), const_df['total_pop'].sum())\nsol_geo.get_df(geo_filter = 'Constituency', loc_filter=['Nggela', 'East AreAre'])\n\n\n\n\n\n\n\n\nKey Statistics\nMain source of household drinking water\n...\nHousehold money received from remittances\nMain source of household income in last 12 months\n\n\n\nTotal Households\nmetered SIWA drinking water\ncommunal standpipe\nprivate water tank\ncommunal water tank\nwell - protected\nwell - unprotected\nriver or stream\nbottled water\nother source of drinking water\n...\n1000 - 1499 S.I. dollars\nmore than 1500 S.I. dollars\nNo income\nWages Salary\nOwn business\nSale fish crop craft\nLand lease\nHouse rent\nRemittances\nOther source\n\n\n(core, location)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEast AreAre\n1105\n1.0\n815.0\n12.0\n9.0\n1.0\n3.0\n223.0\n0.0\n41.0\n...\n41.0\n15.0\n37.0\n89.0\n101.0\n650.0\n0.0\n2.0\n31.0\n195.0\n\n\nNggela\n3315\n26.0\n1557.0\n258.0\n437.0\n52.0\n13.0\n868.0\n1.0\n103.0\n...\n25.0\n59.0\n49.0\n558.0\n327.0\n1878.0\n0.0\n4.0\n75.0\n424.0\n\n\n\n\n2 rows × 66 columns\n\n\n\n\n# TODO work out how to check save and load are the same as a test\n# Might need to wreite and equality function\n\n\n# TODO should do a count check for the geojson similar to this\nsol_geo.geo_df[sol_geo.geo_df['core']['agg'] == 'Constituency'].count()\n\ncore                                               geometry                100\n                                                   id                      100\n                                                   agg                     100\n                                                   year                    100\n                                                   location                100\n                                                                          ... \nMain source of household income in last 12 months  Sale fish crop craft    100\n                                                   Land lease              100\n                                                   House rent              100\n                                                   Remittances             100\n                                                   Other source            100\nLength: 72, dtype: int64"
+  },
+  {
+    "objectID": "table_page.html",
+    "href": "table_page.html",
+    "title": "Table Page",
+    "section": "",
+    "text": "# TODO load the data and dropdown\nSetup some of the key data contiaining objects\nsource"
+  },
+  {
+    "objectID": "table_page.html#update-the-data-displayed-in-the-table",
+    "href": "table_page.html#update-the-data-displayed-in-the-table",
+    "title": "Table Page",
+    "section": "Update the data displayed in the table",
+    "text": "Update the data displayed in the table\n\nsource\n\nupdate_grid\n\n update_grid (geo_input:str, data_type:str, measure:str, variable:str,\n              dict_sol:dict, grid_rows:int)\n\nUpdates the focus census variable or geography dispalayed on the map\n\n\n\n\n\n\n\n\n\nType\nDetails\n\n\n\n\ngeo_input\nstr\nUser input from the geography dropdownk\n\n\ndata_type\nstr\nUser input of type of data\n\n\nmeasure\nstr\nA string contiaining the census variable and measure split by ‘:’\n\n\nvariable\nstr\nThe state of the variable dropdown\n\n\ndict_sol\ndict\nThe dataset in dictionary form\n\n\ngrid_rows\nint\nThe number of rows to display\n\n\nReturns\n(&lt;class ‘dash_ag_grid.AgGrid.AgGrid’&gt;, &lt;class ‘str’&gt;)\nReturns a graph object figure after being updated and the dynamic title"
+  },
+  {
+    "objectID": "table_page.html#update-the-grid-row-count",
+    "href": "table_page.html#update-the-grid-row-count",
+    "title": "Table Page",
+    "section": "Update the Grid row count",
+    "text": "Update the Grid row count\nNeeds to both: - update max input based on the geography selected - update the dash_grid size based on the selected row count\n\nsource\n\nupdate_page_rows\n\n update_page_rows (geo_input:str, dict_sol:dict)\n\nUpdates the page size and max of the input selection based on updated geography\n\n\n\n\n\n\n\n\n\nType\nDetails\n\n\n\n\ngeo_input\nstr\nUser input from the geography dropdown\n\n\ndict_sol\ndict\nThe dataset in dictionary form\n\n\nReturns\n(&lt;class ‘int’&gt;, &lt;class ‘int’&gt;)\nNew value and max size of the grid selection\n\n\n\n\nsource\n\n\nupdate_page_size\n\n update_page_size (page_size:int, grid_options:dict)\n\nUpdates the page size of the grid based on input\n\n\n\n\nType\nDetails\n\n\n\n\npage_size\nint\nThe input page size\n\n\ngrid_options\ndict\nThe current grid page size option\n\n\nReturns\ndict\nThe updated grid page size option"
+  },
+  {
+    "objectID": "table_page.html#enable-downloading-the-current-csv",
+    "href": "table_page.html#enable-downloading-the-current-csv",
+    "title": "Table Page",
+    "section": "Enable downloading the current csv",
+    "text": "Enable downloading the current csv\nOn click of download button, return the current csv in the dash grid\n\nsource\n\nexport_data_as_csv\n\n export_data_as_csv (n_clicks:int)\n\n\n\n\n\nType\nDetails\n\n\n\n\nn_clicks\nint\nListening for click inputs\n\n\nReturns\nbool\nWhether to download csv"
+  },
+  {
+    "objectID": "dash_components.html",
+    "href": "dash_components.html",
+    "title": "Generate Map",
+    "section": "",
+    "text": "# TODO - do a need a state class that tracks the state of different website objects to help with\n# updating etc. \n# TODO - not even state, should it be an object that contains everythin to track. Execpt if I am patching,\n# then the tracking in mem is unessary, so better to just track necesary values like: last changes card etc."
+  },
+  {
+    "objectID": "dash_components.html#load-data",
+    "href": "dash_components.html#load-data",
+    "title": "Generate Map",
+    "section": "Load Data",
+    "text": "Load Data\n\nsol_geo = SolomonGeo.load_pickle(\"/testData/\")\ngeo_df = sol_geo.geo_df"
+  },
+  {
+    "objectID": "dash_components.html#build-the-cloreopath-map",
+    "href": "dash_components.html#build-the-cloreopath-map",
+    "title": "Generate Map",
+    "section": "Build the Cloreopath Map",
+    "text": "Build the Cloreopath Map\ngo.\n\nfig = define_map(sol_geo)\n#fig.show()"
+  },
+  {
+    "objectID": "dash_components.html#create-a-bar-graph-to-display-current-data",
+    "href": "dash_components.html#create-a-bar-graph-to-display-current-data",
+    "title": "Generate Map",
+    "section": "Create a bar graph to display current data",
+    "text": "Create a bar graph to display current data\n\ngen_bar_plot(sol_geo, 'Ward', \"Main source of household income in last 12 months\", 'Wages Salary', ['Cruz', 'Vavaea'],)\n\n\n                                                \n\n\n\nsol_geo.get_df('Ward',\n    'Main source of household washing water',\n    #loc_filter =['Makira-Ulawa'],\n    type_filter = 'Total')\n\n\n\n\n\n\n\n\npiped - private\npiped - shared\ncommunal standpipe\nwell - protected\nwell - unprotected\nprivate water tank\ncommunal water tank\nsea water\nriver, lake or stream water\nother source of washing water\n\n\n(core, location)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNggosi\n897.0\n443.0\n17.0\n2.0\n2.0\n16.0\n2.0\n0.0\n48.0\n3.0\n\n\nMbumburu\n389.0\n71.0\n4.0\n20.0\n4.0\n8.0\n1.0\n0.0\n13.0\n3.0\n\n\nRove - Lengakiki\n273.0\n52.0\n0.0\n0.0\n0.0\n6.0\n1.0\n0.0\n2.0\n0.0\n\n\nCruz\n15.0\n2.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n\n\nVavaea\n612.0\n293.0\n15.0\n0.0\n0.0\n2.0\n2.0\n0.0\n14.0\n4.0\n\n\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n\n\nDuff Islands\n12.0\n14.0\n87.0\n1.0\n0.0\n0.0\n0.0\n6.0\n5.0\n1.0\n\n\nUtupua\n3.0\n0.0\n199.0\n0.0\n0.0\n4.0\n0.0\n3.0\n20.0\n3.0\n\n\nVanikoro\n2.0\n30.0\n145.0\n0.0\n4.0\n3.0\n1.0\n1.0\n79.0\n1.0\n\n\nTikopia\n0.0\n1.0\n232.0\n0.0\n0.0\n1.0\n1.0\n0.0\n25.0\n2.0\n\n\nNeo\n0.0\n1.0\n1.0\n56.0\n223.0\n7.0\n5.0\n6.0\n1.0\n1.0\n\n\n\n\n183 rows × 10 columns"
+  },
+  {
+    "objectID": "dash_components.html#create-data-table",
+    "href": "dash_components.html#create-data-table",
+    "title": "Generate Map",
+    "section": "Create Data Table",
+    "text": "Create Data Table\nA method that creates data tables\n\nsource\n\ngen_dash_grid\n\n gen_dash_grid (sol_geo:SolomonIslandsDataMap.load_data.SolomonGeo,\n                geo_filter:str, variable:str, measure:str,\n                locations:[&lt;class'str'&gt;]=None, type_filter:str='Total',\n                grid_rows:int=10)\n\nCreates a basic data table using dash grid\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nsol_geo\nSolomonGeo\n\nSolomon geo object containing census data to input into map\n\n\ngeo_filter\nstr\n\nThe desired aggregation of the geography\n\n\nvariable\nstr\n\nThe variable to use to create the bar plot\n\n\nmeasure\nstr\n\nThe measure to highlight on the bar graph\n\n\nlocations\n[&lt;class ‘str’&gt;]\nNone\nDesired location within aggregation\n\n\ntype_filter\nstr\nTotal\nThe type aggregartion\n\n\ngrid_rows\nint\n10\nThe number of rows to display\n\n\nReturns\nAgGrid\n\nReturns a graph object figure of a barplot\n\n\n\n\ngen_dash_grid(sol_geo, 'Province', \"Main source of household income in last 12 months\", 'Wages Salary')\n\nAgGrid(id='dash-grid', columnDefs=[{'field': 'Province', 'headerName': 'Province', 'filter': True, 'lockPinned': True, 'cellClass': 'lock-pinned'}, {'field': 'No income', 'headerName': 'No income'}, {'field': 'Wages Salary', 'headerName': 'Wages Salary'}, {'field': 'Own business', 'headerName': 'Own business'}, {'field': 'Sale fish crop craft', 'headerName': 'Sale fish crop craft'}, {'field': 'Land lease', 'headerName': 'Land lease'}, {'field': 'House rent', 'headerName': 'House rent'}, {'field': 'Remittances', 'headerName': 'Remittances'}, {'field': 'Other source', 'headerName': 'Other source'}], columnSize='sizeToFit', dashGridOptions={'pagination': True, 'domLayout': 'autoHeight', 'paginationPageSize': 10}, defaultColDef={'resizable': True, 'sortable': True}, rowData=[{'Province': 'Choiseul', 'No income': 88.0, 'Wages Salary': 892.0, 'Own business': 206.0, 'Sale fish crop craft': 2443.0, 'Land lease': 6.0, 'House rent': 16.0, 'Remittances': 206.0, 'Other source': 855.0}, {'Province': 'Honiara', 'No income': 75.0, 'Wages Salary': 6984.0, 'Own business': 783.0, 'Sale fish crop craft': 393.0, 'Land lease': 54.0, 'House rent': 179.0, 'Remittances': 48.0, 'Other source': 465.0}, {'Province': 'Western', 'No income': 182.0, 'Wages Salary': 3732.0, 'Own business': 618.0, 'Sale fish crop craft': 7518.0, 'Land lease': 8.0, 'House rent': 48.0, 'Remittances': 410.0, 'Other source': 1246.0}, {'Province': 'Isabel', 'No income': 92.0, 'Wages Salary': 907.0, 'Own business': 310.0, 'Sale fish crop craft': 2900.0, 'Land lease': 4.0, 'House rent': 18.0, 'Remittances': 174.0, 'Other source': 738.0}, {'Province': 'Central', 'No income': 66.0, 'Wages Salary': 665.0, 'Own business': 373.0, 'Sale fish crop craft': 2518.0, 'Land lease': 1.0, 'House rent': 5.0, 'Remittances': 88.0, 'Other source': 1189.0}, {'Province': 'Rennell-Bell', 'No income': 114.0, 'Wages Salary': 147.0, 'Own business': 40.0, 'Sale fish crop craft': 244.0, 'Land lease': 1.0, 'House rent': 13.0, 'Remittances': 82.0, 'Other source': 47.0}, {'Province': 'Guadalcanal', 'No income': 538.0, 'Wages Salary': 3978.0, 'Own business': 868.0, 'Sale fish crop craft': 7702.0, 'Land lease': 20.0, 'House rent': 102.0, 'Remittances': 182.0, 'Other source': 3773.0}, {'Province': 'Malaita', 'No income': 1404.0, 'Wages Salary': 2942.0, 'Own business': 1290.0, 'Sale fish crop craft': 11075.0, 'Land lease': 15.0, 'House rent': 154.0, 'Remittances': 584.0, 'Other source': 6957.0}, {'Province': 'Makira-Ulawa', 'No income': 315.0, 'Wages Salary': 1007.0, 'Own business': 459.0, 'Sale fish crop craft': 3293.0, 'Land lease': 14.0, 'House rent': 28.0, 'Remittances': 90.0, 'Other source': 1967.0}, {'Province': 'Temotu', 'No income': 159.0, 'Wages Salary': 612.0, 'Own business': 166.0, 'Sale fish crop craft': 2505.0, 'Land lease': 10.0, 'House rent': 14.0, 'Remittances': 120.0, 'Other source': 717.0}], style={'height': None})"
+  },
+  {
+    "objectID": "dash_components.html#create-card-group",
+    "href": "dash_components.html#create-card-group",
+    "title": "Generate Map",
+    "section": "Create card group",
+    "text": "Create card group\n\n# Build and test a card\n#card_list(sol_geo, \"Header!!\")"
+  },
+  {
+    "objectID": "dash_components.html#create-function-to-make-dropdowns",
+    "href": "dash_components.html#create-function-to-make-dropdowns",
+    "title": "Generate Map",
+    "section": "Create function to make dropdowns",
+    "text": "Create function to make dropdowns\n\ndcc.Dropdown()\n\nDropdown(None)\n\n\n\nsource\n\ngen_dd\n\n gen_dd (location_list:[&lt;class'str'&gt;], id:str, place_holder:str=None,\n         val:str=None, clear:bool=False, height:int=35, multi:bool=False)\n\nCreate the location dropdown from given list\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nlocation_list\n[&lt;class ‘str’&gt;]\n\na list of locations\n\n\nid\nstr\n\nId of the dropdown\n\n\nplace_holder\nstr\nNone\na placeholder message to display\n\n\nval\nstr\nNone\nThe starting value of the dropdown\n\n\nclear\nbool\nFalse\npick whether the ]\n\n\nheight\nint\n35\nheight of the dropdown text\n\n\nmulti\nbool\nFalse\nIs the dropdown multi select\n\n\nReturns\nDropdown\n\nReturns a dropdown"
+  },
+  {
+    "objectID": "dash_components.html#testing",
+    "href": "dash_components.html#testing",
+    "title": "Generate Map",
+    "section": "Testing",
+    "text": "Testing\n\n# TODO implementing testing, everything should at least be run here and execute and be displayed"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Solomon Islands Data Map",
+    "section": "",
+    "text": "Image Credit"
+  },
+  {
+    "objectID": "index.html#click-here-to-view-the-map",
+    "href": "index.html#click-here-to-view-the-map",
+    "title": "Solomon Islands Data Map",
+    "section": "",
+    "text": "Image Credit"
+  },
+  {
+    "objectID": "app.html",
+    "href": "app.html",
+    "title": "Generate Map",
+    "section": "",
+    "text": "Setup the app and global variables\n\nprint(fp)\n\n/home/tom/git/SolomonIslandsDataMap/SolomonIslandsDataMap/pages/\n\n\nCreate a navbar\nImport the sidebar"
+  },
+  {
+    "objectID": "app.html#setup-app-and-server",
+    "href": "app.html#setup-app-and-server",
+    "title": "Generate Map",
+    "section": "",
+    "text": "Setup the app and global variables\n\nprint(fp)\n\n/home/tom/git/SolomonIslandsDataMap/SolomonIslandsDataMap/pages/\n\n\nCreate a navbar\nImport the sidebar"
+  },
+  {
+    "objectID": "app.html#create-the-layout",
+    "href": "app.html#create-the-layout",
+    "title": "Generate Map",
+    "section": "Create the Layout",
+    "text": "Create the Layout"
+  },
+  {
+    "objectID": "app.html#run-the-dash-app",
+    "href": "app.html#run-the-dash-app",
+    "title": "Generate Map",
+    "section": "Run the dash app",
+    "text": "Run the dash app"
+  },
+  {
+    "objectID": "app_data.html",
+    "href": "app_data.html",
+    "title": "App Data",
+    "section": "",
+    "text": "# TODO think about what differentiates dash_components and app_data"
+  },
+  {
+    "objectID": "app_data.html#load-data",
+    "href": "app_data.html#load-data",
+    "title": "App Data",
+    "section": "Load Data",
+    "text": "Load Data"
+  },
+  {
+    "objectID": "app_data.html#instatialise-data-and-dash-components",
+    "href": "app_data.html#instatialise-data-and-dash-components",
+    "title": "App Data",
+    "section": "Instatialise Data and Dash Components",
+    "text": "Instatialise Data and Dash Components\nThe plan for the data is to store it in a dcc.Store object. This is import as if the app scales, variables will only be global if they are stored in a store or another dash component. As an aside, dash uses this strategy so that each app is stateless and multiple different workers can be assigned to run processes.\nThis stored data and additional components will then be refereced via imports used by each page so that each pages shares the common data and components and they will not need to be reloaded. Because the data is imported as a module by each page and app that uses them, it will be global and it will run before the rest of the code.\nSolomonGeo.gen_stored() can be used to reconstuct the SolomonGeo object from the dict format.\nThe following components and data objects are created:\n\nstored_data: The dict version of the dataset,\ndropdown_location: Dropdown for location selection,\ndropdown_geo: Dropdown for the type of geographical aggregation selected,\ncontrol_type: The type of data, Proportion or Total,\ndd_var: Dropdown for the variable to be displayed,\ndd_measure: Dropdown for the emasure to be displayed."
+  },
+  {
+    "objectID": "app_data.html#setup-and-create-the-dropdowns",
+    "href": "app_data.html#setup-and-create-the-dropdowns",
+    "title": "App Data",
+    "section": "Setup and create the dropdowns",
+    "text": "Setup and create the dropdowns"
+  },
+  {
+    "objectID": "app_data.html#create-a-sidebar",
+    "href": "app_data.html#create-a-sidebar",
+    "title": "App Data",
+    "section": "Create a sidebar",
+    "text": "Create a sidebar\nThe sidebar will house all of the relevant dropdowns"
+  },
+  {
+    "objectID": "app_data.html#intialise-components-specific-to-map_page",
+    "href": "app_data.html#intialise-components-specific-to-map_page",
+    "title": "App Data",
+    "section": "Intialise components specific to map_page",
+    "text": "Intialise components specific to map_page\nIt will create:\n\nmytitle: title for the apge\nmap_graph: map object for the page\nselectedBarGraph: bar graph object for the page"
+  },
+  {
+    "objectID": "app_data.html#intialise-components-specific-to-table_page",
+    "href": "app_data.html#intialise-components-specific-to-table_page",
+    "title": "App Data",
+    "section": "Intialise components specific to table_page",
+    "text": "Intialise components specific to table_page\nIt will create:\n\nmytitle: title for the apge\ndata_table: A table for the page\ngrid_rows: An input to change the number of rows in the dash grid"
+  }
+]
