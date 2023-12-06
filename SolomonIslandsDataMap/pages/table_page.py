@@ -18,7 +18,7 @@ except:
         , control_type, dd_var, dd_measure, dropdown_geo, grid_rows
     from load_data import SolomonGeo
 from fastcore.test import *
-from dash import Dash, dcc, callback, Output, Input, State, html, Patch, ctx, register_page  
+from dash import Dash, dcc, callback, Output, Input, State, html, Patch, ctx, register_page, callback_context 
 import dash_bootstrap_components as dbc    
 import dash_ag_grid as dag
 
@@ -129,12 +129,11 @@ def update_page_size(page_size:int, # The input page size
 # %% ../../nbs/04_table_page.ipynb 18
 @callback(
     Output("dash-grid", "exportDataAsCsv"),
-    Input('csv-button', "n_clicks"),
+    [Input('csv-button', "n_clicks")],
 )
 def export_data_as_csv(n_clicks:int, # Listening for click inputs
                        ) -> bool: # Whether to download csv
-    print("anything")
-    if n_clicks:
-        print("download")
+    trigger = callback_context.triggered[0]
+    if trigger['prop_id'] ==  'csv-button.n_clicks':
         return True
     return False
