@@ -98,7 +98,7 @@ sidebar = html.Div(
                 control_type,
                 html.Br(),
                 html.P("Dash Grid Rows"), 
-                grid_rows,
+                grid_rows, # TODO add an info button here explaining that it is only for the dash grid
 
             ],
             vertical=True,

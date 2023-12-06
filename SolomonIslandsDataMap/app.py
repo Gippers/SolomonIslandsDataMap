@@ -6,9 +6,9 @@ __all__ = ['repo', 'fp', 'server', 'pages', 'navbar']
 # %% ../nbs/05_app.ipynb 2
 from nbdev.showdoc import *
 try:
-    from SolomonIslandsDataMap.app_data import sidebar
+    from SolomonIslandsDataMap.app_data import sidebar, stored_data
 except: 
-    from app_data import sidebar
+    from app_data import sidebar, stored_data
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -74,7 +74,8 @@ app.layout = dbc.Container([
                 dbc.Row(
                     [dbc.Col(sidebar, width = 2),
                     dbc.Col(page_container, width = 10),
-                     ], justify = 'center'),                    
+                     ], justify = 'center'),  
+                     stored_data,                  
                 ], fluid = True)
 
 # %% ../nbs/05_app.ipynb 13
