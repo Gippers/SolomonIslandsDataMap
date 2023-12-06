@@ -15,7 +15,7 @@ try:
 except: 
     from dash_components import gen_dash_grid, gen_dd
     from app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo
+        , control_type, dd_var, dd_measure, dropdown_geo, grid_rows
     from load_data import SolomonGeo
 from fastcore.test import *
 from dash import Dash, dcc, callback, Output, Input, State, html, Patch, ctx, register_page  
@@ -32,7 +32,7 @@ except:
     pass
 
 # %% ../../nbs/04_table_page.ipynb 6
-title = dcc.Markdown(children="## This is a placeholder test!!") # TODO This needs a default title
+title = dcc.Markdown(children="## This is a placeholder test!!") # TODO This needs a default title, shift to 02
 
 # %% ../../nbs/04_table_page.ipynb 7
 def layout():

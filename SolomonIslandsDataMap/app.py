@@ -73,7 +73,7 @@ app.layout = dbc.Container([
                 ]),
                 dbc.Row(
                     [dbc.Col(sidebar, width = 2),
-                    dbc.Col(page_container, width = 10)
+                    dbc.Col(page_container, width = 10),
                      ], justify = 'center'),                    
                 ], fluid = True)
 

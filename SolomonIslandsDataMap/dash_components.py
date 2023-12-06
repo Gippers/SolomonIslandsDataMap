@@ -124,7 +124,7 @@ def gen_dash_grid(sol_geo:SolomonGeo, # Solomon geo object containing census dat
     colDef = [{"field": geo_filter, "headerName": geo_filter, "filter": True, "lockPinned": True, "cellClass": "lock-pinned"}]                    
     colDef += [{"field": i, "headerName": i} for i in df.columns[1:]]
     dt = dag.AgGrid(
-        id = 'grid',
+        id = 'dash-grid',
         rowData = df.to_dict('records'),
         columnDefs = colDef,
         columnSize="sizeToFit",
