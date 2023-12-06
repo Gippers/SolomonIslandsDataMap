@@ -10,7 +10,7 @@ from nbdev.showdoc import *
 try:
     from SolomonIslandsDataMap.dash_components import gen_dash_grid, gen_dd
     from SolomonIslandsDataMap.app_data import mytitle, data_grid, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo
+        , control_type, dd_var, dd_measure, dropdown_geo, download_button
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_dash_grid, gen_dd
@@ -37,6 +37,7 @@ title = dcc.Markdown(children="## This is a placeholder test!!") # TODO This nee
 # %% ../../nbs/04_table_page.ipynb 7
 def layout():
     return dbc.Container([title,
+                          download_button,
                           data_grid,
                           stored_data,
                         ])

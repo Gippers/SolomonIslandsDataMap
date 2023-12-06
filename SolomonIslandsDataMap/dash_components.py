@@ -132,6 +132,9 @@ def gen_dash_grid(sol_geo:SolomonGeo, # Solomon geo object containing census dat
         defaultColDef={"resizable": True, "sortable": True},
         dashGridOptions={"pagination": True, "domLayout": "autoHeight", "paginationPageSize": 10},
         style={"height": None},
+        csvExportParams={
+                "fileName": "Solomons 2009 Census Data " + variable + " by " + geo_filter + " - " + type_filter + ".csv",
+            },
     )
 
     return dt

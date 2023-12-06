@@ -2,8 +2,8 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geo_df', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dropdown_geo',
-           'control_type', 'dd_var', 'dd_measure', 'data_grid', 'grid_rows', 'SIDEBAR_STYLE', 'sidebar', 'mytitle',
-           'map_graph', 'selectedBarGraph']
+           'control_type', 'dd_var', 'dd_measure', 'data_grid', 'grid_rows', 'download_button', 'SIDEBAR_STYLE',
+           'sidebar', 'mytitle', 'map_graph', 'selectedBarGraph']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -63,6 +63,7 @@ data_grid = dbc.Container(
                 children = gen_dash_grid(sol_geo, sol_geo.geo_levels[0], "Key Statistics", 'Total Households')
             )
 grid_rows = dcc.Input(id="grid-rows", type="number", min=1, max=len(sol_geo.locations['Province']), value=10)
+download_button = dbc.Button("Download CSV", id="csv-button", n_clicks=0, color = "primary")
 
 # %% ../nbs/02_app_data.ipynb 14
 # Note, for now I am not using a sidebar style as I do not want to fix the width
