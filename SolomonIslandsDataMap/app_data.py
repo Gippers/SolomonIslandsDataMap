@@ -114,4 +114,6 @@ selectedBarGraph = dcc.Graph(figure = gen_bar_plot(sol_geo, sol_geo.geo_levels[0
                             id = 'bar_graph')
 
 # %% ../nbs/02_app_data.ipynb 17
-data_grid = dbc.Col(children = [gen_dash_grid(sol_geo, 'Ward', "Main source of household income in last 12 months", 'Wages Salary')])
+data_grid = dbc.Container(
+                children = gen_dash_grid(sol_geo, sol_geo.geo_levels[0], "Key Statistics", 'Total Households')
+            )

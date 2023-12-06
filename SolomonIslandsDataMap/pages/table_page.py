@@ -66,6 +66,8 @@ def update_grid(geo_input:str, # User input from the geography dropdown
     # TODO decide wether to implment patch later
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
+    print("What happens when auto triggered?")
+    print(button_clicked)
 
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
 
@@ -75,8 +77,9 @@ def update_grid(geo_input:str, # User input from the geography dropdown
         # TODO in future update row highlighting
         print("locationsleected")
         
-    elif button_clicked == control_type.id or button_clicked == dropdown_geo.id or button_clicked == 'varDropdown' or button_clicked == 'measureDropdown':
+    elif button_clicked in [control_type.id, dropdown_geo.id,  'varDropdown',  'measureDropdown', None]:
         # Rebuild the table given updated selection
+        # None is the initial call
         patched_figure = gen_dash_grid(sol_geo, geo_input,variable, measure, type_filter = data_type)
 
 
