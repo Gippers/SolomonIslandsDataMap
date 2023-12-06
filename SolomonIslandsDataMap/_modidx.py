@@ -63,5 +63,7 @@ d = { 'settings': { 'branch': 'main',
                                                                                                            'SolomonIslandsDataMap/pages/table_page.py'),
                                                         'SolomonIslandsDataMap.pages.table_page.update_grid': ( 'table_page.html#update_grid',
                                                                                                                 'SolomonIslandsDataMap/pages/table_page.py'),
+                                                        'SolomonIslandsDataMap.pages.table_page.update_page_rows': ( 'table_page.html#update_page_rows',
+                                                                                                                     'SolomonIslandsDataMap/pages/table_page.py'),
                                                         'SolomonIslandsDataMap.pages.table_page.update_page_size': ( 'table_page.html#update_page_size',
                                                                                                                      'SolomonIslandsDataMap/pages/table_page.py')}}}
