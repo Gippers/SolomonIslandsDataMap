@@ -234,7 +234,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
                      data_type:str, # User input of type of data
                      measure:str, # A string contiaining the census variable and measure split by ':'
                      variable:str, # The state of the variable dropdown
-                     init_load:str, # An empty string always
+                     init_load:{}, # An empty dictionary always
                      dict_sol:dict, # The dataset in dictionary form
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
@@ -304,6 +304,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
     Input(control_type, 'value'),
     Input('measureDropdown', 'value'),
     Input('locDropdown', 'value'),
+    Input('initial-load', 'data'),
     State('varDropdown', 'value'),
     State('geo_df', 'data'),
     allow_duplicate=True,
@@ -313,6 +314,7 @@ def update_bargraph(geo_input:str, # User input from the geography dropdown
                      data_type:str, # User input of type of data
                      measure:str, # A string contiaining the census variable and measure split by ':'
                      loc_selection:[str], # The selected locations, may be none
+                     init_load:{}, # An empty dictionary always, triggers initial load
                      variable:str, # The state of the variable dropdown
                      dict_sol:dict, # The dataset in dictionary form
               )->(type(go.Figure())): # Returns a graph object figure after being updated and the dynamic title
