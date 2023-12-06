@@ -114,6 +114,7 @@ def gen_dash_grid(sol_geo:SolomonGeo, # Solomon geo object containing census dat
                     measure:str, # The measure to highlight on the bar graph
                     locations:[str] = None, # Desired location within aggregation
                     type_filter:str = 'Total', # The type aggregartion
+                    grid_rows:int = 10, # The number of rows to display
                 )->dag.AgGrid: # Returns a graph object figure of a barplot
     '''Creates a basic data table using dash grid'''
     figtext = 'Showing ' + variable + ' by ' + geo_filter

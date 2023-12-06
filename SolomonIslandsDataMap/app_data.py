@@ -62,7 +62,7 @@ dd_measure = html.Div(children = gen_dd(sol_geo.census_vars['Key Statistics'], '
 data_grid = dbc.Container(
                 children = gen_dash_grid(sol_geo, sol_geo.geo_levels[0], "Key Statistics", 'Total Households')
             )
-grid_rows = dcc.Input(id="grid_rows", type="number", min=1, max=len(sol_geo.geo_levels[0]), value=10, step = 5)
+grid_rows = dcc.Input(id="grid-rows", type="number", min=1, max=len(sol_geo.locations['Province']), value=10)
 
 # %% ../nbs/02_app_data.ipynb 14
 # Note, for now I am not using a sidebar style as I do not want to fix the width
