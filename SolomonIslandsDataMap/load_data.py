@@ -101,6 +101,7 @@ class SolomonGeo:
         repo = Repo('.', search_parent_directories=True)
         pw = str(repo.working_tree_dir) + "/testData/"
         df = pd.read_csv(pw + 'sol_census_all_2009_v2.csv')
+        pop = pd.read_csv(pw + 'solo_pop_proj_2009.csv')
         aggs = df.loc[:, 'agg'].unique()
         geos = []
         for agg in aggs:
@@ -183,7 +184,8 @@ class SolomonGeo:
         Extract and return input datasets from file. Assumes correct format of input dataset, then
         Transform given raw input dataset into a cleaned and combined geopandas dataframe
         '''
-        # TODO - if I add more years, loop per year
+        # TODO seperate out the geometry from the data.
+        # TODO - make a function that tests that the geo and datasets both join
 
         geos = gpd.GeoDataFrame()
         for geo in l_geos:
