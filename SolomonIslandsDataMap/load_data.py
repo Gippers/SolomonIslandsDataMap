@@ -110,7 +110,7 @@ class SolomonGeo:
             geo.loc[:, 'agg'] = agg
             geos.append(geo)
 
-        gdf = cls.__transform(df, geos)
+        gdf = cls.__transform(df, pop, geos)
         return cls(
             geo_df = gdf
         )
@@ -177,6 +177,7 @@ class SolomonGeo:
     @classmethod
     def __transform(cls, 
                     df:pd.DataFrame, # The dataframe containing census data
+                    pop_df:pd.DataFrame, # The dataset containing the population projection data
                     l_geos:[gpd.GeoDataFrame], # A list of geopandas dataframes containing 
                                                 # the geographies 
                  ) -> gpd.GeoDataFrame: # Returns combined dataset
@@ -199,7 +200,7 @@ class SolomonGeo:
 
             # simplify the geography, use topo to preserver the topology between shapes
             topo = tp.Topology(geo, prequantize=False)
-            geo = topo.toposimplify(360/43200).to_gdf()
+            geo = topo.toposimplify(720/43200).to_gdf() # old 360/43200
 
             geos = pd.concat([geos, geo])
             
@@ -213,9 +214,10 @@ class SolomonGeo:
         # id needs to change types twice so that it is a string of an int
         df = df.astype({'id': 'int'})#, 'male_pop':'int', 	'female_pop':'int', 'total_pop':'int'})
         df = df.astype({'id': 'str'})
-        
+ 
         # Merge the data together
         geo_df = geos.merge(df, on=['id', 'agg'])
+        test_geo(df, geos)
 
         # Index is unique by type and geoname
         geo_df['pk'] = geo_df['geo_name'] + "_" + geo_df["type"] 
@@ -237,7 +239,7 @@ class SolomonGeo:
         return geo_df
 
 
-# %% ../nbs/00_load_data.ipynb 20
+# %% ../nbs/00_load_data.ipynb 22
 @patch
 def save_pickle(self:SolomonGeo,
                 aws:bool = True, # Whether to save to aws or locally
@@ -267,7 +269,7 @@ def save_pickle(self:SolomonGeo,
       f.close()
 
 
-# %% ../nbs/00_load_data.ipynb 23
+# %% ../nbs/00_load_data.ipynb 25
 @patch
 def get_geojson(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the geojson to the requested aggregation 
@@ -285,7 +287,7 @@ def get_geojson(self:SolomonGeo,
     #return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
     return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
 
-# %% ../nbs/00_load_data.ipynb 26
+# %% ../nbs/00_load_data.ipynb 28
 @patch
 def get_store(self:SolomonGeo, 
             ) -> dcc.Store: # Geo JSON formatted dataset
@@ -300,7 +302,7 @@ def get_store(self:SolomonGeo,
     df.drop(columns = 'core: geometry', inplace=True)
     return dcc.Store(id="geo_df", data={"geojson": df.to_dict()})
 
-# %% ../nbs/00_load_data.ipynb 29
+# %% ../nbs/00_load_data.ipynb 31
 @patch
 def get_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
@@ -347,7 +349,7 @@ def get_df(self:SolomonGeo,
         
     return pd.DataFrame(ret)
 
-# %% ../nbs/00_load_data.ipynb 32
+# %% ../nbs/00_load_data.ipynb 34
 @patch
 def agg_df(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
