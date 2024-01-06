@@ -54,22 +54,27 @@ class SolomonGeo:
     '''
     Load the solomon islands geography data 
     Attributes:
-        geo_df    Geopandas dataframe containing geographies and census data
+        cen_df    Geopandas dataframe containing geographies and census data
         geo_levels    A list of the types of available aggregations
         census_vars    A dictionary of census variables in the dataset 
         data_type   Specifies whether the variable is a percentage or number
         locations A dictionary of locations accessed by the geography level
     '''
     def __init__(self, 
-                geo_df:gpd.GeoDataFrame): # A geopandas dataset containing population and geography boundaries for each aggregation
-        self.geo_df = geo_df
+                cen_df:pd.DataFrame, # A dataset containing the census data,
+                pop_df:pd.DataFrame, # A dataset contain the population projection data
+                geos:gpd.GeoDataFrame, # A geodataframe containing geographies of data
+    ):
+        self.census = cen_df
+        self.population = pop_df
+        self.geo = geos
 
         # variable that tracks the types of aggregations
-        self.geo_levels = geo_df.loc[:, ('core', 'agg')].unique()
+        self.geo_levels = cen_df.loc[:, ('core', 'agg')].unique()
 
         # Save a list of census variables, ignoring the core variables
         # Use a dictionary that maps the upper level column names to lower level ones
-        var_df = geo_df.drop(columns = "core", level=0)
+        var_df = cen_df.drop(columns = "core", level=0)
         vars = {}
         for col in var_df.columns:
             if col[0] not in vars:
@@ -79,12 +84,12 @@ class SolomonGeo:
         self.census_vars = vars
 
         # TODO should captialise first letter
-        self.data_type = geo_df.loc[:, ('core', 'type')].unique()
+        self.data_type = cen_df.loc[:, ('core', 'type')].unique()
 
         # save a list of locations as a dictionary access by geography level
         locations = {}
         for geo in self.geo_levels:
-            locations[geo] = geo_df.loc[geo_df['core']['agg'] == geo, ('core', 'location')].unique()
+            locations[geo] = cen_df.loc[cen_df['core']['agg'] == geo, ('core', 'location')].unique()
         self.locations = locations
         # TODO: need a list of column sub headings: get from column name split by `:`
 
@@ -110,9 +115,11 @@ class SolomonGeo:
             geo.loc[:, 'agg'] = agg
             geos.append(geo)
 
-        gdf = cls.__transform(df, pop, geos)
+        ret = cls.__transform(df, pop, geos)
         return cls(
-            geo_df = gdf
+            cen_df = ret[0],
+            pop_df = ret[1],
+            geos = ret[2],
         )
     
     @classmethod
@@ -150,7 +157,9 @@ class SolomonGeo:
  
         
         return cls(
-            geo_df = gpd.GeoDataFrame(tmp_geo['geo_df'])
+            cen_df = gpd.GeoDataFrame(tmp_geo['census']),
+            pop_df = gpd.GeoDataFrame(tmp_geo['population']),
+            geos = gpd.GeoDataFrame(tmp_geo['geo']),
         )
         
     
@@ -165,13 +174,26 @@ class SolomonGeo:
 
         Note that storing and the reloading, will result in dropping the geometry.
         '''
-        gdf = gpd.GeoDataFrame(json_sol['geojson'])
-        cols = gdf.columns.str.extract(r'(.*): (.+)', expand=True)
-        gdf.columns = pd.MultiIndex.from_arrays((cols[0], cols[1]))
-        gdf.columns.names = [None]*2
-        gdf.index.name = 'pk'
+        def df_to_hier(df:pd.DataFrame, # dataframe to convert to hierarchical
+                       ) -> pd.DataFrame: # Converted dataframe back to hierachical
+            cols = df.columns.str.extract(r'(.*): (.+)', expand=True)
+            df.columns = pd.MultiIndex.from_arrays((cols[0], cols[1]))
+            df.columns.names = [None]*2
+            return df
+
+        census = gpd.GeoDataFrame(json_sol['census'])
+        census = df_to_hier(census)
+        census.index.name = 'pk'
+
+        population = gpd.GeoDataFrame(json_sol['population'])
+        population = df_to_hier(population)
+
+        geo = gpd.GeoDataFrame(json_sol['geo'])
+
         return cls(
-            geo_df = gdf
+            cen_df = census,
+            pop_df = population,
+            geos = geo,
         )
     
     @classmethod
@@ -210,33 +232,49 @@ class SolomonGeo:
         # Clean the census data
         df = df.dropna()
         # Rename columns to be consistent across geography
-        df.columns = df.columns.str.replace(r'^[a-zA-Z]+_name$', 'geo_name', case = False, regex = True)
+        df.columns = df.columns.str.replace(r'^[a-zA-Z]+_name$', 'location', case = False, regex = True)
         # id needs to change types twice so that it is a string of an int
         df = df.astype({'id': 'int'})#, 'male_pop':'int', 	'female_pop':'int', 'total_pop':'int'})
         df = df.astype({'id': 'str'})
- 
-        # Merge the data together
-        geo_df = geos.merge(df, on=['id', 'agg'])
-        test_geo(df, geos)
+
+        pop_df = pop_df.astype({'core: id': 'int'})
+        pop_df = pop_df.astype({'core: id': 'str'})
+
+        # Add location names to geography dataset
+        locations = copy.copy(df)
+        locations = locations.loc[:, ['id', 'agg', 'location']].drop_duplicates()
+        geos = geos.merge(locations, on=['id', 'agg'], how = 'left')
+        print(geos)
 
         # Index is unique by type and geoname
-        geo_df['pk'] = geo_df['geo_name'] + "_" + geo_df["type"] 
-        geo_df = geo_df.set_index("pk") 
+        df['pk'] = df['location'] + "_" + df["type"] 
+        df = df.set_index("pk") 
+
+        # Rename some of the census data
+        df = df.rename(columns = {
+                                'id':'core: id', 'agg':'core: agg', 'location':'core: location',
+                                'year':'core: year', 'type':'core: type'})
+
+        # Test that the datasets all have geographies
+        test_geo(df, geos)
+        test_geo(pop_df, geos.loc[geos['agg'] == 'Province'])         
 
         # Convert into a multiindex dataframe, with hiearchical columns
         try:
-            geo_df = geo_df.rename(columns = {'geometry':'core: geometry', 
-                                          'id':'core: id', 'agg':'core: agg', 'geo_name':'core: location',
-                                          'year':'core: year', 'type':'core: type'})
-            cols = geo_df.columns.str.extract(r'(.*): (.+)', expand=True)
-            geo_df.columns = pd.MultiIndex.from_arrays((cols[0], cols[1]))
-            geo_df.columns.names = [None]*2
+            cols = df.columns.str.extract(r'(.*): (.+)', expand=True)
+            df.columns = pd.MultiIndex.from_arrays((cols[0], cols[1]))
+            df.columns.names = [None]*2
+
+            cols2 = pop_df.columns.str.extract(r'(.*): (.+)', expand=True)
+            pop_df.columns = pd.MultiIndex.from_arrays((cols2[0], cols2[1])) 
+            pop_df.columns.names = [None]*2
         except:
             raise ValueError("Issue converting geopandas dataframe to multindex. \
                              Check that all columns have \': \' beside the following\
                              core columns: geometry, id, agg, year, type.")
-        # Turn the transformed dataset
-        return geo_df
+                
+        # return the transformed dataset
+        return df, pop_df, geos
 
 
 # %% ../nbs/00_load_data.ipynb 22
@@ -277,15 +315,15 @@ def get_geojson(self:SolomonGeo,
     '''
     A getter method for the SolomonGeo class that returns a Geo JSON formatted dataset
     '''
-    ret = self.geo_df
-    # Only need geojson from one half of the dataset
-    ret = ret.loc[ret['core']['type'] == self.type_default, :]
-    ret = ret.set_index(ret.loc[:, ('core', 'location')]) # Change index to location for matching
+    ret = self.geo
+    # Change index to location name for merging
+    ret = ret.set_index(ret.loc[:, 'location']) 
+    # Return only required aggregation if specified
     if geo_filter is not None:
-        ret = ret.loc[ret['core']['agg'] == geo_filter, :]
-    # Return only the core data to minimise the html size
-    #return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
-    return json.loads(ret.loc[:, ('core', 'geometry')].to_json())
+        ret = ret.loc[ret['agg'] == geo_filter, :]
+    # Return only the geometry (plus location name in id)
+    # to minise file size
+    return json.loads(ret.loc[:, 'geometry'].to_json())
 
 # %% ../nbs/00_load_data.ipynb 28
 @patch
@@ -295,12 +333,23 @@ def get_store(self:SolomonGeo,
     A getter method that returns a dcc.Store object with the data of the `SolomonGeo` class
     converted to a dictionary for storing with dash. 
     '''
-    df = copy.copy(self.geo_df)
-    cols = df.columns.droplevel(1) + ": " + df.columns.droplevel(0)
-    cols = cols.tolist()
-    df.columns = cols
-    df.drop(columns = 'core: geometry', inplace=True)
-    return dcc.Store(id="geo_df", data={"geojson": df.to_dict()})
+    def hier_to_pandas(df:pd.DataFrame) -> pd.DataFrame:
+        cols = df.columns.droplevel(1) + ": " + df.columns.droplevel(0)
+        cols = cols.tolist()
+        df.columns = cols
+        return df
+
+    cen_df = copy.copy(self.census)
+    cen_df = hier_to_pandas(cen_df)
+
+    pop_df = copy.copy(self.population)
+    pop_df = hier_to_pandas(pop_df)
+    
+    geos = copy.copy(self.geo)    
+
+    return dcc.Store(id="geo_df", data={"census": cen_df.to_dict(),
+                                        "population": pop_df.to_dict(),
+                                        "geo": geos.to_dict()})
 
 # %% ../nbs/00_load_data.ipynb 31
 @patch
@@ -312,13 +361,16 @@ def get_df(self:SolomonGeo,
                 # TODO remove hardcoding here?
                 type_filter:str = 'Total', # Return either number of proportion
                 agg_flag = False, # Whether to return the dataset aggregated for the given selection
+                dataset = 'census', # Dataset, eiter census or 
                ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
     A getter method for the SolomonGeo class that returns a pandas dataset containg
     the id variable and the total population variable. This is the minimal data required
     to display on the map. 
     '''
-    ret = self.geo_df
+    if dataset == 'census': ret = self.census
+    elif dataset == 'population': ret = self.population
+    else: ValueError("get_df dataset must be: census or population")
     ret = ret.loc[ret['core']['type'] == type_filter, :] 
     ret = ret.set_index(ret.loc[:, ('core', 'location')]) # Change index to location as it's more desriptive
     # TODO check that filter is valid
