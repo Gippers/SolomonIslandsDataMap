@@ -180,15 +180,17 @@ class SolomonGeo:
             df.columns = pd.MultiIndex.from_arrays((cols[0], cols[1]))
             df.columns.names = [None]*2
             return df
+        
+        json_sol = json_sol["data"]
 
-        census = gpd.GeoDataFrame(json_sol['census'])
+        census = pd.DataFrame(json_sol['census'])
         census = df_to_hier(census)
         census.index.name = 'pk'
 
-        population = gpd.GeoDataFrame(json_sol['population'])
+        population = pd.DataFrame(json_sol['population'])
         population = df_to_hier(population)
 
-        geo = gpd.GeoDataFrame(json_sol['geo'])
+        geo = gpd.GeoDataFrame(json_sol['geojson'])
 
         return cls(
             cen_df = census,
@@ -244,7 +246,6 @@ class SolomonGeo:
         locations = copy.copy(df)
         locations = locations.loc[:, ['id', 'agg', 'location']].drop_duplicates()
         geos = geos.merge(locations, on=['id', 'agg'], how = 'left')
-        print(geos)
 
         # Index is unique by type and geoname
         df['pk'] = df['location'] + "_" + df["type"] 
@@ -272,6 +273,9 @@ class SolomonGeo:
             raise ValueError("Issue converting geopandas dataframe to multindex. \
                              Check that all columns have \': \' beside the following\
                              core columns: geometry, id, agg, year, type.")
+        
+        # Set index of geography
+        geos = geos.set_index(geos.loc[:, 'location']) 
                 
         # return the transformed dataset
         return df, pop_df, geos
@@ -316,8 +320,6 @@ def get_geojson(self:SolomonGeo,
     A getter method for the SolomonGeo class that returns a Geo JSON formatted dataset
     '''
     ret = self.geo
-    # Change index to location name for merging
-    ret = ret.set_index(ret.loc[:, 'location']) 
     # Return only required aggregation if specified
     if geo_filter is not None:
         ret = ret.loc[ret['agg'] == geo_filter, :]
@@ -345,11 +347,14 @@ def get_store(self:SolomonGeo,
     pop_df = copy.copy(self.population)
     pop_df = hier_to_pandas(pop_df)
     
-    geos = copy.copy(self.geo)    
+    geos = copy.copy(self.geo)  
+    # Need to drop geometry as it won't serialize
+    geos.drop(columns = 'geometry', inplace = True)  
 
-    return dcc.Store(id="geo_df", data={"census": cen_df.to_dict(),
-                                        "population": pop_df.to_dict(),
-                                        "geo": geos.to_dict()})
+    return dcc.Store(id="geo_df", data={"data": {
+                                            "census": cen_df.to_dict("records"),
+                                            "population": pop_df.to_dict("records"),
+                                            "geojson": geos.to_dict()}})
 
 # %% ../nbs/00_load_data.ipynb 31
 @patch
