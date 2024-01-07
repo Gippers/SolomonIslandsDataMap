@@ -358,7 +358,7 @@ def get_store(self:SolomonGeo,
 
 # %% ../nbs/00_load_data.ipynb 31
 @patch
-def get_df(self:SolomonGeo, 
+def get_census(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
                 var:str = None, # Selects an upper level 
                 measure:str = None, # Selects the lower level variable, if var 1 is used, measure must be used.
@@ -375,7 +375,7 @@ def get_df(self:SolomonGeo,
     '''
     if dataset == 'census': ret = self.census
     elif dataset == 'population': ret = self.population
-    else: ValueError("get_df dataset must be: census or population")
+    else: ValueError("get_census dataset must be: census or population")
     ret = ret.loc[ret['core']['type'] == type_filter, :] 
     ret = ret.set_index(ret.loc[:, ('core', 'location')]) # Change index to location as it's more desriptive
     # TODO check that filter is valid
@@ -417,10 +417,10 @@ def agg_df(self:SolomonGeo,
                 type_filter:str = 'Total', # Return either number of proportion
                ) -> pd.Series: # Pandas data series containing aggregated and filtered data
     '''
-    A getter method for the SolomonGeo class that calls get_df to get a spcific and then further 
+    A getter method for the SolomonGeo class that calls get_census to get a spcific and then further 
     aggregates that dataset so that the proportion is the weighted proportion
     '''
-    df = self.get_df(geo_filter, var, measure, loc_filter)
+    df = self.get_census(geo_filter, var, measure, loc_filter)
 
     if type_filter == 'Total':
         df = df.sum()
