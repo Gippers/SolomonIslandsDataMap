@@ -1,4 +1,4 @@
-﻿core: id,core: loc_name,core: agg,core: type,core: year,Age: Age_Bracket,Age: Numerical_Bracket,Population: Males,Population: Females,Population: Total
+﻿core: id,core: location,core: agg,core: type,core: year,Age: Age_Bracket,Age: Numerical_Bracket,Population: Males,Population: Females,Population: Total
 1,Choiseul,Province,Total,2010,0-4,0,"2,279","2,060","4,339"
 1,Choiseul,Province,Total,2010,5-9,5,"2,131","2,002","4,133"
 1,Choiseul,Province,Total,2010,10-14,10,"1,778","1,640","3,418"
