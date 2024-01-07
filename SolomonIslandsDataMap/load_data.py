@@ -366,16 +366,14 @@ def get_census(self:SolomonGeo,
                 # TODO remove hardcoding here?
                 type_filter:str = 'Total', # Return either number of proportion
                 agg_flag = False, # Whether to return the dataset aggregated for the given selection
-                dataset = 'census', # Dataset, eiter census or 
                ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
     A getter method for the SolomonGeo class that returns a pandas dataset containg
-    the id variable and the total population variable. This is the minimal data required
+    the id variable and the requested census data. This is the minimal data required
     to display on the map. 
+    - Optionally can aggregate the dataset, uses weighted aggregation for proportional data
     '''
-    if dataset == 'census': ret = self.census
-    elif dataset == 'population': ret = self.population
-    else: ValueError("get_census dataset must be: census or population")
+    ret = self.census
     ret = ret.loc[ret['core']['type'] == type_filter, :] 
     ret = ret.set_index(ret.loc[:, ('core', 'location')]) # Change index to location as it's more desriptive
     # TODO check that filter is valid
@@ -403,29 +401,74 @@ def get_census(self:SolomonGeo,
     elif var is not None:
         # Keep all values from upper level column
         ret = ret[var]
-        
-    return pd.DataFrame(ret)
+
+    ret = pd.DataFrame(ret)
+
+    # If required, aggregate dataset based on data type
+    if agg_flag == True:
+        if type_filter == 'Total':
+            ret = ret.sum()
+        elif type_filter == 'Proportion':
+            ret = ret.sum() / ret.sum().sum() * 100
+        else:
+            raise ValueError('The type passed to the aggregate function must be one of the following: \'Total\', \'Proportion\'.')
+    
+    return ret
 
 # %% ../nbs/00_load_data.ipynb 34
 @patch
-def agg_df(self:SolomonGeo, 
-                geo_filter:str = None, # Filters the dataframe to the requested geography 
+def get_pop(self:SolomonGeo, 
                 var:str = None, # Selects an upper level 
                 measure:str = None, # Selects the lower level variable, if var 1 is used, measure must be used.
                 loc_filter:[str] = None, # Filters one of more locations
                 # TODO remove hardcoding here?
                 type_filter:str = 'Total', # Return either number of proportion
-               ) -> pd.Series: # Pandas data series containing aggregated and filtered data
+                agg_flag = False, # Whether to return the dataset aggregated for the given selection
+                dataset = 'census', # Dataset, eiter census or 
+               ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
-    A getter method for the SolomonGeo class that calls get_census to get a spcific and then further 
-    aggregates that dataset so that the proportion is the weighted proportion
+    A getter method for the SolomonGeo class that returns a pandas dataset containg
+    the id variable and the requested popultion data. This is the minimal data required
+    to display on the map. 
     '''
-    df = self.get_census(geo_filter, var, measure, loc_filter)
+    geo_filter = 'Province'
+    ret = self.population
+    ret = ret.loc[ret['core']['type'] == type_filter, :] 
+    ret = ret.set_index(ret.loc[:, ('core', 'location')]) # Change index to location as it's more desriptive
+    # TODO check that filter is valid
+    if geo_filter is not None:
+        try:
+            assert(geo_filter in ['Ward', 'Constituency', 'Province'])
+        except:
+            ValueError("Geo filter must be one of: ['Ward', 'Constituency', 'Province']")
+        ret = ret.loc[ret['core']['agg'] == geo_filter, :]
 
-    if type_filter == 'Total':
-        df = df.sum()
-    elif type_filter == 'Proportion':
-        df = df.sum() / df.sum().sum() * 100
-    else:
-        raise ValueError('The type passed to the aggregate function must be one of the following: \'Total\', \'Proportion\'.')
-    return df
+    if loc_filter is not None:
+        ret = ret.loc[ret['core']['location'].isin(loc_filter), :]
+
+    # Return no core data to minimise the html size
+    ret = ret.drop(columns = 'core', level=0)
+
+    # Keep only selected column if required
+    if measure is not None:
+        try:
+            assert(var is not None)
+            assert(measure in self.census_vars[var])
+        except:
+            ValueError("If measure is set, var 1 must be set and the key value pair of var and measure must match")
+        ret = ret[var].filter(items = [measure])
+    elif var is not None:
+        # Keep all values from upper level column
+        ret = ret[var]
+
+    ret = pd.DataFrame(ret)
+    # If required, aggregate dataset based on data type
+    if agg_flag == True:
+        if type_filter == 'Total':
+            ret = ret.sum()
+        elif type_filter == 'Proportion':
+            ret = ret.sum() / ret.sum().sum() * 100
+        else:
+            raise ValueError('The type passed to the aggregate function must be one of the following: \'Total\', \'Proportion\'.')
+        
+    return ret
