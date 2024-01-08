@@ -10,7 +10,7 @@ from nbdev.showdoc import *
 try:
     from SolomonIslandsDataMap.dash_components import gen_dash_grid, gen_dd
     from SolomonIslandsDataMap.app_data import mytitle, data_grid, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo, download_button
+        , control_type, dd_var, dd_measure, dropdown_geo, download_button, sidebar_table
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_dash_grid, gen_dd
@@ -36,13 +36,16 @@ title = dcc.Markdown(children="## This is a placeholder test!!") # TODO This nee
 
 # %% ../../nbs/04_table_page.ipynb 7
 def layout():
-    return dbc.Container([dbc.Row([
-                            dbc.Col(title, width = 8),
-                            dbc.Col(download_button, width = {"size": 2})
-                                  ]),
-                          data_grid,
-                          stored_data,
-                        ])
+    return dbc.Row(
+        [dbc.Col(sidebar_table, width = 2),
+         dbc.Col([
+          dbc.Row([
+                dbc.Col(title, width = 8),
+                dbc.Col(download_button, width = {"size": 2})
+                      ]),
+              data_grid,
+              stored_data,], width = 10)
+          ], justify = 'center')
 
 # %% ../../nbs/04_table_page.ipynb 10
 @callback(

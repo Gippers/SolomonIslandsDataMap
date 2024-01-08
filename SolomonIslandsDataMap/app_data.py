@@ -2,8 +2,8 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dropdown_geo', 'control_type',
-           'dd_var', 'dd_measure', 'data_grid', 'grid_rows', 'download_button', 'SIDEBAR_STYLE', 'sidebar', 'mytitle',
-           'map_graph', 'selectedBarGraph']
+           'dd_var', 'dd_measure', 'data_grid', 'grid_rows', 'download_button', 'SIDEBAR_STYLE', 'sidebar_census',
+           'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -78,7 +78,35 @@ SIDEBAR_STYLE = {
 }
 
 
-sidebar = html.Div(
+sidebar_census = html.Div(
+    [
+        html.H2("Filters"),
+        html.Hr(),
+        dbc.Nav(
+            [
+                html.P("Geography"), # TODO add a tooltip button here with link to geo explanation
+                dropdown_geo,
+                html.Br(),
+                html.P("Location"), # TODO add a little info button here with link to geo explanation
+                dropdown_location,
+                html.Br(),
+                html.P("Data"), # TODO add a little info button here with link to geo explanation
+                dd_var,
+                dd_measure,
+                html.Br(),
+                html.P("Data Type"), 
+                control_type,
+                html.Br(),
+
+            ],
+            vertical=True,
+            pills=True,
+        ),
+    ],
+    #style=SIDEBAR_STYLE,
+)
+
+sidebar_table = html.Div(
     [
         html.H2("Filters"),
         html.Hr(),

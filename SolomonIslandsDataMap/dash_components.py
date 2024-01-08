@@ -114,6 +114,7 @@ def gen_dash_grid(sol_geo:SolomonGeo, # Solomon geo object containing census dat
                     measure:str, # The measure to highlight on the bar graph
                     locations:[str] = None, # Desired location within aggregation
                     type_filter:str = 'Total', # The type aggregartion
+                    grid_rows:int = 10, # The number of rows to display
                 )->dag.AgGrid: # Returns a graph object figure of a barplot
     '''Creates a basic data table using dash grid'''
     figtext = 'Showing ' + variable + ' by ' + geo_filter
@@ -124,13 +125,16 @@ def gen_dash_grid(sol_geo:SolomonGeo, # Solomon geo object containing census dat
     colDef = [{"field": geo_filter, "headerName": geo_filter, "filter": True, "lockPinned": True, "cellClass": "lock-pinned"}]                    
     colDef += [{"field": i, "headerName": i} for i in df.columns[1:]]
     dt = dag.AgGrid(
-        id = 'grid',
+        id = 'dash-grid',
         rowData = df.to_dict('records'),
         columnDefs = colDef,
         columnSize="sizeToFit",
         defaultColDef={"resizable": True, "sortable": True},
         dashGridOptions={"pagination": True, "domLayout": "autoHeight", "paginationPageSize": 10},
         style={"height": None},
+        csvExportParams={
+                "fileName": "Solomons 2009 Census Data " + variable + " by " + geo_filter + " - " + type_filter + ".csv",
+            },
     )
 
     return dt

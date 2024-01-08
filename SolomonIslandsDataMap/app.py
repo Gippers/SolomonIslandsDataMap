@@ -6,7 +6,7 @@ __all__ = ['repo', 'fp', 'server', 'pages', 'navbar']
 # %% ../nbs/05_app.ipynb 2
 from nbdev.showdoc import *
 try:
-    from SolomonIslandsDataMap.app_data import sidebar, stored_data
+    from SolomonIslandsDataMap.app_data import stored_data
 except: 
     from app_data import sidebar, stored_data
 
@@ -58,7 +58,7 @@ navbar = dbc.NavbarSimple(
             label="Select Page",
         ),
     ],
-    brand="Solomon Islands Data Map",
+    brand="Solomon Islands Data Explorer",
     brand_href="#",
     color="primary",
     #dark=True,
@@ -71,11 +71,8 @@ app.layout = dbc.Container([
                 dbc.Row([
                     navbar
                 ]),
-                dbc.Row(
-                    [dbc.Col(sidebar, width = 2),
-                    dbc.Col(page_container, width = 10),
-                     ], justify = 'center'),  
-                     stored_data,                  
+                page_container, 
+                stored_data,                  
                 ], fluid = True)
 
 # %% ../nbs/05_app.ipynb 13
