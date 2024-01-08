@@ -277,6 +277,18 @@ class SolomonGeo:
         # Set index of geography and population data
         geos = geos.set_index(geos.loc[:, 'location']) 
         pop_df.set_index(('core', 'location'), inplace = True)
+
+        # Set all non core and age columns of population to int variables
+        # TODO must be a better way to do this
+        cols = pop_df.columns.get_level_values(0)
+        ignore = ['core', 'Age']
+        cols = [c for c in cols if c not in ignore]
+        cols = list(set(cols))
+        for c1 in cols:
+            to_change = pop_df[c1].columns
+            for c2 in to_change:
+                pop_df[(c1, c2)] = pop_df[(c1, c2)].apply(lambda x: int(x.split()[0].replace(',', '')))
+        
                 
         # return the transformed dataset
         return df, pop_df, geos
@@ -478,9 +490,9 @@ def get_pop(self:SolomonGeo,
     # If required, aggregate dataset based on data type
     if agg == True:
         if type_filter == 'Total':
-            ret = ret.groupby(['year']).sum()
+            ret = ret.groupby(['year']).sum(numeric_only= True)
         elif type_filter == 'Proportion':
-            ret = ret.groupby('year').sum() / ret.groupby('year').sum().sum() * 100
+            ret = ret.groupby('year').sum(numeric_only= True) / ret.groupby('year').sum(numeric_only= True).sum(numeric_only= True) * 100
         else:
             raise ValueError('The type passed to the aggregate function must be one of the following: \'Total\', \'Proportion\'.')
         

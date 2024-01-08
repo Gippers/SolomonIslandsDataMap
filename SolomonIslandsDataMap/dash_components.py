@@ -41,7 +41,7 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
     traces = []
     # TODO if fails remember I changed visible from cols_dd
     for value in cols_dd:
-        z_vals = sol_df.get_df(geo_filter = value, var = 'Key Statistics', 
+        z_vals = sol_df.get_census(geo_filter = value, var = 'Key Statistics', 
                                                  measure = 'Total Households').values
         z_vals = z_vals.reshape((z_vals.shape[0],))
         traces.append(go.Choroplethmapbox(
@@ -83,13 +83,13 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
     # TODO setup so that the graph highlights the selected measure
     figtext = 'Showing ' + variable + ' for '
     if locations is None:
-        df = sol_geo.agg_df(geo_filter, variable, loc_filter = locations, type_filter = type_filter)
+        df = sol_geo.get_census(geo_filter, variable, loc_filter = locations, type_filter = type_filter, agg = True)
         df = pd.DataFrame(df).transpose()
         df.index = ['Total']
         locations = ['Total']
         figtext += 'Solomon Islands'
     else:
-        df = sol_geo.get_df(geo_filter, variable, loc_filter = locations, type_filter = type_filter)
+        df = sol_geo.get_census(geo_filter, variable, loc_filter = locations, type_filter = type_filter)
         figtext += ', '.join(locations)
     fig = go.Figure()
     measures = list(df.columns)
@@ -117,7 +117,7 @@ def gen_dash_grid(sol_geo:SolomonGeo, # Solomon geo object containing census dat
                 )->dag.AgGrid: # Returns a graph object figure of a barplot
     '''Creates a basic data table using dash grid'''
     figtext = 'Showing ' + variable + ' by ' + geo_filter
-    df = sol_geo.get_df(geo_filter, variable, loc_filter = locations, type_filter = type_filter)
+    df = sol_geo.get_census(geo_filter, variable, loc_filter = locations, type_filter = type_filter)
     df.insert(0, geo_filter, df.index) # Put geo locations at the front
     
     # pre define the column definitions, with extra speficiations for the locations
@@ -169,17 +169,19 @@ def card_list(sg:SolomonGeo, # Input data object
         for var in sg.census_vars[key]:
             # Create an accordian with the header of the variable and such
             if loc == None:
-                df = sg.agg_df(geo_filter = geo,
+                df = sg.get_census(geo_filter = geo,
                                 var = key,
                                 measure = var, 
                                 loc_filter = loc,
-                                type_filter = type_filter).values[0]
+                                type_filter = type_filter,
+                                agg = True).values[0]
             else:
-                df = sg.get_df(geo_filter = geo, 
+                df = sg.get_census(geo_filter = geo, 
                                 var = key,
                                 measure = var, 
                                 loc_filter = loc,
-                                type_filter = type_filter).values[0]
+                                type_filter = type_filter,
+                                agg = True).values[0]
             cards.append(#dbc.Col([
                 dbc.Card(
                 children = [

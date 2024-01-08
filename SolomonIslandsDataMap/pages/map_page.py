@@ -266,7 +266,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
         # Update the type of data displayed on map and the hover template
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_df(geo_filter = geo, type_filter=data_type, var = variable, measure = measure).values
+            ar = sol_geo.get_census(geo_filter = geo, type_filter=data_type, var = variable, measure = measure).values
             ar = ar.reshape((ar.shape[0],))
             if data_type == 'Total':
                 ht = '%{customdata} <extra>%{z}</extra>'
@@ -287,7 +287,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
         # TODO this is fairly inefficient, as we are processing each time
         # Maybe faster framework like polars could help? or caching but would require a lot of caching
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_df(geo_filter = geo, type_filter=data_type, var = variable, measure=measure).values
+            ar = sol_geo.get_census(geo_filter = geo, type_filter=data_type, var = variable, measure=measure).values
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][tn]['z'] = ar
         
