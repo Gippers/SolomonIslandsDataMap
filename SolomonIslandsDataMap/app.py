@@ -72,7 +72,8 @@ app.layout = dbc.Container([
                     navbar
                 ]),
                 page_container, 
-                stored_data,                  
+                stored_data, 
+                dcc.Store('type-value', storage_type="session", data = 'Total')                 
                 ], fluid = True)
 
 # %% ../nbs/05_app.ipynb 13

@@ -2,8 +2,8 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dropdown_geo', 'control_type',
-           'dd_var', 'dd_measure', 'data_grid', 'grid_rows', 'download_button', 'SIDEBAR_STYLE', 'sidebar_census',
-           'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph']
+           'dd_var', 'dd_measure', 'dd_test', 'data_grid', 'grid_rows', 'download_button', 'SIDEBAR_STYLE',
+           'sidebar_census', 'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -56,6 +56,9 @@ dd_var = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdo
                                     val = 'Key Statistics', height = 75))
 dd_measure = html.Div(children = gen_dd(sol_geo.census_vars['Key Statistics'], 'measureDropdown',
                                       val = sol_geo.census_vars['Key Statistics'][0]))
+
+dd_test = html.Div(children = gen_dd(['1', '2'], 
+                                                '1', clear = True, place_holder='Select Dropdown Location'))
 
 # %% ../nbs/02_app_data.ipynb 12
 data_grid = dbc.Container(
