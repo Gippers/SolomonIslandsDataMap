@@ -274,8 +274,9 @@ class SolomonGeo:
                              Check that all columns have \': \' beside the following\
                              core columns: geometry, id, agg, year, type.")
         
-        # Set index of geography
+        # Set index of geography and population data
         geos = geos.set_index(geos.loc[:, 'location']) 
+        pop_df.set_index(('core', 'location'), inplace = True)
                 
         # return the transformed dataset
         return df, pop_df, geos
@@ -365,7 +366,7 @@ def get_census(self:SolomonGeo,
                 loc_filter:[str] = None, # Filters one of more locations
                 # TODO remove hardcoding here?
                 type_filter:str = 'Total', # Return either number of proportion
-                agg_flag = False, # Whether to return the dataset aggregated for the given selection
+                agg = False, # Whether to return the dataset aggregated for the given selection
                ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
     A getter method for the SolomonGeo class that returns a pandas dataset containg
@@ -405,7 +406,7 @@ def get_census(self:SolomonGeo,
     ret = pd.DataFrame(ret)
 
     # If required, aggregate dataset based on data type
-    if agg_flag == True:
+    if agg == True:
         if type_filter == 'Total':
             ret = ret.sum()
         elif type_filter == 'Proportion':
@@ -418,13 +419,13 @@ def get_census(self:SolomonGeo,
 # %% ../nbs/00_load_data.ipynb 34
 @patch
 def get_pop(self:SolomonGeo, 
-                var:str = None, # Selects an upper level 
+                years:str, # Selects the year/years of data to return
+                var:str = None, # Selects an upper level variable
                 measure:str = None, # Selects the lower level variable, if var 1 is used, measure must be used.
                 loc_filter:[str] = None, # Filters one of more locations
-                # TODO remove hardcoding here?
                 type_filter:str = 'Total', # Return either number of proportion
-                agg_flag = False, # Whether to return the dataset aggregated for the given selection
-                dataset = 'census', # Dataset, eiter census or 
+                agg = False, # Whether to return the dataset aggregated for the given selection
+                ages:[int] = None, # Filters for one or more Age Brackets, if none returns all
                ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
     A getter method for the SolomonGeo class that returns a pandas dataset containg
@@ -434,7 +435,6 @@ def get_pop(self:SolomonGeo,
     geo_filter = 'Province'
     ret = self.population
     ret = ret.loc[ret['core']['type'] == type_filter, :] 
-    ret = ret.set_index(ret.loc[:, ('core', 'location')]) # Change index to location as it's more desriptive
     # TODO check that filter is valid
     if geo_filter is not None:
         try:
@@ -443,11 +443,21 @@ def get_pop(self:SolomonGeo,
             ValueError("Geo filter must be one of: ['Ward', 'Constituency', 'Province']")
         ret = ret.loc[ret['core']['agg'] == geo_filter, :]
 
+    # Filter to years
+    ret = ret.loc[ret['core']['year'].isin(years), :]
+
     if loc_filter is not None:
-        ret = ret.loc[ret['core']['location'].isin(loc_filter), :]
+        ret = ret.loc[ret.index.isin(loc_filter), :]
+
+    if ages is not None:
+        ret = ret.loc[ret['Age']['Age_Bracket'].isin(ages), :]
 
     # Return no core data to minimise the html size
-    ret = ret.drop(columns = 'core', level=0)
+    age_year = copy.copy(ret)
+    age_year = age_year[[('core', 'year'), ('Age', 'Age_Bracket')]]
+    # WARNING - don't reorder before the concat below
+    ret = ret.drop(columns = ['core', 'Age'], level=0)
+    ret = ret.drop(columns = "Numerical_Bracket", level = 1)
 
     # Keep only selected column if required
     if measure is not None:
@@ -461,13 +471,16 @@ def get_pop(self:SolomonGeo,
         # Keep all values from upper level column
         ret = ret[var]
 
+    ret = pd.concat([age_year, ret], axis = 1)
     ret = pd.DataFrame(ret)
+    # Flatten the dataset
+    ret.columns = ret.columns.get_level_values(1)
     # If required, aggregate dataset based on data type
-    if agg_flag == True:
+    if agg == True:
         if type_filter == 'Total':
-            ret = ret.sum()
+            ret = ret.groupby(['year']).sum()
         elif type_filter == 'Proportion':
-            ret = ret.sum() / ret.sum().sum() * 100
+            ret = ret.groupby('year').sum() / ret.groupby('year').sum().sum() * 100
         else:
             raise ValueError('The type passed to the aggregate function must be one of the following: \'Total\', \'Proportion\'.')
         
