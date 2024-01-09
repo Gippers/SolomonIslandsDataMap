@@ -76,7 +76,8 @@ def initial_load(fakeData:{}, # A fake variable, ignore
 # %% ../../nbs/03_map_page.ipynb 13
 @callback(
     Output("segmented_type", "value"),
-    Input("interval-timer", "n_intervals"),
+    Input('initial-load', 'data'),
+    #Input("interval-timer", "n_intervals"),
     State("type-value", "data"),
     prevent_initial_call=True,
     allow_duplicate=True,
