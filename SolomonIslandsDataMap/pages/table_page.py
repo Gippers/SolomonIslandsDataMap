@@ -11,12 +11,12 @@ from nbdev.showdoc import *
 try:
     from SolomonIslandsDataMap.dash_components import gen_dash_grid, gen_dd
     from SolomonIslandsDataMap.app_data import mytitle, data_grid, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo, download_button, sidebar_table, dd_test
+        , control_type, dd_var, dd_measure, dropdown_geo, download_button, sidebar_table
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_dash_grid, gen_dd
     from app_data import mytitle, data_grid, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo, download_button, sidebar_table, dd_test
+        , control_type, dd_var, dd_measure, dropdown_geo, download_button, sidebar_table
     from load_data import SolomonGeo
 from fastcore.test import *
 from dash import Dash, dcc, callback, Output, Input, State, html, Patch, ctx, register_page, callback_context 
@@ -49,7 +49,6 @@ def layout():
                       ]),
               data_grid,
               stored_data,
-              dd_test,
               init_load,
               init_init,
             # fires 1ms after page load
