@@ -19,6 +19,7 @@ from dash import page_container, Dash, dcc, Output, Input, State, html, Patch, p
 import dash_bootstrap_components as dbc    # pip install dash-bootstrap-components
 from dash_bootstrap_templates import load_figure_template
 from git import Repo
+import json
 
 
 # %% ../nbs/05_app.ipynb 5
@@ -73,15 +74,15 @@ app.layout = dbc.Container([
                 ]),
                 page_container, 
                 stored_data, 
-                dcc.Store('type-value', storage_type="session", data = {'type': 'Total',
+                dcc.Store('type-value', storage_type="session", data = json.dumps({'type': 'Total',
                                                                         'geo': 'Province',
                                                                         'location': '',
                                                                         'variable': 'Key Statistics',
                                                                         'measure': 'Total Households',
-                                                                        })                 
+                                                                        }))                 
                 ], fluid = True)
 
-# %% ../nbs/05_app.ipynb 13
+# %% ../nbs/05_app.ipynb 14
 # Run app
 if __name__=='__main__':
     try:

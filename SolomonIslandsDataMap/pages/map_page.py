@@ -28,6 +28,7 @@ import dash_bootstrap_components as dbc    # pip install dash-bootstrap-componen
 from dash_bootstrap_templates import load_figure_template
 import dash_mantine_components as dmc
 import os
+import json
 
 # %% ../../nbs/03_map_page.ipynb 3
 # Try catch is added here so that the notebook can be tested without the app being run
@@ -71,20 +72,22 @@ def layout():
     Output("segmented_type", "value"),
     Output('initial-load', 'data'),
     Input(init_init, 'data'),
-    State("type-value", "data"),
-    allow_duplicate=True,
+    State("stored-value", "data"),
 )
 def initial_load(blank:dict, # Blank initialisation variable
-                   val_state:dict, # the current selection for the data
-                         ) -> type(html.Div):
+                   js:str, # the current selection for the data
+                         ) -> dict:
     """Load persistent starting values for all of the dropdowns"""
-    print("****triggered load: " + val_state)
+    print("****triggered load: ")
+    print(js)
+    val_state = json.loads(js)
+    print(val_state)
     return val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'], None
 
 
 # %% ../../nbs/03_map_page.ipynb 13
 @callback(
-    Output("type-value", "data"),
+    Output("stored-value", "data"),
     Input("segmented_geo", "value"),
     Input("locDropdown", "value"),
     Input("varDropdown", "value"),
@@ -106,17 +109,18 @@ def persist_dd_values(geo:str,
             'variable': variable,
             'measure': measure,
             }
-    print("****triggered save: " + data)
-    return data
+    print("****triggered save: ")
+    print(data)
+    return json.dumps(data)
 
 # %% ../../nbs/03_map_page.ipynb 16
 @callback(
-    Output('locDropdown', 'value'),
+    Output('locDropdown', 'value', allow_duplicate=True),
     Output(map_graph, "clickData"),
     Output(map_graph, "selectedData"),
     Input(map_graph, 'clickData'),
     Input(map_graph, 'selectedData'),
-    State('locDropdown', 'value'),
+    State('locDropdown', 'value', ),
     prevent_initial_call=True,
     allow_duplicate=True,
 )
@@ -213,7 +217,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
 
 # %% ../../nbs/03_map_page.ipynb 26
 @callback(
-    Output(dd_measure, 'children'),
+    Output(dd_measure, 'children', allow_duplicate=True),
     Input('varDropdown', 'value'),
     State('geo_df', 'data'),
     allow_duplicate=True,
@@ -232,7 +236,7 @@ def update_measure(new_var:str, # Selected variable
 
 # %% ../../nbs/03_map_page.ipynb 29
 @callback(
-    Output('measureDropdown', 'value'),
+    Output('measureDropdown', 'value', allow_duplicate=True),
     Output(selectedBarGraph, "clickData"),
     Input(selectedBarGraph, 'clickData'),
     State('varDropdown', 'value'),
