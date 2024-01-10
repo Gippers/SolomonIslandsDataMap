@@ -73,16 +73,36 @@ def layout():
     Output('initial-load', 'data'),
     Input(init_init, 'data'),
     State("stored_values", "data"),
+    State('geo_df', 'data'),
 )
 def initial_load(blank:dict, # Blank initialisation variable
                    js:str, # the current selection for the data
+                   dict_sol:dict, # Dictionary of the solomon geo data
                          ) -> dict:
     """Load persistent starting values for all of the dropdowns"""
     print("****triggered load: ")
     print(js)
     val_state = json.loads(js)
-    print(val_state)
-    print(val_state['location'])
+
+    # In some circumstances location will not match geo, in which case reset locations
+    sol_geo = SolomonGeo.gen_stored(dict_sol)
+    if val_state['location'] != [] and not (set(val_state['location']) <= set(sol_geo.locations[val_state['geo']])):
+        val_state['location'] = []
+        print("Had to reset location")
+
+    # In some cirucumstances, None or Null values have crept into the save state. When this happens,
+    # we should catch this and revert to a defualt state
+    for key, value in val_state.items():
+        if value is None:
+            # If a value is None, do a hard reset and trigger a save
+            val_state = {'type': 'Total',
+                            'geo': 'Province',
+                            'location': [],
+                            'variable': 'Key Statistics',
+                            'measure': 'Total Households',
+                            }
+            persist_dd_values(val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'])
+
     return val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'], None
 
 
@@ -221,7 +241,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     # If all selected locations are in new geo, then keep old locations
     print("Does this bit fail")
     new_locations = []
-    if locations != [] and set(locations) <= set(sol_geo.locations[geo_input]):
+    if locations != [] and not (set(locations) <= set(sol_geo.locations[geo_input])):
         new_locations = locations
 
     print('catch this here')
@@ -292,11 +312,11 @@ def bar_click(clickData:dict, # The currently clicked location on bar graph
     allow_duplicate=True,
     prevent_initial_call=True)
 def update_map(geo_input:str, # User input from the geography dropdown
-                     data_type:str, # User input of type of data
-                     measure:str, # A string contiaining the census variable and measure split by ':'
-                     variable:str, # The state of the variable dropdown
-                     init_load:{}, # An empty dictionary always
-                     dict_sol:dict, # The dataset in dictionary form
+                data_type:str, # User input of type of data
+                measure:str, # A string contiaining the census variable and measure split by ':'
+                variable:str, # The state of the variable dropdown
+                init_load:{}, # An empty dictionary always
+                dict_sol:dict, # The dataset in dictionary form
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
     Updates the focus census variable or geography dispalayed on the map
@@ -361,21 +381,21 @@ def update_map(geo_input:str, # User input from the geography dropdown
 # Callback allows components to interact
 @callback(
     Output(selectedBarGraph, 'figure'),
-    Input(dropdown_geo, 'value'),
     Input("segmented_type", 'value'),
     Input('measureDropdown', 'value'),
     Input('locDropdown', 'value'),
     Input('initial-load', 'data'),
+    State(dropdown_geo, 'value'),
     State('varDropdown', 'value'),
     State('geo_df', 'data'),
     allow_duplicate=True,
     prevent_initial_call=True
 )
-def update_bargraph(geo_input:str, # User input from the geography dropdown
-                     data_type:str, # User input of type of data
+def update_bargraph(data_type:str, # User input of type of data
                      measure:str, # A string contiaining the census variable and measure split by ':'
                      loc_selection:[str], # The selected locations, may be none
                      init_load:{}, # An empty dictionary always, triggers initial load
+                     geo_input:str, # User input from the geography dropdown
                      variable:str, # The state of the variable dropdown
                      dict_sol:dict, # The dataset in dictionary form
               )->(type(go.Figure())): # Returns a graph object figure after being updated and the dynamic title
