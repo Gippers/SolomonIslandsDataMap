@@ -35,7 +35,7 @@ stored_data = sol_geo.get_store()
 # %% ../nbs/02_app_data.ipynb 11
 dropdown_location = html.Div(children = gen_dd(sol_geo.locations[sol_geo.geo_levels[0]], 
                                                 'locDropdown', clear = True, place_holder='Select Dropdown Location',
-                                                multi = True))
+                                                multi = True, val = []))
 
 dropdown_geo = dmc.SegmentedControl(
                             id="segmented_geo",
@@ -54,9 +54,11 @@ control_type = dmc.SegmentedControl(
                         fullWidth = True,)
 
 dd_var = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdown', 
-                                    val = '', height = 75))
-dd_measure = html.Div(children = gen_dd(sol_geo.census_vars['Key Statistics'], 'measureDropdown',
-                                      val = ''))
+                                    val = '',
+                                    height = 75))
+dd_measure = html.Div(children = gen_dd(sol_geo.census_vars['Key Statistics'], 'measureDropdown'
+                                    ,val = ''
+                                      ))
 
 # %% ../nbs/02_app_data.ipynb 12
 data_grid = dbc.Container(

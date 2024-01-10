@@ -8,7 +8,7 @@ from nbdev.showdoc import *
 try:
     from SolomonIslandsDataMap.app_data import stored_data
 except: 
-    from app_data import sidebar, stored_data
+    from app_data import stored_data
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -74,9 +74,9 @@ app.layout = dbc.Container([
                 ]),
                 page_container, 
                 stored_data, 
-                dcc.Store('type-value', storage_type="session", data = json.dumps({'type': 'Total',
+                dcc.Store('stored_values', storage_type="session", data = json.dumps({'type': 'Total',
                                                                         'geo': 'Province',
-                                                                        'location': '',
+                                                                        'location': [],
                                                                         'variable': 'Key Statistics',
                                                                         'measure': 'Total Households',
                                                                         }))                 

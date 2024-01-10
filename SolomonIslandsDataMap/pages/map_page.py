@@ -72,7 +72,7 @@ def layout():
     Output("segmented_type", "value"),
     Output('initial-load', 'data'),
     Input(init_init, 'data'),
-    State("stored-value", "data"),
+    State("stored_values", "data"),
 )
 def initial_load(blank:dict, # Blank initialisation variable
                    js:str, # the current selection for the data
@@ -82,12 +82,13 @@ def initial_load(blank:dict, # Blank initialisation variable
     print(js)
     val_state = json.loads(js)
     print(val_state)
+    print(val_state['location'])
     return val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'], None
 
 
 # %% ../../nbs/03_map_page.ipynb 13
 @callback(
-    Output("stored-value", "data"),
+    Output("stored_values", "data"),
     Input("segmented_geo", "value"),
     Input("locDropdown", "value"),
     Input("varDropdown", "value"),
@@ -97,7 +98,7 @@ def initial_load(blank:dict, # Blank initialisation variable
     allow_duplicate=True,
 )
 def persist_dd_values(geo:str,
-                      location:str,
+                      location:[str],
                       variable:str, 
                       measure:str,
                       type:str, # Data type to save
@@ -203,17 +204,30 @@ def map_selections(locations:[str], # The previously selected locations
     Output(dropdown_location, 'children'),
     Input(dropdown_geo, 'value'),
     State('geo_df', 'data'),
+    State('locDropdown', 'value'),
     allow_duplicate=True,
     prevent_initial_call=True
 )
 def update_geography(geo_input:str, # User input from the geography dropdown
                     dict_sol:dict, # The dataset in dictionary form
+                    locations:[str], # Currently selected locations
               )->[str]: # Returns a new list of locations to display
     '''
     Updates the dropdown_location dropdown based on the currently selected data aggregation.
+    Check to see if current locations are in geography, if they are not then reset them.
     '''
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
-    return gen_dd(sol_geo.locations[geo_input], 'locDropdown', "Select a location", clear = True, multi = True)
+    
+    # If all selected locations are in new geo, then keep old locations
+    print("Does this bit fail")
+    new_locations = []
+    if locations != [] and set(locations) <= set(sol_geo.locations[geo_input]):
+        new_locations = locations
+
+    print('catch this here')
+
+    return gen_dd(sol_geo.locations[geo_input], 'locDropdown', "Select a location", clear = True, multi = True, 
+                  val = new_locations)
 
 # %% ../../nbs/03_map_page.ipynb 26
 @callback(
@@ -229,6 +243,7 @@ def update_measure(new_var:str, # Selected variable
     '''
     Updates the dropdown_location dropdown based on the currently selected data aggregation.
     '''
+    print("func um")
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
     # When a variable is selected, the measure will be set as the first one
     return gen_dd(sol_geo.census_vars[new_var], 'measureDropdown', 
@@ -249,6 +264,7 @@ def bar_click(clickData:dict, # The currently clicked location on bar graph
                 dict_sol:dict, # The dataset in dictionary form
                 )->[str]: # Returns the new value for the dropdown
     """This function updates the dropdown menu based on the bar graph click data"""
+    print("func bc")
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
     if clickData is None:
         print("Click data was none")
@@ -371,9 +387,9 @@ def update_bargraph(geo_input:str, # User input from the geography dropdown
     # Create newly selected barplot
     print("input")
     print(loc_selection)
-    locs = None
+    locs = []
     # Multi dropdown can return None or a list of None.
-    if loc_selection: 
+    if len(loc_selection) > 0: 
         locs = loc_selection
     print("Going in to function")
     print(locs)

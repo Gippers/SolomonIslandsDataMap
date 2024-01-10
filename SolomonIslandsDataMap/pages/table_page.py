@@ -52,7 +52,7 @@ def layout():
               init_load,
               init_init,
             # fires 1ms after page load
-            dcc.Interval(id="interval-timer", interval=1, max_intervals=1),
+            #dcc.Interval(id="interval-timer", interval=1, max_intervals=1),
             ], width = 10)
           ], justify = 'center')
 
