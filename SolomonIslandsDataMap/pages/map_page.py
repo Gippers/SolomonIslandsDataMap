@@ -35,8 +35,8 @@ import json
 try:
     register_page(__name__, 
                         path='/',
-                        title='Data Map',
-                        name='Data Map')
+                        title='Census Map',
+                        name='Census Map')
 except:
     pass
 
@@ -70,8 +70,10 @@ def layout():
     Output("varDropdown", "value"),
     Output("measureDropdown", "value"),
     Output("segmented_type", "value"),
+    Output("locDropdownPop", 'value'),
     Output('initial-load', 'data'),
-    Input(init_init, 'data'),
+    Input("initial-initial", 'data'),
+    Input("initial-pop", 'data'),
     State("stored_values", "data"),
     State('geo_df', 'data'),
 )
@@ -83,9 +85,17 @@ def initial_load(blank:dict, # Blank initialisation variable
     print("****triggered load: ")
     print(js)
     val_state = json.loads(js)
+    sol_geo = SolomonGeo.gen_stored(dict_sol)
+
+    # When the initial load id triggered by navigation to population page, 
+    # if the geo isn't province we reset to this
+    loaded_page = ctx.triggered_id
+    if loaded_page == 'initial-pop' and val_state['geo'] != 'Province':
+        val_state['geo'] = 'Province'
+        val_state['location'] = []
+        # TODO test that this works with multi tab
 
     # In some circumstances location will not match geo, in which case reset locations
-    sol_geo = SolomonGeo.gen_stored(dict_sol)
     if val_state['location'] != [] and not (set(val_state['location']) <= set(sol_geo.locations[val_state['geo']])):
         val_state['location'] = []
         print("Had to reset location")
@@ -108,7 +118,8 @@ def initial_load(blank:dict, # Blank initialisation variable
                             }
             persist_dd_values(val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'])
 
-    return val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'], None
+    return val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], \
+            val_state['type'], val_state['pop_location'], None
 
 
 # %% ../../nbs/03_map_page.ipynb 13
@@ -127,6 +138,7 @@ def persist_dd_values(geo:str,
                       measure:str,
                       type:str, # Data type to save
                       variable:str, 
+                      popLocation:[str], # Note different population location as it can only be province
                     ) -> str:
     """Update the data type to persistent on load"""
     data = {'type': type,

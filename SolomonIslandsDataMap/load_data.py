@@ -83,6 +83,20 @@ class SolomonGeo:
                 vars[col[0]].append(col[1])
         self.census_vars = vars
 
+        # Save a list of population variables, ignoring the core variables
+        # Use a dictionary that maps the upper level column names to lower level ones
+        var_df = pop_df.drop(columns = ["core", "Age"], level=0)
+        vars = {}
+        for col in var_df.columns:
+            if col[0] not in vars:
+                vars[col[0]] = [col[1]]
+            else:
+                vars[col[0]].append(col[1])
+        self.population_vars = vars
+        # Seperately save the age groupings
+        self.ages = list(pop_df['Age']['Age_Bracket'].values)
+
+
         # TODO should captialise first letter
         self.data_type = cen_df.loc[:, ('core', 'type')].unique()
 
