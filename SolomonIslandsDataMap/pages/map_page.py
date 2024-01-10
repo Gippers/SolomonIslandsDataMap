@@ -241,8 +241,9 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     # If all selected locations are in new geo, then keep old locations
     print("Does this bit fail")
     new_locations = []
-    if locations != [] and not (set(locations) <= set(sol_geo.locations[geo_input])):
+    if locations != [] and set(locations) <= set(sol_geo.locations[geo_input]):
         new_locations = locations
+        print("reset locations - mismatched")
 
     print('catch this here')
 
