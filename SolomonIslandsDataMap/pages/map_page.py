@@ -90,6 +90,11 @@ def initial_load(blank:dict, # Blank initialisation variable
         val_state['location'] = []
         print("Had to reset location")
 
+    # In some circumstances, variable will not match measure. In which case reset measure
+    if val_state['measure'] not in sol_geo.census_vars[val_state['variable']]:
+        val_state['measure'] = sol_geo.census_vars[val_state['variable']][0]
+        print("reset measure")
+
     # In some cirucumstances, None or Null values have crept into the save state. When this happens,
     # we should catch this and revert to a defualt state
     for key, value in val_state.items():
@@ -111,17 +116,17 @@ def initial_load(blank:dict, # Blank initialisation variable
     Output("stored_values", "data"),
     Input("segmented_geo", "value"),
     Input("locDropdown", "value"),
-    Input("varDropdown", "value"),
     Input("measureDropdown", "value"),
     Input("segmented_type", "value"),
+    Input("varDropdown", "value"),
     prevent_initial_call=True,
     allow_duplicate=True,
 )
 def persist_dd_values(geo:str,
                       location:[str],
-                      variable:str, 
                       measure:str,
                       type:str, # Data type to save
+                      variable:str, 
                     ) -> str:
     """Update the data type to persistent on load"""
     data = {'type': type,
@@ -255,20 +260,28 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     Output(dd_measure, 'children', allow_duplicate=True),
     Input('varDropdown', 'value'),
     State('geo_df', 'data'),
+    State('measureDropdown', 'value'),
     allow_duplicate=True,
     prevent_initial_call=True
 )
 def update_measure(new_var:str, # Selected variable
                    dict_sol:dict, # The dataset in dictionary form
+                   measure:str, # Currently selected measure
               )->dcc.Dropdown: # Returns a dropdown of measures for selected variable
     '''
     Updates the dropdown_location dropdown based on the currently selected data aggregation.
     '''
     print("func um")
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
+
+    # Sometimes this callback is triggered when the measure doesn't need to be reset.
+    # Check whether measure is in variable, if not reset to 0
+    if measure not in sol_geo.census_vars[new_var]:
+        measure = sol_geo.census_vars[new_var][0]
+
     # When a variable is selected, the measure will be set as the first one
     return gen_dd(sol_geo.census_vars[new_var], 'measureDropdown', 
-                  val = sol_geo.census_vars[new_var][0])
+                  val = measure)
 
 # %% ../../nbs/03_map_page.ipynb 29
 @callback(
