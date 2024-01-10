@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dropdown_geo', 'dd_geo_pop',
-           'control_type', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop', 'data_grid', 'grid_rows',
+           'control_type', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop', 'dd_age', 'data_grid', 'grid_rows',
            'download_button', 'SIDEBAR_STYLE', 'sidebar_census', 'sidebar_population', 'sidebar_table', 'mytitle',
            'map_graph', 'selectedBarGraph']
 
@@ -68,10 +68,14 @@ dd_measure = html.Div(children = gen_dd(sol_geo.census_vars['Key Statistics'], '
                                     ,val = ''
                                       ))
 
-dd_var_pop = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdown', 
+dd_var_pop = html.Div(children = gen_dd(list(sol_geo.population_vars.keys()), 'varDropdownPop', 
                                     val = '',
                                     height = 75))
-dd_measure_pop = html.Div(children = gen_dd(sol_geo.pop_vars['Key Statistics'], 'measureDropdown'
+dd_measure_pop = html.Div(children = gen_dd(sol_geo.population_vars[list(sol_geo.population_vars.keys())[0]], 'measureDropdownPop'
+                                    ,val = ''
+                                      ))
+
+dd_age = html.Div(children = gen_dd(sol_geo.ages, 'age_dropdown'
                                     ,val = ''
                                       ))
 
@@ -134,12 +138,15 @@ sidebar_population = html.Div(
                 html.P("Geography"), # TODO add a tooltip button here with link to geo explanation
                 dd_geo_pop,
                 html.Br(),
+                html.P("Age Group"), # TODO add a tooltip button here with link to geo explanation
+                dd_age,
+                html.Br(),
                 html.P("Location"), # TODO add a little info button here with link to geo explanation
                 dropdown_location,
                 html.Br(),
                 html.P("Data"), # TODO add a little info button here with link to geo explanation
-                dd_var,
-                dd_measure,
+                dd_var_pop,
+                dd_measure_pop,
                 html.Br(),
                 html.P("Data Type"), 
                 control_type,

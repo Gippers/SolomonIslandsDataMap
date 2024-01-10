@@ -53,7 +53,7 @@ navbar = dbc.NavbarSimple(
                 #dbc.DropdownMenuItem("More pages coming soon", header=True),
                 
                 dbc.DropdownMenuItem('Census Map', href=pages['Census Map']),
-                dbc.DropdownMenuItem('Population Projections', href=pages['Population Projectionss']),
+                dbc.DropdownMenuItem('Population Projections', href=pages['Population Projections']),
                 dbc.DropdownMenuItem('Data Table', href=pages['Data Table']),
             ],
             nav=True,
@@ -76,15 +76,19 @@ app.layout = dbc.Container([
                 ]),
                 page_container, 
                 stored_data, 
-                dcc.Store('stored_values', storage_type="session", data = json.dumps({'type': 'Total',
-                                                                        'geo': 'Province',
-                                                                        'location': [],
-                                                                        'variable': 'Key Statistics',
-                                                                        'measure': 'Total Households',
-                                                                        }))                 
+                dcc.Store('stored_values', storage_type="session", 
+                          data = json.dumps({'type': 'Total',
+                                    'geo': 'Province',
+                                    'location': [],
+                                    'variable': 'Key Statistics',
+                                    'measure': 'Total Households',
+                                    'var-pop': 'Population',
+                                    'measure-pop': 'Total',
+                                    'age': '0-4',
+                                    }))                 
                 ], fluid = True)
 
-# %% ../nbs/06_app.ipynb 14
+# %% ../nbs/06_app.ipynb 13
 # Run app
 if __name__=='__main__':
     try:

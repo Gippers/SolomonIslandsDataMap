@@ -71,6 +71,9 @@ def layout():
     Output("measureDropdown", "value"),
     Output("segmented_type", "value"),
     Output("locDropdownPop", 'value'),
+    Output("varDropdownPop", "value"),
+    Output("measureDropdownPop", "value"),
+    Output("age_dropdown", "value"),
     Output('initial-load', 'data'),
     Input("initial-initial", 'data'),
     Input("initial-pop", 'data'),
@@ -119,7 +122,8 @@ def initial_load(blank:dict, # Blank initialisation variable
             persist_dd_values(val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'])
 
     return val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], \
-            val_state['type'], val_state['pop_location'], None
+            val_state['type'], val_state['pop_location'], val_state['var-pop'], \
+            val_state['measure-pop'], val_state['age'], None
 
 
 # %% ../../nbs/03_map_page.ipynb 13
@@ -130,6 +134,9 @@ def initial_load(blank:dict, # Blank initialisation variable
     Input("measureDropdown", "value"),
     Input("segmented_type", "value"),
     Input("varDropdown", "value"),
+    Input("varDropdownPop", "value"),
+    Input("measureDropdownPop", "value"),
+    Input("age_dropdown", "value"),
     prevent_initial_call=True,
     allow_duplicate=True,
 )
@@ -138,7 +145,9 @@ def persist_dd_values(geo:str,
                       measure:str,
                       type:str, # Data type to save
                       variable:str, 
-                      popLocation:[str], # Note different population location as it can only be province
+                      popVariable:str,
+                      popMeasure:str, 
+                      age:str,
                     ) -> str:
     """Update the data type to persistent on load"""
     data = {'type': type,
@@ -146,6 +155,9 @@ def persist_dd_values(geo:str,
             'location': location,
             'variable': variable,
             'measure': measure,
+            'var-pop': popVariable,
+            'measure-pop': popMeasure,
+            'age': age,
             }
     print("****triggered save: ")
     print(data)
