@@ -101,7 +101,7 @@ def initial_load_pop(page_trigger:str, # Page that triggered initial load
                             'var-pop': 'Population',
                             'measure-pop': 'Total',
                             'age': '0-4',
-                            'pop_year': 2024,
+                            'pop_year': [2024],
                             }
             persist_dd_values_pop(val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'])
 
@@ -121,7 +121,7 @@ def initial_load_pop(page_trigger:str, # Page that triggered initial load
 def persist_dd_values(popVariable:str,
                       popMeasure:str, 
                       age:str,
-                      year:int,
+                      years:[int],
                       json_store:dict,
                     ) -> str:
     """Update the data type to persistent on load"""
@@ -129,7 +129,7 @@ def persist_dd_values(popVariable:str,
     store['var-pop'] = popVariable
     store['measure-pop'] = popMeasure
     store['age'] = age
-    store['pop_year'] = year
+    store['pop_year'] = years
 
     print("****triggered save: ")
     print(store)
@@ -188,7 +188,7 @@ def update_map_pop(data_type:str, # User input of type of data
                 variable:str, # The state of the variable dropdown
                 init_load:{}, # An empty dictionary always
                 age:str, # Age Bracket to display
-                year:int, # The selected projection year
+                years:[int], # The selected projection year
                 dict_sol:dict, # The dataset in dictionary form
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
@@ -220,7 +220,7 @@ def update_map_pop(data_type:str, # User input of type of data
         # Update the type of data displayed on map and the hover template
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_pop(years = year, type_filter=data_type, var = variable, measure = measure, 
+            ar = sol_geo.get_pop(years = years, type_filter=data_type, var = variable, measure = measure, 
                                  ages = age).values
             ar = ar.reshape((ar.shape[0],))
             if data_type == 'Total':
@@ -242,7 +242,7 @@ def update_map_pop(data_type:str, # User input of type of data
         # TODO this is fairly inefficient, as we are processing each time
         # Maybe faster framework like polars could help? or caching but would require a lot of caching
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_pop(years = year, type_filter=data_type, var = variable, measure = measure, 
+            ar = sol_geo.get_pop(years = years, type_filter=data_type, var = variable, measure = measure, 
                                  ages = age).values
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][tn]['z'] = ar

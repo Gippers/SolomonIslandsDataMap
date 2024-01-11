@@ -115,7 +115,7 @@ def initial_load(page_trigger:str, # Page that triggered initial load
                             'var-pop': 'Population',
                             'measure-pop': 'Total',
                             'age': '0-4',
-                            'pop_year': 2024,
+                            'pop_year': [2024],
                             }
             persist_dd_values(val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'])
 
