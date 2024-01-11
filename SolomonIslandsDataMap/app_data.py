@@ -2,9 +2,9 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dropdown_geo', 'dd_geo_pop',
-           'control_type', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop', 'dd_age', 'data_grid', 'grid_rows',
-           'download_button', 'SIDEBAR_STYLE', 'sidebar_census', 'sidebar_population', 'sidebar_table', 'mytitle',
-           'map_graph', 'selectedBarGraph']
+           'control_type', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop', 'dd_age', 'dd_years_pop',
+           'data_grid', 'grid_rows', 'download_button', 'SIDEBAR_STYLE', 'sidebar_census', 'sidebar_population',
+           'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -79,6 +79,10 @@ dd_age = html.Div(children = gen_dd(sol_geo.ages, 'age_dropdown'
                                     ,val = ''
                                       ))
 
+dd_years_pop = html.Div(children = gen_dd(sol_geo.pop_years, 'years_dropdown'
+                                    ,val = ''
+                                      ))
+
 # %% ../nbs/02_app_data.ipynb 13
 data_grid = dbc.Container(
                 children = gen_dash_grid(sol_geo, sol_geo.geo_levels[0], "Key Statistics", 'Total Households')
@@ -140,6 +144,9 @@ sidebar_population = html.Div(
                 html.Br(),
                 html.P("Age Group"), # TODO add a tooltip button here with link to geo explanation
                 dd_age,
+                html.Br(),
+                html.P("Projection Year"), # TODO add a tooltip button here with link to geo explanation
+                dd_years_pop,
                 html.Br(),
                 html.P("Location"), # TODO add a little info button here with link to geo explanation
                 dropdown_location,

@@ -44,7 +44,7 @@ except:
 # Creat some hacked init things
 # TODO again as below, must be a better way
 init_load = dcc.Store(id="initial-load", data={})
-init_init = dcc.Store(id="initial-initial", data={})
+init_init = dcc.Store(id="initial-initial", data='census')
 
 # %% ../../nbs/03_map_page.ipynb 7
 def layout():
@@ -70,17 +70,12 @@ def layout():
     Output("varDropdown", "value"),
     Output("measureDropdown", "value"),
     Output("segmented_type", "value"),
-    Output("locDropdownPop", 'value'),
-    Output("varDropdownPop", "value"),
-    Output("measureDropdownPop", "value"),
-    Output("age_dropdown", "value"),
     Output('initial-load', 'data'),
     Input("initial-initial", 'data'),
-    Input("initial-pop", 'data'),
     State("stored_values", "data"),
     State('geo_df', 'data'),
 )
-def initial_load(blank:dict, # Blank initialisation variable
+def initial_load(page_trigger:str, # Page that triggered initial load
                    js:str, # the current selection for the data
                    dict_sol:dict, # Dictionary of the solomon geo data
                          ) -> dict:
@@ -92,8 +87,7 @@ def initial_load(blank:dict, # Blank initialisation variable
 
     # When the initial load id triggered by navigation to population page, 
     # if the geo isn't province we reset to this
-    loaded_page = ctx.triggered_id
-    if loaded_page == 'initial-pop' and val_state['geo'] != 'Province':
+    if page_trigger == 'pop' and val_state['geo'] != 'Province':
         val_state['geo'] = 'Province'
         val_state['location'] = []
         # TODO test that this works with multi tab
@@ -118,12 +112,15 @@ def initial_load(blank:dict, # Blank initialisation variable
                             'location': [],
                             'variable': 'Key Statistics',
                             'measure': 'Total Households',
+                            'var-pop': 'Population',
+                            'measure-pop': 'Total',
+                            'age': '0-4',
+                            'pop_year': 2024,
                             }
             persist_dd_values(val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'])
 
     return val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], \
-            val_state['type'], val_state['pop_location'], val_state['var-pop'], \
-            val_state['measure-pop'], val_state['age'], None
+            val_state['type'], None
 
 
 # %% ../../nbs/03_map_page.ipynb 13
@@ -134,34 +131,29 @@ def initial_load(blank:dict, # Blank initialisation variable
     Input("measureDropdown", "value"),
     Input("segmented_type", "value"),
     Input("varDropdown", "value"),
-    Input("varDropdownPop", "value"),
-    Input("measureDropdownPop", "value"),
-    Input("age_dropdown", "value"),
+    State("stored_values", "data"),
     prevent_initial_call=True,
     allow_duplicate=True,
 )
 def persist_dd_values(geo:str,
-                      location:[str],
-                      measure:str,
-                      type:str, # Data type to save
-                      variable:str, 
-                      popVariable:str,
-                      popMeasure:str, 
-                      age:str,
+                        location:[str],
+                        measure:str,
+                        type:str, # Data type to save
+                        variable:str, 
+                        json_store:dict,
                     ) -> str:
-    """Update the data type to persistent on load"""
-    data = {'type': type,
-            'geo': geo,
-            'location': location,
-            'variable': variable,
-            'measure': measure,
-            'var-pop': popVariable,
-            'measure-pop': popMeasure,
-            'age': age,
-            }
-    print("****triggered save: ")
-    print(data)
-    return json.dumps(data)
+        """Update the data type to persistent on load"""
+        store = json.loads(json_store)
+        
+        store['type'] = type
+        store['geo'] = geo
+        store['location'] = location
+        store['variable'] = variable
+        store['measure'] = measure
+                
+        print("****triggered save: ")
+        print(store)
+        return json.dumps(store)
 
 # %% ../../nbs/03_map_page.ipynb 16
 @callback(
@@ -170,7 +162,7 @@ def persist_dd_values(geo:str,
     Output(map_graph, "selectedData"),
     Input(map_graph, 'clickData'),
     Input(map_graph, 'selectedData'),
-    State('locDropdown', 'value', ),
+    State('locDropdown', 'value'),
     prevent_initial_call=True,
     allow_duplicate=True,
 )
@@ -179,6 +171,7 @@ def map_click(clickData:dict, # The currently clicked location on the map
                 prev_locs:[str], # The previously selected locations
                 )->[str]: # Returns the new value for the dropdown
     """This function updates the dropdown menu based on the map click data"""
+
     print("map clicked updating to:")
     if clickData is None and selectedData is None:
         # TODO when none, maybe in future return current saved state, for now doing total

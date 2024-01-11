@@ -7,6 +7,7 @@ __all__ = ['s3_client', 'SolomonGeo']
 from nbdev.showdoc import *
 import geopandas as gpd
 import pandas as pd
+import numpy as np
 from git import Repo
 import json
 from fastcore import *
@@ -21,6 +22,7 @@ from dotenv import load_dotenv
 from dash import dcc
 import os
 import copy
+
 
 load_dotenv()
 
@@ -95,7 +97,7 @@ class SolomonGeo:
         self.population_vars = vars
         # Seperately save the age groupings
         self.ages = list(pop_df['Age']['Age_Bracket'].values)
-
+        self.pop_years = list(np.unique(pop_df['core']['year'].values))
 
         # TODO should captialise first letter
         self.data_type = cen_df.loc[:, ('core', 'type')].unique()
@@ -105,6 +107,7 @@ class SolomonGeo:
         for geo in self.geo_levels:
             locations[geo] = cen_df.loc[cen_df['core']['agg'] == geo, ('core', 'location')].unique()
         self.locations = locations
+    
         # TODO: need a list of column sub headings: get from column name split by `:`
 
         self.type_default = 'Total'

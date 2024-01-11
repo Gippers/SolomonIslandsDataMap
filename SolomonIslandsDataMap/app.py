@@ -85,6 +85,7 @@ app.layout = dbc.Container([
                                     'var-pop': 'Population',
                                     'measure-pop': 'Total',
                                     'age': '0-4',
+                                    'pop_year': 2024,
                                     }))                 
                 ], fluid = True)
 

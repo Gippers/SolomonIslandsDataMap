@@ -38,7 +38,7 @@ title = dcc.Markdown(children="## This is a placeholder test!!") # TODO This nee
 # %% ../../nbs/05_table_page.ipynb 7
 # TODO again as below, must be a better way
 init_load = dcc.Store(id="initial-load", data={})
-init_init = dcc.Store(id="initial-initial", data={})
+init_init = dcc.Store(id="initial-initial", data='table')
 def layout():
     return dbc.Row(
         [dbc.Col(sidebar_table, width = 2),
