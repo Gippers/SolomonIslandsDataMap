@@ -96,7 +96,7 @@ class SolomonGeo:
                 vars[col[0]].append(col[1])
         self.population_vars = vars
         # Seperately save the age groupings
-        self.ages = list(pop_df['Age']['Age_Bracket'].values)
+        self.ages = list(np.unique(pop_df['Age']['Age_Bracket'].values))
         self.pop_years = list(np.unique(pop_df['core']['year'].values))
 
         # TODO should captialise first letter

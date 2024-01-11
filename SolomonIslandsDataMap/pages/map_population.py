@@ -236,7 +236,7 @@ def update_map_pop(data_type:str, # User input of type of data
             
         
 
-    if button_clicked in ['measureDropdownPop', 'initial-load-pop']:
+    if button_clicked in ['measureDropdownPop', 'initial-load-pop', 'year_slider', 'age_dropdown']:
         # Update the z values in map to the data for the requested census variable
         for geo in sol_geo.geo_levels:
         # Ar updates the z value ie. data disaplyed each time
