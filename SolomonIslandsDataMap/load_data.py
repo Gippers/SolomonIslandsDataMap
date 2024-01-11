@@ -454,7 +454,7 @@ def get_pop(self:SolomonGeo,
                 loc_filter:[str] = None, # Filters one of more locations
                 type_filter:str = 'Total', # Return either number of proportion
                 agg = False, # Whether to return the dataset aggregated for the given selection
-                ages:[int] = None, # Filters for one or more Age Brackets, if none returns all
+                ages:[str] = None, # Filters for one or more Age Brackets, if none returns all
                ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
     A getter method for the SolomonGeo class that returns a pandas dataset containg
@@ -496,14 +496,18 @@ def get_pop(self:SolomonGeo,
         except:
             ValueError("If measure is set, var 1 must be set and the key value pair of var and measure must match")
         ret = ret[var].filter(items = [measure])
+        ret = pd.concat([age_year, ret], axis = 1)
     elif var is not None:
         # Keep all values from upper level column
         ret = ret[var]
+        ret = pd.concat([age_year, ret], axis = 1)
+    else:
+        print("sad")
+        ret = pd.concat([age_year, ret], axis = 1)
+        ret.columns = ret.columns.get_level_values(1)
+        # TODO incosistent column naming based on variable, measure or no selection
 
-    ret = pd.concat([age_year, ret], axis = 1)
     ret = pd.DataFrame(ret)
-    # Flatten the dataset
-    ret.columns = ret.columns.get_level_values(1)
     # If required, aggregate dataset based on data type
     if agg == True:
         if type_filter == 'Total':

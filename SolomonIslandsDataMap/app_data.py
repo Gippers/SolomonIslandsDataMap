@@ -3,8 +3,8 @@
 # %% auto 0
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dd_years_pop', 'dropdown_geo',
            'dd_geo_pop', 'control_type', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop', 'dd_age', 'data_grid',
-           'grid_rows', 'download_button', 'SIDEBAR_STYLE', 'sidebar_census', 'sidebar_population', 'sidebar_table',
-           'mytitle', 'map_graph', 'selectedBarGraph']
+           'grid_rows', 'download_button', 'year_slider', 'SIDEBAR_STYLE', 'sidebar_census', 'sidebar_population',
+           'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -78,7 +78,7 @@ dd_var_pop = html.Div(children = gen_dd(list(sol_geo.population_vars.keys()), 'v
 dd_measure_pop = html.Div(children = gen_dd(sol_geo.population_vars[list(sol_geo.population_vars.keys())[0]], 'measureDropdownPop'
                                     ,val = ''
                                       ))
-
+# TODO maybe ages should be multi select
 dd_age = html.Div(children = gen_dd(sol_geo.ages, 'age_dropdown'
                                     ,val = ''
                                       ))
@@ -92,6 +92,10 @@ grid_rows = dcc.Input(id="grid-rows", type="number", min=1, max=len(sol_geo.loca
 download_button = dbc.Button("Download", id="csv-button", outline=True, n_clicks=0, color = "primary")
 
 # %% ../nbs/02_app_data.ipynb 15
+year_slider = dcc.Slider(sol_geo.pop_years[0], sol_geo.pop_years[-1], 1, marks=None, id = 'year_slider',
+                tooltip={"placement": "bottom", "always_visible": True},  included=False, dots = True)
+
+# %% ../nbs/02_app_data.ipynb 17
 # Note, for now I am not using a sidebar style as I do not want to fix the width
 # TODO fix the width of the sidebar, particular on different screens
 SIDEBAR_STYLE = {
@@ -146,9 +150,6 @@ sidebar_population = html.Div(
                 html.P("Age Group"), # TODO add a tooltip button here with link to geo explanation
                 dd_age,
                 html.Br(),
-                html.P("Projection Year"), # TODO add a tooltip button here with link to geo explanation
-                dd_years_pop,
-                html.Br(),
                 html.P("Location"), # TODO add a little info button here with link to geo explanation
                 dropdown_location,
                 html.Br(),
@@ -199,7 +200,7 @@ sidebar_table = html.Div(
 )
 
 
-# %% ../nbs/02_app_data.ipynb 17
+# %% ../nbs/02_app_data.ipynb 19
 # TODO - not sure whether this should be imported from app_data or built here.
 # if building it here causes it to reload each time, I should probably move it later
 # TODO downside of having it here is that it is a little more seperated.

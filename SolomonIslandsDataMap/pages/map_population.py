@@ -10,12 +10,12 @@ from nbdev.showdoc import *
 try:
     from SolomonIslandsDataMap.dash_components import gen_bar_plot, gen_dd
     from SolomonIslandsDataMap.app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location  \
-        , control_type, dd_var_pop, dd_measure_pop, dd_geo_pop, sidebar_population, dd_var_pop, dd_measure_pop
+        , control_type, dd_var_pop, dd_measure_pop, dd_geo_pop, sidebar_population, dd_var_pop, dd_measure_pop, year_slider
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_bar_plot, gen_dd
     from app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dd_geo_pop, sidebar_population, dd_var_pop, dd_measure_pop
+        , control_type, dd_var, dd_measure, dd_geo_pop, sidebar_population, dd_var_pop, dd_measure_pop, year_slider
     from load_data import SolomonGeo
 import plotly.express as px
 import plotly.graph_objects as go
@@ -52,6 +52,7 @@ def layout():
         dbc.Col([
             mytitle,
             map_graph,
+            year_slider,
             #selectedBarGraph,
             stored_data, 
             init_load, 
@@ -67,7 +68,7 @@ def layout():
     Output("varDropdownPop", "value"),
     Output("measureDropdownPop", "value"),
     Output("age_dropdown", "value"),
-    Output("years_dropdown", "value"),
+    Output("year_slider", "value"),
     Output('initial-load-pop', 'data'),
     Input("initial-initial", 'data'),
     State("stored_values", "data"),
@@ -101,7 +102,7 @@ def initial_load_pop(page_trigger:str, # Page that triggered initial load
                             'var-pop': 'Population',
                             'measure-pop': 'Total',
                             'age': '0-4',
-                            'pop_year': [2024],
+                            'pop_year': 2024,
                             }
             persist_dd_values_pop(val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'])
 
@@ -113,7 +114,7 @@ def initial_load_pop(page_trigger:str, # Page that triggered initial load
     Input("varDropdownPop", "value"),
     Input("measureDropdownPop", "value"),
     Input("age_dropdown", "value"),
-    Input("years_dropdown", "value"),
+    Input("year_slider", "value"),
     State("stored_values", "data"),
     prevent_initial_call=True,
     allow_duplicate=True,
@@ -121,7 +122,7 @@ def initial_load_pop(page_trigger:str, # Page that triggered initial load
 def persist_dd_values(popVariable:str,
                       popMeasure:str, 
                       age:str,
-                      years:[int],
+                      years:int,
                       json_store:dict,
                     ) -> str:
     """Update the data type to persistent on load"""
@@ -179,7 +180,7 @@ def update_measure_pop(new_var:str, # Selected variable
     Input('varDropdownPop', 'value'),
     Input('initial-load-pop', 'data'),
     Input('age_dropdown', 'value'),
-    Input("years_dropdown", "value"),
+    Input("year_slider", "value"),
     State('geo_df', 'data'),
     allow_duplicate=True,
     prevent_initial_call=True)
@@ -188,7 +189,7 @@ def update_map_pop(data_type:str, # User input of type of data
                 variable:str, # The state of the variable dropdown
                 init_load:{}, # An empty dictionary always
                 age:str, # Age Bracket to display
-                years:[int], # The selected projection year
+                year:int, # The selected projection year
                 dict_sol:dict, # The dataset in dictionary form
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
@@ -220,8 +221,8 @@ def update_map_pop(data_type:str, # User input of type of data
         # Update the type of data displayed on map and the hover template
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_pop(years = years, type_filter=data_type, var = variable, measure = measure, 
-                                 ages = age).values
+            ar = sol_geo.get_pop(years = [year], var = variable, measure = measure, #type_filter=data_type,
+                                 ages = [age]).values[:, -1]
             ar = ar.reshape((ar.shape[0],))
             if data_type == 'Total':
                 ht = '%{customdata} <extra>%{z}</extra>'
@@ -242,8 +243,8 @@ def update_map_pop(data_type:str, # User input of type of data
         # TODO this is fairly inefficient, as we are processing each time
         # Maybe faster framework like polars could help? or caching but would require a lot of caching
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_pop(years = years, type_filter=data_type, var = variable, measure = measure, 
-                                 ages = age).values
+            ar = sol_geo.get_pop(years = [year], var = variable, measure = measure, # type_filter=data_type,
+                                 ages = [age]).values[:, -1]
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][tn]['z'] = ar
         
