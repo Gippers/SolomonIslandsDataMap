@@ -7,8 +7,10 @@ __all__ = ['repo', 'fp', 'server', 'pages', 'navbar']
 from nbdev.showdoc import *
 try:
     from SolomonIslandsDataMap.app_data import stored_data
+    from SolomonIslandsDataMap.app_data import dropdown_geo
 except: 
     from app_data import stored_data
+    from app_data import dropdown_geo
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -86,7 +88,11 @@ app.layout = dbc.Container([
                                     'measure-pop': 'Total',
                                     'age': '0-4',
                                     'pop_year': 2024,
-                                    }))                 
+                                    }),),
+                html.Div([
+                    dropdown_geo,
+                ], style = {'display': 'none'}),
+                                                     
                 ], fluid = True)
 
 # %% ../nbs/06_app.ipynb 13
