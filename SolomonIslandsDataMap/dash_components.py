@@ -83,7 +83,7 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
     # TODO setup so that the graph highlights the selected measure
     figtext = 'Showing ' + variable + ' for '
     if locations == []:
-        df = sol_geo.get_census(geo_filter, variable, loc_filter = locations, type_filter = type_filter, agg = True)
+        df = sol_geo.get_census(geo_filter, variable, type_filter = type_filter, agg = True)
         df = pd.DataFrame(df).transpose()
         df.index = ['Total']
         locations = ['Total']
