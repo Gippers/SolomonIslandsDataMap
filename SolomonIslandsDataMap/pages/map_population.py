@@ -10,12 +10,12 @@ from nbdev.showdoc import *
 try:
     from SolomonIslandsDataMap.dash_components import gen_bar_plot, gen_dd
     from SolomonIslandsDataMap.app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location  \
-        , control_type, dd_var_pop, dd_measure_pop, dd_geo_pop, sidebar_population, dd_var_pop, dd_measure_pop, year_slider
+        , control_type, dd_var_pop, dd_measure_pop, dropdown_geo, sidebar_population, dd_var_pop, dd_measure_pop, year_slider
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_bar_plot, gen_dd
     from app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dd_geo_pop, sidebar_population, dd_var_pop, dd_measure_pop, year_slider
+        , control_type, dd_var, dd_measure, dropdown_geo, sidebar_population, dd_var_pop, dd_measure_pop, year_slider
     from load_data import SolomonGeo
 import plotly.express as px
 import plotly.graph_objects as go
@@ -73,6 +73,7 @@ def layout():
     Input("initial-initial", 'data'),
     State("stored_values", "data"),
     State('geo_df', 'data'),
+    prevent_initial_call = True,
 )
 def initial_load_pop(page_trigger:str, # Page that triggered initial load
                    js:str, # the current selection for the data
@@ -104,7 +105,8 @@ def initial_load_pop(page_trigger:str, # Page that triggered initial load
                             'age': '0-4',
                             'pop_year': 2024,
                             }
-            persist_dd_values_pop(val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'])
+            persist_dd_values_pop(val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], 
+                                  val_state['type'], js)
 
     return  val_state['var-pop'], val_state['measure-pop'], val_state['age'], val_state['pop_year'],  None
 
@@ -175,6 +177,7 @@ def update_measure_pop(new_var:str, # Selected variable
 @callback(
     Output(map_graph, 'figure', allow_duplicate=True),
     Output(mytitle, 'children', allow_duplicate=True),
+    Input("segmented_geo", 'value'),
     Input("segmented_type", 'value'),
     Input('measureDropdownPop', 'value'),
     Input('varDropdownPop', 'value'),
@@ -184,7 +187,8 @@ def update_measure_pop(new_var:str, # Selected variable
     State('geo_df', 'data'),
     allow_duplicate=True,
     prevent_initial_call=True)
-def update_map_pop(data_type:str, # User input of type of data
+def update_map_pop(geog:str, # current geography
+    data_type:str, # User input of type of data
                 measure:str, # A string contiaining the census variable and measure split by ':'
                 variable:str, # The state of the variable dropdown
                 init_load:{}, # An empty dictionary always
@@ -210,11 +214,11 @@ def update_map_pop(data_type:str, # User input of type of data
     # A None value is passed when the page is first loaded, hence
     # the the values are reset.
     # Hardcoded to province as we only have forcasts by province
-    if button_clicked in [dropdown_location.id, 'initial-load-pop']:
+    if button_clicked in [dropdown_geo.id, dropdown_location.id, 'initial-load-pop']:
         # Update disaplayed geography 
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            patched_figure['data'][tn]['visible'] = 'Province' == geo
+            patched_figure['data'][tn]['visible'] = geog == geo
             print(geo)
         
     if button_clicked in [control_type.id, 'initial-load-pop']:

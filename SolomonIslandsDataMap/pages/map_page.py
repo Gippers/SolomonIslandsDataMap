@@ -71,6 +71,7 @@ def layout():
     Output("measureDropdown", "value"),
     Output("segmented_type", "value"),
     Output('initial-load', 'data'),
+    Output('segmented_geo', 'disabled'), # On page load, allow for changing geography
     Input("initial-initial", 'data'),
     State("stored_values", "data"),
     State('geo_df', 'data'),
@@ -84,6 +85,12 @@ def initial_load(page_trigger:str, # Page that triggered initial load
     print(js)
     val_state = json.loads(js)
     sol_geo = SolomonGeo.gen_stored(dict_sol)
+
+    # Depending on the page loaded, geogrpahy will or will not be disabled
+    geo_disable = False
+
+    if page_trigger == 'pop':
+        geo_disable = True
 
     # When the initial load id triggered by navigation to population page, 
     # if the geo isn't province we reset to this
@@ -117,10 +124,11 @@ def initial_load(page_trigger:str, # Page that triggered initial load
                             'age': '0-4',
                             'pop_year': 2024,
                             }
-            persist_dd_values(val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'])
+            persist_dd_values(val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], val_state['type'],
+                              js)
 
     return val_state['geo'], val_state['location'], val_state['variable'], val_state['measure'], \
-            val_state['type'], None
+            val_state['type'], None, geo_disable
 
 
 # %% ../../nbs/03_map_page.ipynb 13
@@ -222,6 +230,7 @@ def map_selections(locations:[str], # The previously selected locations
     Update the selected data on the map for the selected locations
     Selections is an array of integers indicating the index of the selected points
     '''
+    print("Changing map selections")
     sol_geo = SolomonGeo.gen_stored(dict_sol)
     patched_figure = Patch()
     ct = np.where(sol_geo.geo_levels == geo_input)[0][0] # Tracks the trace number

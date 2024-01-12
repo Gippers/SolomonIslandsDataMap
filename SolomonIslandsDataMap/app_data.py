@@ -2,9 +2,9 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dd_years_pop', 'dropdown_geo',
-           'dd_geo_pop', 'control_type', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop', 'dd_age', 'data_grid',
-           'grid_rows', 'download_button', 'year_slider', 'SIDEBAR_STYLE', 'sidebar_census', 'sidebar_population',
-           'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph']
+           'control_type', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop', 'dd_age', 'data_grid', 'grid_rows',
+           'download_button', 'year_slider', 'SIDEBAR_STYLE', 'sidebar_census', 'sidebar_population', 'sidebar_table',
+           'mytitle', 'map_graph', 'selectedBarGraph']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -47,15 +47,9 @@ dropdown_geo = dmc.SegmentedControl(
                             data=geos,
                              orientation="vertical",
                             color = 'gray',
+                            disabled = False, 
                             fullWidth = True,) # TODO consider redoing as theme is not consistent with this library
 # Can only access province for population
-dd_geo_pop = dmc.SegmentedControl(
-                            id="pop_geo",
-                            value="Province",
-                            data=['Province'],
-                             orientation="vertical",
-                            color = 'gray',
-                            fullWidth = True,) # TODO consider redoing as theme is not consistent with this library
 control_type = dmc.SegmentedControl(
                         id="segmented_type",
                         #value=sol_geo.data_type[0],
@@ -145,7 +139,7 @@ sidebar_population = html.Div(
         dbc.Nav(
             [
                 html.P("Geography"), # TODO add a tooltip button here with link to geo explanation
-                dd_geo_pop,
+                dropdown_geo,
                 html.Br(),
                 html.P("Age Group"), # TODO add a tooltip button here with link to geo explanation
                 dd_age,
