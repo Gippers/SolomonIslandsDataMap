@@ -89,6 +89,8 @@ def initial_load(page_trigger:str, # Page that triggered initial load
     # Depending on the page loaded, geogrpahy will or will not be disabled
     geo_disable = False
 
+    print("page")
+    print(page_trigger)
     if page_trigger == 'pop':
         geo_disable = True
 
@@ -217,22 +219,27 @@ def map_click(clickData:dict, # The currently clicked location on the map
     # TODO - make this a Row object with children, then use function to recontruct
     # a group of them
     Input('locDropdown', 'value'),
-    State(dropdown_geo, 'value'),
+    State("stored_values", "data"),
     State('geo_df', 'data'),
     prevent_initial_call=True,
     allow_duplicate=True,
 )
 def map_selections(locations:[str], # The previously selected locations
-                geo_input:str, # The currently selected geography
+                json_store:json, # The currently selected data values
                 dict_sol:dict, # The dataset in dictionary form
                 )->[str]: # Returns the new value for the dropdown
     '''
     Update the selected data on the map for the selected locations
     Selections is an array of integers indicating the index of the selected points
     '''
+    # Using geo from stored values
+    store = json.loads(json_store)
+    geo_input = store['geo']
     print("Changing map selections")
     sol_geo = SolomonGeo.gen_stored(dict_sol)
+    print(geo_input)
     patched_figure = Patch()
+    print(sol_geo.geo_levels == geo_input)
     ct = np.where(sol_geo.geo_levels == geo_input)[0][0] # Tracks the trace number
     pot_locs = map_graph.figure['data'][ct]['locations']
     print(locations)
