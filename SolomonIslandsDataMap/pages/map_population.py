@@ -43,7 +43,7 @@ except:
 # %% ../../nbs/04_map_population.ipynb 4
 # Creat some hacked init things
 # TODO again as below, must be a better way
-init_load = dcc.Store(id="initial-load-pop", data={})
+init_load = dcc.Store(id="initial-load-pop", data='')
 init_init = dcc.Store(id="initial-initial", data='pop')
 
 # %% ../../nbs/04_map_population.ipynb 7

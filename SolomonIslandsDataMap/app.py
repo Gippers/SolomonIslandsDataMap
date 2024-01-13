@@ -30,12 +30,13 @@ repo = Repo('.', search_parent_directories=True)
 fp = str(repo.working_tree_dir) + "/SolomonIslandsDataMap/pages/"
 
 try:
-    app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY], use_pages=True, pages_folder = fp)
+    app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY], use_pages=True, pages_folder = fp, suppress_callback_exceptions=True)
 except:
     # When running in a notebook, the below trick should get the notebook to still execute
     import __main__ as main
     main.__file__ = "main_file"
-    app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY], use_pages=True, pages_folder = fp)
+    app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY], use_pages=True, pages_folder = fp, suppress_callback_exceptions=True)
+app.config.suppress_callback_exceptions = True
 server = app.server
 load_figure_template("minty")
 
