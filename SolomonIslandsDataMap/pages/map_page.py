@@ -134,10 +134,9 @@ def initial_load(page_trigger:str, # Page that triggered initial load
 @callback(
     Output("segmented_geo", "value"),
     Output('segmented_geo', 'disabled'), # On page load, allow for changing geography
-    Input("initial-load", 'data'),
+    Input("initial-initial", 'data'),
     State("stored_values", "data"),
     State('geo_df', 'data'),
-    prevent_initial_load = True,
 )
 def geo_load(page_trigger:str, # Page that triggered initial load
                    js:str, # the current selection for the data
