@@ -244,7 +244,7 @@ def update_map_pop(geog:str, # current geography
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
             # All years allows us to set the min and max colour as the min and max across all years
             all_years = sol_geo.get_pop(years = sol_geo.pop_years, var = variable, measure = measure, #type_filter=data_type,
-                                 ages = age, agg = True, agg_location = True)
+                                  agg = True, agg_location = True, ages = age)
             ar = all_years.loc[year].values[:, -1]
             all_years = all_years.values[:, -1]
             ar = ar.reshape((ar.shape[0],))
@@ -272,11 +272,11 @@ def update_map_pop(geog:str, # current geography
             
             # All years allows us to set the min and max colour as the min and max across all years
             all_years = sol_geo.get_pop(years = sol_geo.pop_years, var = variable, measure = measure, #type_filter=data_type,
-                                 ages = age, agg = True, agg_location = True)
+                                  agg = True, agg_location = True, ages = age)
             ar = all_years.loc[year].values[:, -1]
             all_years = all_years.values[:, -1]
             ar = ar.reshape((ar.shape[0],))
-            print(ar)
+            print(all_years)
             patched_figure['data'][tn]['z'] = ar
             patched_figure['data'][tn]['zmin'] = np.min(all_years)
             patched_figure['data'][tn]['zmax'] = np.max(all_years)
