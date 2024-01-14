@@ -225,8 +225,11 @@ def update_map_pop(geog:str, # current geography
         # Update the type of data displayed on map and the hover template
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_pop(years = [year], var = variable, measure = measure, #type_filter=data_type,
-                                 ages = [age]).values[:, -1]
+            # All years allows us to set the min and max colour as the min and max across all years
+            all_years = sol_geo.get_pop(years = sol_geo.pop_years, var = variable, measure = measure, #type_filter=data_type,
+                                 ages = [age])
+            ar = all_years.loc[all_years.loc[:, ('core', 'year')] == year].values[:, -1]
+            all_years = all_years.values[:, -1]
             ar = ar.reshape((ar.shape[0],))
             if data_type == 'Total':
                 ht = '%{customdata} <extra>%{z}</extra>'
@@ -235,8 +238,8 @@ def update_map_pop(geog:str, # current geography
             else:
                 ValueError("Data type of map not recognised and note accounted for")
             patched_figure['data'][tn]['z'] = ar
-            patched_figure['data'][tn]['zmin'] = np.min(ar)
-            patched_figure['data'][tn]['zmax'] = np.max(ar)
+            patched_figure['data'][tn]['zmin'] = np.min(all_years)
+            patched_figure['data'][tn]['zmax'] = np.max(all_years)
             patched_figure['data'][tn]['hovertemplate'] = ht
 
             
@@ -249,12 +252,16 @@ def update_map_pop(geog:str, # current geography
         # TODO this is fairly inefficient, as we are processing each time
         # Maybe faster framework like polars could help? or caching but would require a lot of caching
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_pop(years = [year], var = variable, measure = measure, # type_filter=data_type,
-                                 ages = [age]).values[:, -1]
+            
+            # All years allows us to set the min and max colour as the min and max across all years
+            all_years = sol_geo.get_pop(years = sol_geo.pop_years, var = variable, measure = measure, #type_filter=data_type,
+                                 ages = [age])
+            ar = all_years.loc[all_years.loc[:, ('core', 'year')] == year].values[:, -1]
+            all_years = all_years.values[:, -1]
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][tn]['z'] = ar
-            patched_figure['data'][tn]['zmin'] = np.min(ar)
-            patched_figure['data'][tn]['zmax'] = np.max(ar)
+            patched_figure['data'][tn]['zmin'] = np.min(all_years)
+            patched_figure['data'][tn]['zmax'] = np.max(all_years)
         
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
