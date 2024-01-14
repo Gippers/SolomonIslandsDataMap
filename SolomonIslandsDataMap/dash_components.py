@@ -50,9 +50,11 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
                                customdata = sol_df.locations[value],
                                # TODO undo hardcoding
                                z = z_vals,
+                               zmin = np.min(z_vals),
+                               zmax = np.min(z_vals),
                                colorscale="deep",
                                 marker_line_width = 0.5,
-                                zauto=True,
+                                #zauto=True,
                                 selectedpoints=None,
                                 hovertemplate = '%{customdata} <extra>%{z}</extra>',
                 visible= True if value==cols_dd[0] else False))
@@ -72,7 +74,7 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
     return fig
 
 
-# %% ../nbs/01_dash_components.ipynb 12
+# %% ../nbs/01_dash_components.ipynb 14
 def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
                     variable:str, # The variable to use to create the bar plot
@@ -106,7 +108,7 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
                       , xaxis={'categoryorder':'total descending'})
     return fig
 
-# %% ../nbs/01_dash_components.ipynb 17
+# %% ../nbs/01_dash_components.ipynb 19
 # TODO should this method be appended to sol_geo??
 def gen_dash_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
@@ -139,7 +141,7 @@ def gen_dash_grid(sol_geo:SolomonGeo, # Solomon geo object containing census dat
 
     return dt
 
-# %% ../nbs/01_dash_components.ipynb 22
+# %% ../nbs/01_dash_components.ipynb 24
 # todo - turn this eventually into a function
 
 # TODO - make it in future so that clicking on a card updates the current census variable
@@ -212,7 +214,7 @@ def card_list(sg:SolomonGeo, # Input data object
     # TODO return list of accordiants in a column?
     return dbc.Col(accordians)
 
-# %% ../nbs/01_dash_components.ipynb 26
+# %% ../nbs/01_dash_components.ipynb 28
 def gen_dd(location_list:[str], # a list of locations
            id:str, # Id of the dropdown
            place_holder:str = None, # a placeholder message to display
