@@ -235,6 +235,8 @@ def update_map_pop(geog:str, # current geography
             else:
                 ValueError("Data type of map not recognised and note accounted for")
             patched_figure['data'][tn]['z'] = ar
+            patched_figure['data'][tn]['zmin'] = np.min(ar)
+            patched_figure['data'][tn]['zmax'] = np.max(ar)
             patched_figure['data'][tn]['hovertemplate'] = ht
 
             
@@ -251,6 +253,8 @@ def update_map_pop(geog:str, # current geography
                                  ages = [age]).values[:, -1]
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][tn]['z'] = ar
+            patched_figure['data'][tn]['zmin'] = np.min(ar)
+            patched_figure['data'][tn]['zmax'] = np.max(ar)
         
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 

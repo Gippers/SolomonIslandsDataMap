@@ -404,6 +404,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
                 ValueError("Data type of map not recognised and note accounted for")
             patched_figure['data'][tn]['z'] = ar
             patched_figure['data'][tn]['zmin'] = np.min(ar)
+            patched_figure['data'][tn]['zmax'] = np.max(ar)
             patched_figure['data'][tn]['hovertemplate'] = ht
 
             
@@ -419,6 +420,8 @@ def update_map(geo_input:str, # User input from the geography dropdown
             ar = sol_geo.get_census(geo_filter = geo, type_filter=data_type, var = variable, measure=measure).values
             ar = ar.reshape((ar.shape[0],))
             patched_figure['data'][tn]['z'] = ar
+            patched_figure['data'][tn]['zmin'] = np.min(ar)
+            patched_figure['data'][tn]['zmax'] = np.max(ar)
         
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 

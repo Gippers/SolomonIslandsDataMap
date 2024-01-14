@@ -492,14 +492,23 @@ def get_pop(self:SolomonGeo,
     if measure is not None:
         try:
             assert(var is not None)
-            assert(measure in self.census_vars[var])
+            assert(measure in self.population_vars[var])
         except:
             ValueError("If measure is set, var 1 must be set and the key value pair of var and measure must match")
         ret = ret[var].filter(items = [measure])
+        # Make it multiindex again
+        ret.columns = pd.MultiIndex.from_arrays(([var], [measure]))
+        
         ret = pd.concat([age_year, ret], axis = 1)
     elif var is not None:
         # Keep all values from upper level column
         ret = ret[var]
+        # Make it multiindex again
+        measures = self.population_vars[var]
+        n_measures = len(measures)
+        vars = list(np.repeat(var, n_measures))
+        print(vars)
+        ret.columns = pd.MultiIndex.from_arrays((vars, measures))
         ret = pd.concat([age_year, ret], axis = 1)
     else:
         print("sad")
