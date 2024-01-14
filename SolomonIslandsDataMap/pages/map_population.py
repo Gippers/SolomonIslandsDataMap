@@ -102,13 +102,29 @@ def initial_load_pop(page_trigger:str, # Page that triggered initial load
                             'measure': 'Total Households',
                             'var-pop': 'Population',
                             'measure-pop': 'Total',
-                            'age': '0-4',
+                            'ages': ['0-4',
+                                    '5-9',
+                                    '10-14',
+                                    '15-19',
+                                    '20-24',
+                                    '25-29',
+                                    '30-34',
+                                    '35-39',
+                                    '40-44',
+                                    '45-49',
+                                    '50-54',
+                                    '55-59',
+                                    '60-64',
+                                    '65-69',
+                                    '70-74',
+                                    '75-79',
+                                    '80+'],
                             'pop_year': 2024,
                             }
-            persist_dd_values_pop(val_state['var-pop'], val_state['measure-pop'], val_state['age'], val_state['pop_year'], 
+            persist_dd_values_pop(val_state['var-pop'], val_state['measure-pop'], val_state['ages'], val_state['pop_year'], 
                                   js)
 
-    return  val_state['var-pop'], val_state['measure-pop'], val_state['age'], val_state['pop_year'],  None
+    return  val_state['var-pop'], val_state['measure-pop'], val_state['ages'], val_state['pop_year'],  None
 
 # %% ../../nbs/04_map_population.ipynb 14
 @callback(
@@ -123,7 +139,7 @@ def initial_load_pop(page_trigger:str, # Page that triggered initial load
 )
 def persist_dd_values_pop(popVariable:str,
                       popMeasure:str, 
-                      age:str,
+                      ages:[str],
                       years:int,
                       json_store:dict,
                     ) -> str:
@@ -131,7 +147,7 @@ def persist_dd_values_pop(popVariable:str,
     store = json.loads(json_store)
     store['var-pop'] = popVariable
     store['measure-pop'] = popMeasure
-    store['age'] = age
+    store['ages'] = ages
     store['pop_year'] = years
 
     print("****triggered save: ")
@@ -192,7 +208,7 @@ def update_map_pop(geog:str, # current geography
                 measure:str, # A string contiaining the census variable and measure split by ':'
                 variable:str, # The state of the variable dropdown
                 init_load:{}, # An empty dictionary always
-                age:str, # Age Bracket to display
+                age:[str], # Age Brackets to display
                 year:int, # The selected projection year
                 dict_sol:dict, # The dataset in dictionary form
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
@@ -227,7 +243,7 @@ def update_map_pop(geog:str, # current geography
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
             # All years allows us to set the min and max colour as the min and max across all years
             all_years = sol_geo.get_pop(years = sol_geo.pop_years, var = variable, measure = measure, #type_filter=data_type,
-                                 ages = [age], agg = True, agg_location = True)
+                                 ages = age, agg = True, agg_location = True)
             ar = all_years[year].values[:, -1]
             all_years = all_years.values[:, -1]
             ar = ar.reshape((ar.shape[0],))
@@ -255,7 +271,7 @@ def update_map_pop(geog:str, # current geography
             
             # All years allows us to set the min and max colour as the min and max across all years
             all_years = sol_geo.get_pop(years = sol_geo.pop_years, var = variable, measure = measure, #type_filter=data_type,
-                                 ages = [age], agg = True, agg_location = True)
+                                 ages = age, agg = True, agg_location = True)
             ar = all_years[year].values[:, -1]
             all_years = all_years.values[:, -1]
             ar = ar.reshape((ar.shape[0],))

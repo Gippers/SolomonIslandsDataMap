@@ -7,10 +7,8 @@ __all__ = ['repo', 'fp', 'server', 'pages', 'navbar']
 from nbdev.showdoc import *
 try:
     from SolomonIslandsDataMap.app_data import stored_data
-    from SolomonIslandsDataMap.app_data import dropdown_geo
 except: 
     from app_data import stored_data
-    from app_data import dropdown_geo
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -30,13 +28,12 @@ repo = Repo('.', search_parent_directories=True)
 fp = str(repo.working_tree_dir) + "/SolomonIslandsDataMap/pages/"
 
 try:
-    app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY], use_pages=True, pages_folder = fp, suppress_callback_exceptions=True)
+    app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY], use_pages=True, pages_folder = fp)
 except:
     # When running in a notebook, the below trick should get the notebook to still execute
     import __main__ as main
     main.__file__ = "main_file"
-    app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY], use_pages=True, pages_folder = fp, suppress_callback_exceptions=True)
-app.config.suppress_callback_exceptions = True
+    app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY], use_pages=True, pages_folder = fp)
 server = app.server
 load_figure_template("minty")
 
@@ -87,12 +84,25 @@ app.layout = dbc.Container([
                                     'measure': 'Total Households',
                                     'var-pop': 'Population',
                                     'measure-pop': 'Total',
-                                    'age': '0-4',
+                                    'ages': ['0-4',
+                                            '5-9',
+                                            '10-14',
+                                            '15-19',
+                                            '20-24',
+                                            '25-29',
+                                            '30-34',
+                                            '35-39',
+                                            '40-44',
+                                            '45-49',
+                                            '50-54',
+                                            '55-59',
+                                            '60-64',
+                                            '65-69',
+                                            '70-74',
+                                            '75-79',
+                                            '80+'],
                                     'pop_year': 2024,
                                     }),),
-                html.Div([
-                    dropdown_geo,
-                ], style = {'display': 'none'}),
                                                      
                 ], fluid = True)
 
