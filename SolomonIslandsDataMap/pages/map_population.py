@@ -226,6 +226,7 @@ def update_map_pop(geog:str, # current geography
 
     print(data_type)
     print(measure)
+    print(age)
 
     # A None value is passed when the page is first loaded, hence
     # the the values are reset.
@@ -275,6 +276,7 @@ def update_map_pop(geog:str, # current geography
             ar = all_years.loc[year].values[:, -1]
             all_years = all_years.values[:, -1]
             ar = ar.reshape((ar.shape[0],))
+            print(ar)
             patched_figure['data'][tn]['z'] = ar
             patched_figure['data'][tn]['zmin'] = np.min(all_years)
             patched_figure['data'][tn]['zmax'] = np.max(all_years)
