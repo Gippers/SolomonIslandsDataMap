@@ -454,6 +454,7 @@ def get_pop(self:SolomonGeo,
                 loc_filter:[str] = None, # Filters one of more locations
                 type_filter:str = 'Total', # Return either number of proportion
                 agg = False, # Whether to return the dataset aggregated for the given selection
+                agg_location = False, # If true, don't aggregate the population data by location
                 ages:[str] = None, # Filters for one or more Age Brackets, if none returns all
                ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
@@ -517,12 +518,17 @@ def get_pop(self:SolomonGeo,
         # TODO incosistent column naming based on variable, measure or no selection
 
     ret = pd.DataFrame(ret)
-    # If required, aggregate dataset based on data type
+
+    # Set the group by variables
+    group_by = [('core', 'year')]
+    if agg_location == True:
+        group_by.append(ret.index)
+     # If required, aggregate dataset based on data type
     if agg == True:
         if type_filter == 'Total':
-            ret = ret.groupby(['year']).sum(numeric_only= True)
+            ret = ret.groupby(group_by, sort = False).sum(numeric_only= True)
         elif type_filter == 'Proportion':
-            ret = ret.groupby('year').sum(numeric_only= True) / ret.groupby('year').sum(numeric_only= True).sum(numeric_only= True) * 100
+            ret = ret.groupby(group_by, sort = False).sum(numeric_only= True) / ret.groupby(group_by, sort = False).sum(numeric_only= True).sum(numeric_only= True) * 100
         else:
             raise ValueError('The type passed to the aggregate function must be one of the following: \'Total\', \'Proportion\'.')
         
