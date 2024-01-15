@@ -202,10 +202,13 @@ class SolomonGeo:
 
         census = pd.DataFrame(json_sol['census'])
         census = df_to_hier(census)
+        # Index is unique by type and geoname
+        census = census.set_index(census['core']['location'] + "_" + census['core']["type"] ) 
         census.index.name = 'pk'
 
         population = pd.DataFrame(json_sol['population'])
         population = df_to_hier(population)
+        population.set_index(('core', 'location'), inplace = True)
 
         geo = gpd.GeoDataFrame(json_sol['geojson'])
 
@@ -375,6 +378,7 @@ def get_store(self:SolomonGeo,
     cen_df = hier_to_pandas(cen_df)
 
     pop_df = copy.copy(self.population)
+    pop_df.loc[:, ('core', 'location')] = pop_df.index
     pop_df = hier_to_pandas(pop_df)
     
     geos = copy.copy(self.geo)  

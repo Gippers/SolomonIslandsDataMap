@@ -33,7 +33,7 @@ NUM_GEOS = len(geos)
 # %% ../nbs/02_app_data.ipynb 9
 stored_data = sol_geo.get_store()
 
-# %% ../nbs/02_app_data.ipynb 12
+# %% ../nbs/02_app_data.ipynb 14
 dropdown_location = html.Div(children = gen_dd(sol_geo.locations[sol_geo.geo_levels[0]], 
                                                 'locDropdown', clear = True, place_holder='Select Dropdown Location',
                                                 multi = True, 
@@ -79,18 +79,18 @@ dd_measure_pop = html.Div(children = gen_dd(sol_geo.population_vars[list(sol_geo
                                       ))
 
 
-# %% ../nbs/02_app_data.ipynb 13
+# %% ../nbs/02_app_data.ipynb 15
 data_grid = dbc.Container(
                 children = gen_dash_grid(sol_geo, sol_geo.geo_levels[0], "Key Statistics", 'Total Households')
             )
 grid_rows = dcc.Input(id="grid-rows", type="number", min=1, max=len(sol_geo.locations['Province']), value=10)
 download_button = dbc.Button("Download", id="csv-button", outline=True, n_clicks=0, color = "primary")
 
-# %% ../nbs/02_app_data.ipynb 15
+# %% ../nbs/02_app_data.ipynb 17
 year_slider = dcc.Slider(sol_geo.pop_years[0], sol_geo.pop_years[-1], 1, marks=None, id = 'year_slider',
                 tooltip={"placement": "bottom", "always_visible": True},  included=False, dots = True)
 
-# %% ../nbs/02_app_data.ipynb 17
+# %% ../nbs/02_app_data.ipynb 19
 # Note, for now I am not using a sidebar style as I do not want to fix the width
 # TODO fix the width of the sidebar, particular on different screens
 SIDEBAR_STYLE = {
@@ -195,7 +195,7 @@ sidebar_table = html.Div(
 )
 
 
-# %% ../nbs/02_app_data.ipynb 19
+# %% ../nbs/02_app_data.ipynb 21
 # TODO - not sure whether this should be imported from app_data or built here.
 # if building it here causes it to reload each time, I should probably move it later
 # TODO downside of having it here is that it is a little more seperated.
