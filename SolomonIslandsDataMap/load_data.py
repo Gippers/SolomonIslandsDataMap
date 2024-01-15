@@ -459,6 +459,7 @@ def get_pop(self:SolomonGeo,
                 type_filter:str = 'Total', # Return either number of proportion
                 agg = False, # Whether to return the dataset aggregated for the given selection
                 agg_location = False, # If true, don't aggregate the population data by location
+                agg_ages = False, # If true, don't aggregate the population data by age
                 ages:[str] = None, # Filters for one or more Age Brackets, if none returns all
                ) -> pd.DataFrame: # Pandas Dataframe containing population data
     '''
@@ -527,6 +528,8 @@ def get_pop(self:SolomonGeo,
     group_by = [('core', 'year')]
     if agg_location == True:
         group_by.append(ret.index)
+    if agg_ages == True:
+        group_by.append(('Age', 'Age_Bracket'))
      # If required, aggregate dataset based on data type
     if agg == True:
         if type_filter == 'Total':

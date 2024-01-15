@@ -10,7 +10,6 @@ try:
     from SolomonIslandsDataMap.load_data import *
 except: 
     from load_data import *
-import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio # Unless this is used graphs will not be dynamic?
 import json
@@ -24,6 +23,7 @@ import dash_bootstrap_components as dbc    # pip install dash-bootstrap-componen
 from dash_bootstrap_templates import load_figure_template
 import random
 import dash_mantine_components as dmc
+import numpy as np
 
 # %% ../nbs/01_dash_components.ipynb 7
 # TODO I should build figures and maps in another script
