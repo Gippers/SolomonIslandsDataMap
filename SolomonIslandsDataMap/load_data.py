@@ -513,11 +513,9 @@ def get_pop(self:SolomonGeo,
         measures = self.population_vars[var]
         n_measures = len(measures)
         vars = list(np.repeat(var, n_measures))
-        print(vars)
         ret.columns = pd.MultiIndex.from_arrays((vars, measures))
         ret = pd.concat([age_year, ret], axis = 1)
     else:
-        print("sad")
         ret = pd.concat([age_year, ret], axis = 1)
         ret.columns = ret.columns.get_level_values(1)
         # TODO incosistent column naming based on variable, measure or no selection
