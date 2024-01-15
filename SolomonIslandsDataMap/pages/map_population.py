@@ -11,12 +11,14 @@ from nbdev.showdoc import *
 try:
     from SolomonIslandsDataMap.dash_components import gen_bar_plot, gen_dd
     from SolomonIslandsDataMap.app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location  \
-        , control_type, dd_var_pop, dd_measure_pop, dropdown_geo, sidebar_population, dd_var_pop, dd_measure_pop, year_slider
+        , control_type, dd_var_pop, dd_measure_pop, dropdown_geo, sidebar_population, dd_var_pop, dd_measure_pop, year_slider\
+        , popPyramid
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_bar_plot, gen_dd
     from app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo, sidebar_population, dd_var_pop, dd_measure_pop, year_slider
+        , control_type, dd_var, dd_measure, dropdown_geo, sidebar_population, dd_var_pop, dd_measure_pop, year_slider\
+        , popPyramid
     from load_data import SolomonGeo
 import plotly.express as px
 import plotly.graph_objects as go
@@ -54,7 +56,7 @@ def layout():
             mytitle,
             map_graph,
             year_slider,
-            #selectedBarGraph,
+            popPyramid,
             stored_data, 
             init_load, 
             init_init,], width = 10),

@@ -237,41 +237,50 @@ def gen_dd(location_list:[str], # a list of locations
                         multi=multi)
     return dd
 
-# %% ../nbs/01_dash_components.ipynb 36
+# %% ../nbs/01_dash_components.ipynb 31
 def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
                     year:str, # Selected year to display on the graph
-                    variable:str, # The variable to use to create the bar plot
+                    variable:str = 'Population', # The variable to use to create the bar plot
                     locations:[str] = [], # Desired location within aggregation
                     type_filter:str = 'Total', # The type aggregartion
                     ages:[str] = [], # Currenly selected ages for highlighting
                 )->type(go.Figure()): # Returns a graph object figure of a barplot
     '''Create a population pyramid of selected population data'''
-    figtext = 'Population pyramid for '
+    # TODO Can't make a comparative pop pyrmid. Should I do this??
     
     # Load Data
     if locations == []:
         pop_data = sol_geo.get_pop(years = [year], var = "Population", agg = True, agg_ages = True
                                    , type_filter=type_filter)
-        figtext += 'Total'
+        figtext = 'Projected Population Pyramid for Solomon Islands'
     else:
         pop_data = sol_geo.get_pop(years = [year], var = "Population", agg = True, agg_ages = True
                                    , type_filter=type_filter, loc_filter = locations)
-        figtext += ', '.join(locations)
+        figtext = 'Aggregated Projected Population Pyramid for ' + ','.join(locations)
+
+    figtext += ' in ' + str(year)
 
     # Manipulate data for pyramid
-    pop_data = sol_geo.get_pop(years = [year], var = "Population", agg = True, agg_ages = True, type_filter=type_filter)
     age_df = pop_data.loc[year]
     age_df.index.name = 'age'
     age_df.drop(columns = ('Population', 'Total'))
 
     y_age = age_df.index
-    x_male = age_df.loc[:, ('Population', 'Males')]
-    y_female = age_df.loc[:, ('Population', 'Females')] * -1
+    x_male = age_df.loc[:, ('Population', 'Males')] * -1
+    x_female = age_df.loc[:, ('Population', 'Females')]
 
     # Create instance of the figure
     pyramid_fig = go.Figure()
 
+
+    # Add Trace to figure
+    pyramid_fig.add_trace(go.Bar(
+            y=y_age,
+            x=x_female,
+            name='Female',
+            orientation='h'
+    ))
     # Add Trace to Figure
     pyramid_fig.add_trace(go.Bar(
             y=y_age,
@@ -280,17 +289,10 @@ def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data 
             orientation='h'
     ))
 
-    # Add Trace to figure
-    pyramid_fig.add_trace(go.Bar(
-            y=y_age,
-            x=y_female,
-            name='Female',
-            orientation='h'
-    ))
 
     # Update Figure Layout
     pyramid_fig.update_layout(
-        title= 'Projected Pyramid Solomon Islands ' + str(2024),
+        title= figtext,
         title_font_size = 24,
         barmode='relative',
         bargap=0.0,
@@ -306,6 +308,6 @@ def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data 
     # TODO overtext labelling, should be flipped for female
 
     # Plot figure
-    pyramid_fig.show()
+    #pyramid_fig.show()
     
-    return fig
+    return pyramid_fig
