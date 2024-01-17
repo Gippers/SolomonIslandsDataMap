@@ -12,13 +12,13 @@ try:
     from SolomonIslandsDataMap.dash_components import gen_pyramid, gen_dd
     from SolomonIslandsDataMap.app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location  \
         , control_type, dd_var_pop, dd_measure_pop, dropdown_geo, sidebar_population, dd_var_pop, dd_measure_pop, year_slider\
-        , popPyramid
+        , popPyramid, pyramidTitle
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_pyramid, gen_dd
     from app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
         , control_type, dd_var, dd_measure, dropdown_geo, sidebar_population, dd_var_pop, dd_measure_pop, year_slider\
-        , popPyramid
+        , popPyramid, pyramidTitle
     from load_data import SolomonGeo
 import plotly.express as px
 import plotly.graph_objects as go
@@ -56,6 +56,7 @@ def layout():
             mytitle,
             map_graph,
             year_slider,
+            pyramidTitle,
             popPyramid,
             stored_data, 
             init_load, 
@@ -292,6 +293,7 @@ def update_map_pop(geog:str, # current geography
 # Callback allows components to interact
 @callback(
     Output('popPyramid', 'figure'),
+    Output('pyramidTitle', 'children'),
     Input("segmented_type", 'value'),
     Input('measureDropdownPop', 'value'),
     Input('locDropdown', 'value'),
@@ -313,7 +315,7 @@ def update_pyramid(data_type:str, # User input of type of data
                      geo_input:str, # User input from the geography dropdown
                      variable:str, # The state of the variable dropdown
                      dict_sol:dict, # The dataset in dictionary form
-              )->(type(go.Figure())): # Returns a graph object figure after being updated and the dynamic title
+              )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
     Updates the focus census variable or geography dispalayed on the map
     '''
@@ -321,8 +323,17 @@ def update_pyramid(data_type:str, # User input of type of data
     print("type: " + data_type)
     fig = gen_pyramid(sol_geo = sol_geo, geo_filter = geo_input, year = year, 
                       variable = variable, locations = loc_selection, type_filter = data_type, ages = ages)
+    
+    
+    # Create a title for the pyramid
+    if loc_selection == []:
+        figtext = '## Projected Population Pyramid for Solomon Islands'
+    else:
+        figtext = '## Aggregated Projected Population Pyramid for ' + ', '.join(loc_selection)
+    figtext += ' in ' + str(year)
 
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
+    
 
-    return fig
+    return fig, figtext

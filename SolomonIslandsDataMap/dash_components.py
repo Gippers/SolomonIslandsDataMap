@@ -245,7 +245,7 @@ def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data 
                     locations:[str] = [], # Desired location within aggregation
                     type_filter:str = 'Total', # The type aggregartion
                     ages:[str] = [], # Currenly selected ages for highlighting
-                )->type(go.Figure()): # Returns a graph object figure of a barplot
+                )->type(go.Figure()): # Returns a population pyramid and it's title
     '''Create a population pyramid of selected population data'''
     # TODO Can't make a comparative pop pyrmid. Should I do this??
     
@@ -253,13 +253,9 @@ def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data 
     if locations == []:
         pop_data = sol_geo.get_pop(years = [year], var = "Population", agg = True, agg_ages = True
                                    , type_filter=type_filter)
-        figtext = 'Projected Population Pyramid for Solomon Islands'
     else:
         pop_data = sol_geo.get_pop(years = [year], var = "Population", agg = True, agg_ages = True
                                    , type_filter=type_filter, loc_filter = locations)
-        figtext = 'Aggregated Projected Population Pyramid for ' + ','.join(locations)
-
-    figtext += ' in ' + str(year)
 
     # Manipulate data for pyramid
     age_df = pop_data.loc[year]
@@ -292,7 +288,6 @@ def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data 
 
     # Update Figure Layout
     pyramid_fig.update_layout(
-        title= figtext,
         title_font_size = 24,
         barmode='relative',
         bargap=0.0,
@@ -306,8 +301,5 @@ def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data 
         yaxis = dict(title = 'Age Group')
     )
     # TODO overtext labelling, should be flipped for female
-
-    # Plot figure
-    #pyramid_fig.show()
     
     return pyramid_fig
