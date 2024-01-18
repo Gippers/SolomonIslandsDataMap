@@ -4,7 +4,7 @@
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dd_age', 'dd_years_pop',
            'dropdown_geo', 'control_type', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop', 'data_grid',
            'grid_rows', 'download_button', 'year_slider', 'SIDEBAR_STYLE', 'sidebar_census', 'sidebar_population',
-           'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph', 'popPyramid', 'pyramidTitle']
+           'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph', 'popPyramid', 'pyramidTitle', 'popKpi']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -196,9 +196,6 @@ sidebar_table = html.Div(
 
 
 # %% ../nbs/02_app_data.ipynb 18
-# TODO - not sure whether this should be imported from app_data or built here.
-# if building it here causes it to reload each time, I should probably move it later
-# TODO downside of having it here is that it is a little more seperated.
 mytitle = dcc.Markdown(children="## " + list(cen_vars.keys())[0] + " by " + geos[0]) # TODO This needs a default title
 map_graph = dcc.Graph(figure=define_map(sol_geo), selectedData=None,)
 
@@ -207,3 +204,5 @@ selectedBarGraph = dcc.Graph(figure = gen_bar_plot(sol_geo, sol_geo.geo_levels[0
                             id = 'bar_graph')
 popPyramid = dcc.Graph(figure = gen_pyramid(sol_geo, 'Province', 2024), id = 'popPyramid')
 pyramidTitle = dcc.Markdown(children ='## Projected Population Pyramid for Solomon Islands', id = 'pyramidTitle')
+popKpi = dbc.Col(children = kpi_card(sol_geo, 2022, 'Population', 'Total', ["0-4"]))
+# testing

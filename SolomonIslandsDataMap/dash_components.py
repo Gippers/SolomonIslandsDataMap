@@ -146,9 +146,9 @@ def gen_dash_grid(sol_geo:SolomonGeo, # Solomon geo object containing census dat
 
 def kpi_card(sg:SolomonGeo, # Input data object
                 year:str, # Year of the kpi
-                header:str, # Header of Accordian
                 variable:str, # Variable to dispaly
                 measure:str, # Measure to display
+                ages:[str], # ages to display
                 loc:[str] = [], # Desired location within aggregation
                 type_filter:str = 'Total', # The type 
             )->dbc.Col: # Returns a column containing a title and accordian items
@@ -161,19 +161,17 @@ def kpi_card(sg:SolomonGeo, # Input data object
         df = sg.get_pop(years = [year],
                         var = variable,
                         measure = measure, 
+                        ages = ages,
                         type_filter = type_filter,
                         agg = True).values[0]
-        print(df)
-        footer = "for Solomon Islands"
     else:
         df = sg.get_pop(years = [year], 
                         var = variable,
                         measure = measure, 
+                        ages = ages,
                         loc_filter = loc,
                         type_filter = type_filter,
                         agg = True).values[0]
-        print(df)
-        footer = "for selection"
     card = dbc.Card(
         children = [
             dbc.CardHeader(
@@ -187,17 +185,15 @@ def kpi_card(sg:SolomonGeo, # Input data object
                 ] # TODO - add a rank here and colour code based on rank (i.e. 2nd highest of provinces)
             ),
             dbc.CardFooter(
-                [html.P(footer)]
+                [html.P("for current selection")]
             )]
         , class_name ="border-primary" #m-2 mb-3
          )
-    
-
 
     # TODO return list of accordiants in a column?
     return card
 
-# %% ../nbs/01_dash_components.ipynb 28
+# %% ../nbs/01_dash_components.ipynb 27
 def gen_dd(location_list:[str], # a list of locations
            id:str, # Id of the dropdown
            place_holder:str = None, # a placeholder message to display
@@ -220,7 +216,7 @@ def gen_dd(location_list:[str], # a list of locations
                         multi=multi)
     return dd
 
-# %% ../nbs/01_dash_components.ipynb 31
+# %% ../nbs/01_dash_components.ipynb 30
 def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
                     year:str, # Selected year to display on the graph
