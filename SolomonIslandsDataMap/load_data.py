@@ -452,7 +452,7 @@ def get_census(self:SolomonGeo,
 # %% ../nbs/00_load_data.ipynb 34
 @patch
 def get_pop(self:SolomonGeo, 
-                years:str, # Selects the year/years of data to return
+                years:[str], # Selects the year/years of data to return
                 var:str = None, # Selects an upper level variable
                 measure:str = None, # Selects the lower level variable, if var 1 is used, measure must be used.
                 loc_filter:[str] = None, # Filters one of more locations
