@@ -88,7 +88,8 @@ download_button = dbc.Button("Download", id="csv-button", outline=True, n_clicks
 
 # %% ../nbs/02_app_data.ipynb 14
 year_slider = dcc.Slider(sol_geo.pop_years[0], sol_geo.pop_years[-1], 1, marks=None, id = 'year_slider',
-                tooltip={"placement": "bottom", "always_visible": True},  included=False, dots = True)
+                tooltip={"placement": "top", "always_visible": True},  included=False, dots = True, updatemode =  "drag", 
+                )
 
 # %% ../nbs/02_app_data.ipynb 16
 # Note, for now I am not using a sidebar style as I do not want to fix the width
