@@ -48,7 +48,7 @@ except:
 init_load = dcc.Store(id="initial-load-pop", data='')
 init_init = dcc.Store(id="initial-initial", data='pop')
 
-# %% ../../nbs/04_map_population.ipynb 7
+# %% ../../nbs/04_map_population.ipynb 6
 def layout():
     return  dbc.Row(
         [dbc.Col(sidebar_population, width = 2),
@@ -60,9 +60,8 @@ def layout():
             dbc.Row([
                 popKpi,
                 dbc.Col([popPyramid], width = 8, align = 'center')
-            ], justify = 'center'),
-            dcc.Markdown(children = "# 83,000"), 
-            dcc.Markdown(children = "Total Projected Population in 2022"),
+            ], justify = 'between'
+            ),
             stored_data, 
             init_load, 
             init_init,], width = 10),
