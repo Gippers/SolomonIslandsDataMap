@@ -173,7 +173,7 @@ def gen_kpi(sg:SolomonGeo, # Input data object
                         type_filter = type_filter,
                         agg = True).values[0]
     kpi = dcc.Markdown(children = "# " + str(format(int(df[0]), ",d")))
-    text = dcc.Markdown(children = measure + " persons in current selection")
+    text = dcc.Markdown(children = measure.lower() + " persons in current selection")
     
     return kpi, text
 

@@ -2,20 +2,20 @@
 
 # %% auto 0
 __all__ = ['init_load', 'init_init', 'layout', 'initial_load_pop', 'persist_dd_values_pop', 'update_measure_pop',
-           'update_map_pop', 'update_pyramid']
+           'update_map_pop', 'update_pyramid', 'update_kpi']
 
 # %% ../../nbs/04_map_population.ipynb 2
 # TODO minimise these imports a bit where possible
 from nbdev.showdoc import *
 # TODO work out how to get around below hack
 try:
-    from SolomonIslandsDataMap.dash_components import gen_pyramid, gen_dd
+    from SolomonIslandsDataMap.dash_components import gen_pyramid, gen_dd, gen_kpi
     from SolomonIslandsDataMap.app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location  \
         , control_type, dd_var_pop, dd_measure_pop, dropdown_geo, sidebar_population, dd_var_pop, dd_measure_pop, year_slider\
         , popPyramid, pyramidTitle, popKpi
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
-    from dash_components import gen_pyramid, gen_dd
+    from dash_components import gen_pyramid, gen_dd, gen_kpi
     from app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
         , control_type, dd_var, dd_measure, dropdown_geo, sidebar_population, dd_var_pop, dd_measure_pop, year_slider\
         , popPyramid, pyramidTitle, popKpi
@@ -341,3 +341,36 @@ def update_pyramid(data_type:str, # User input of type of data
     
 
     return fig, figtext
+
+# %% ../../nbs/04_map_population.ipynb 33
+# Callback allows components to interact
+@callback(
+    Output('popKpi', 'children'),
+    Input("segmented_type", 'value'),
+    Input('measureDropdownPop', 'value'),
+    Input('locDropdown', 'value'),
+    Input('initial-load-pop', 'data'),
+    Input('age_dropdown', 'value'),
+    Input("year_slider", "value"),
+    State("segmented_geo", 'value'),
+    State('varDropdownPop', 'value'),
+    State('geo_df', 'data'),
+    allow_duplicate=True,
+    prevent_initial_call=True
+)
+def update_kpi(data_type:str, # User input of type of data
+                     measure:str, # A string contiaining the census variable and measure split by ':'
+                     loc_selection:[str], # The selected locations, may be none
+                     init_load:{}, # An empty dictionary always, triggers initial load
+                     ages:[str], # Currently selected locations for highlighting
+                     year:str, # Year of projection data
+                     geo_input:str, # User input from the geography dropdown
+                     variable:str, # The state of the variable dropdown
+                     dict_sol:dict, # The dataset in dictionary form
+              )->(dcc.Markdown, dcc.Markdown): # Returns a graph object figure after being updated and the dynamic title
+    '''
+    Updates the focus census variable or geography dispalayed on the map
+    '''
+    sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data    
+
+    return gen_kpi(sol_geo, year, variable, measure, ages, loc = loc_selection, type_filter = data_type)
