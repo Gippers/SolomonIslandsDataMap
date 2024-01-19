@@ -175,18 +175,19 @@ def kpi_card(sg:SolomonGeo, # Input data object
     card = dbc.Card(
         children = [
             dbc.CardHeader(
-                [html.H4(measure + "Projected Population in " + str(year))]
+                [html.H6(measure + " Projected Population in " + str(year))]
 
             ),
             dbc.CardBody(
                 [
-                html.H5(df, 
+                html.H2(df, 
                         className = "text-center")
                 ] # TODO - add a rank here and colour code based on rank (i.e. 2nd highest of provinces)
             ),
-            dbc.CardFooter(
-                [html.P("for current selection")]
-            )]
+            #dbc.CardFooter(
+            #    [html.P("for current selection")]
+           # )
+            ]
         , class_name ="border-primary" #m-2 mb-3
          )
 

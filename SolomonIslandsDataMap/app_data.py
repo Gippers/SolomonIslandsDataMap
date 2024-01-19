@@ -205,5 +205,5 @@ selectedBarGraph = dcc.Graph(figure = gen_bar_plot(sol_geo, sol_geo.geo_levels[0
 popPyramid = dcc.Graph(figure = gen_pyramid(sol_geo, 'Province', 2024), id = 'popPyramid')
 pyramidTitle = dcc.Markdown(children ='## Projected Population Pyramid for Solomon Islands', id = 'pyramidTitle')
 popKpi = dbc.Col(children = kpi_card(sol_geo, 2022, 'Population', 'Total', ["0-4"]), id = 'popKpi',
-                 width = 4)
+                 width = 2, align = 'center')
 # testing

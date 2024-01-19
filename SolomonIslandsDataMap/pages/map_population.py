@@ -59,8 +59,10 @@ def layout():
             pyramidTitle,
             dbc.Row([
                 popKpi,
-                dbc.Col([popPyramid], width = 6)
-            ]),
+                dbc.Col([popPyramid], width = 8, align = 'center')
+            ], justify = 'center'),
+            dcc.Markdown(children = "# 83,000"), 
+            dcc.Markdown(children = "Total Projected Population in 2022"),
             stored_data, 
             init_load, 
             init_init,], width = 10),
