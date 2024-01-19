@@ -57,8 +57,10 @@ def layout():
             map_graph,
             year_slider,
             pyramidTitle,
-            popPyramid,
-            popKpi,
+            dbc.Row([
+                popKpi,
+                dbc.Col([popPyramid], width = 6)
+            ]),
             stored_data, 
             init_load, 
             init_init,], width = 10),
