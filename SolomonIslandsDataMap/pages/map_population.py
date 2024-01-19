@@ -53,14 +53,14 @@ def layout():
     return  dbc.Row(
         [dbc.Col(sidebar_population, width = 2),
         dbc.Col([
-            mytitle,
+            #mytitle,
+            pyramidTitle,
             map_graph,
             year_slider,
-            pyramidTitle,
             dbc.Row([
                 popKpi,
                 dbc.Col([popPyramid], width = 8, align = 'center')
-            ], justify = 'between'
+            ], justify = 'around'
             ),
             stored_data, 
             init_load, 
@@ -331,9 +331,9 @@ def update_pyramid(data_type:str, # User input of type of data
     
     # Create a title for the pyramid
     if loc_selection == []:
-        figtext = '## Projected Population Pyramid for Solomon Islands'
+        figtext = '## Projected Population for Solomon Islands'
     else:
-        figtext = '## Aggregated Projected Population Pyramid for ' + ', '.join(loc_selection)
+        figtext = '## Aggregated Projected Population for ' + ', '.join(loc_selection)
     figtext += ' in ' + str(year)
 
     # returned objects are assigned to the component property of the Output
