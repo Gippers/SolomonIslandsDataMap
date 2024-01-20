@@ -138,6 +138,7 @@ def initial_load(page_trigger:str, # Page that triggered initial load
     Output("segmented_geo", "value"),
     Output('segmented_geo', 'disabled'), # On page load, allow for changing geography
     Output("segmented_type", "value"),
+    Output("dataset_html", "style"),
     Input("initial-initial", 'data'),
     State("stored_values", "data"),
 )
@@ -163,7 +164,15 @@ def geo_load(page_trigger:str, # Page that triggered initial load
         val_state['location'] = []
         # TODO test that this works with multi tab
 
-    return val_state['geo'], geo_disable, val_state['type']
+    # Based on page, update hidden style
+    style = ''
+    if page_trigger == 'pop' or page_trigger == 'census':
+        style = {'display': 'none'}
+    elif page_trigger == 'table':
+        style = {'display': 'block'}  
+
+
+    return val_state['geo'], geo_disable, val_state['type'], style
 
 # %% ../../nbs/03_map_page.ipynb 15
 @callback(
