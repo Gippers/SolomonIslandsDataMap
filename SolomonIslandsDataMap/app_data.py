@@ -64,17 +64,13 @@ control_type = dmc.SegmentedControl(
                         color = 'gray',
                         fullWidth = True,)
 
-dd_dataset = html.Div(children = 
-                      dmc.SegmentedControl(
+dd_dataset = dmc.SegmentedControl(
                         id="dataset_type",
-                        value=sol_geo.data_type[0],
                         value = "Census",
                         data=['Census', 'Population Projections'],
                         orientation="vertical",
                         color = 'gray',
-                        fullWidth = True,),
-                        style = {'display': 'none'},
-                        id = "dataset_html")
+                        fullWidth = True,)
 
 dd_var = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdown', 
                                     val = list(sol_geo.census_vars.keys())[0],
@@ -176,9 +172,6 @@ sidebar = html.Div(
     ],
     #style=SIDEBAR_STYLE,
 )
-
-
-
 
 # %% ../nbs/02_app_data.ipynb 18
 mytitle = dcc.Markdown(children="## " + list(cen_vars.keys())[0] + " by " + geos[0]) # TODO This needs a default title

@@ -11,12 +11,12 @@ from nbdev.showdoc import *
 try:
     from SolomonIslandsDataMap.dash_components import gen_dash_grid, gen_dd
     from SolomonIslandsDataMap.app_data import mytitle, data_grid, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo, download_button, sidebar_table
+        , control_type, dd_var, dd_measure, dropdown_geo, download_button
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_dash_grid, gen_dd
     from app_data import mytitle, data_grid, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo, download_button, sidebar_table
+        , control_type, dd_var, dd_measure, dropdown_geo, download_button
     from load_data import SolomonGeo
 from fastcore.test import *
 from dash import Dash, dcc, callback, Output, Input, State, html, Patch, ctx, register_page, callback_context 
@@ -40,21 +40,11 @@ title = dcc.Markdown(children="## This is a placeholder test!!") # TODO This nee
 init_load = dcc.Store(id="initial-load", data={})
 init_init = dcc.Store(id="initial-initial", data='table')
 def layout():
-    return dbc.Row(
-        [dbc.Col(sidebar_table, width = 2),
-         dbc.Col([
-          dbc.Row([
+    return dbc.Row([
                 dbc.Col(title, width = 8),
                 dbc.Col(download_button, width = {"size": 2})
-                      ]),
-              data_grid,
-              stored_data,
-              init_load,
-              init_init,
-            # fires 1ms after page load
-            #dcc.Interval(id="interval-timer", interval=1, max_intervals=1),
-            ], width = 10)
-          ], justify = 'center')
+                      ]), data_grid, stored_data, init_load, init_init,
+
 
 # %% ../../nbs/05_table_page.ipynb 13
 @callback(
