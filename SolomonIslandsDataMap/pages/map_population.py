@@ -48,11 +48,11 @@ init_init = dcc.Store(id="initial-initial", data='pop')
 
 # %% ../../nbs/04_map_population.ipynb 8
 def layout():
-    return pyramidTitle, map_graph, year_slider,\
+    return  init_init, pyramidTitle, map_graph, year_slider,\
         dbc.Row([
                 popKpi,
                 dbc.Col([popPyramid], width = 8, align = 'center')
-            ], justify = 'around'), stored_data, init_init
+            ], justify = 'around'), stored_data,
 
 # %% ../../nbs/04_map_population.ipynb 12
 @callback(
@@ -98,7 +98,7 @@ def update_measure_pop(new_var:str, # Selected variable
     Input('varDropdownPop', 'value'),
     Input('age_dropdown', 'value'),
     Input("year_slider", "value"),
-    Input('initial-initial', 'data'),
+    #Input('initial-initial', 'data'),
     State('geo_df', 'data'),
     allow_duplicate=True,
     prevent_initial_call=True)
@@ -109,7 +109,7 @@ def update_map_pop(geog:str, # current geography
                 age:[str], # Age Brackets to display
                 year:int, # The selected projection year
                 dict_sol:dict, # The dataset in dictionary form
-                init_trigger:str, # Initial trigger of the map
+                #init_trigger:str, # Initial trigger of the map
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
     Updates the focus census variable or geography dispalayed on the map
@@ -130,14 +130,14 @@ def update_map_pop(geog:str, # current geography
     # A None value is passed when the page is first loaded, hence
     # the the values are reset.
     # Hardcoded to province as we only have forcasts by province
-    if button_clicked in [dropdown_geo.id, dropdown_location.id] or init_trigger == 'Pop':
+    if button_clicked in [dropdown_geo.id, dropdown_location.id]:# or init_trigger == 'Pop':
         # Update disaplayed geography 
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
             patched_figure['data'][tn]['visible'] = geog == geo
             print(geo)
         
-    if button_clicked in [control_type.id] or init_trigger == 'Pop':
+    if button_clicked in [control_type.id]:# or init_trigger == 'Pop':
         # Update the type of data displayed on map and the hover template
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
@@ -161,7 +161,7 @@ def update_map_pop(geog:str, # current geography
             
         
 
-    if button_clicked in ['measureDropdownPop', 'year_slider', 'age_dropdown'] or init_trigger == 'Pop':
+    if button_clicked in ['measureDropdownPop', 'year_slider', 'age_dropdown']:# or init_trigger == 'Pop':
         # Update the z values in map to the data for the requested census variable
         for geo in sol_geo.geo_levels:
         # Ar updates the z value ie. data disaplyed each time
@@ -195,7 +195,6 @@ def update_map_pop(geog:str, # current geography
     Input('locDropdown', 'value'),
     Input('age_dropdown', 'value'),
     Input("year_slider", "value"),
-    Input('initial-initial', 'data'),
     State("segmented_geo", 'value'),
     State('varDropdownPop', 'value'),
     State('geo_df', 'data'),
@@ -207,7 +206,6 @@ def update_pyramid(data_type:str, # User input of type of data
                      loc_selection:[str], # The selected locations, may be none
                      ages:[str], # Currently selected locations for highlighting
                      year:str, # Year of projection data
-                     init:str, 
                      geo_input:str, # User input from the geography dropdown
                      variable:str, # The state of the variable dropdown
                      dict_sol:dict, # The dataset in dictionary form
@@ -244,7 +242,6 @@ def update_pyramid(data_type:str, # User input of type of data
     Input('locDropdown', 'value'),
     Input('age_dropdown', 'value'),
     Input("year_slider", "value"),
-    #Input('initial-initial', 'data'),
     State('varDropdownPop', 'value'),
     State('geo_df', 'data'),
     allow_duplicate=True,
@@ -255,7 +252,6 @@ def update_kpi(data_type:str, # User input of type of data
                      loc_selection:[str], # The selected locations, may be none
                      ages:[str], # Currently selected locations for highlighting
                      year:str, # Year of projection data
-                     #init:str, 
                      variable:str, # The state of the variable dropdown
                      dict_sol:dict, # The dataset in dictionary form
               )->(dcc.Markdown, dcc.Markdown): # Returns a graph object figure after being updated and the dynamic title
