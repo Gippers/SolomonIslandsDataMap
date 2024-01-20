@@ -3,8 +3,8 @@
 # %% auto 0
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dd_age', 'dd_years_pop',
            'dropdown_geo', 'control_type', 'dd_dataset', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop',
-           'data_grid', 'grid_rows', 'download_button', 'year_slider', 'SIDEBAR_STYLE', 'sidebar', 'sidebar_population',
-           'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph', 'popPyramid', 'pyramidTitle', 'popKpi']
+           'data_grid', 'grid_rows', 'download_button', 'year_slider', 'SIDEBAR_STYLE', 'sidebar', 'mytitle',
+           'map_graph', 'selectedBarGraph', 'popPyramid', 'pyramidTitle', 'popKpi']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -20,6 +20,7 @@ from dash import dcc, html
 import dash_bootstrap_components as dbc 
 import dash_mantine_components as dmc
 from dash_bootstrap_templates import load_figure_template
+from datetime import datetime
 
 # %% ../nbs/02_app_data.ipynb 5
 sol_geo = SolomonGeo.load_pickle(aws = True)
@@ -43,12 +44,12 @@ dropdown_location = html.Div(children = gen_dd(sol_geo.locations[sol_geo.geo_lev
 dd_age = html.Div(children = gen_dd(sol_geo.ages, 'age_dropdown'
                                     ,val = sol_geo.ages
                                     ,multi = True, clear = False))
-dd_years_pop = html.Div(children = gen_dd(sol_geo.pop_years, 'years_dropdown', val = [], #multi = True 
+dd_years_pop = html.Div(children = gen_dd(sol_geo.pop_years, 'years_dropdown', val = [datetime.now().year], #multi = True 
                                       ))
 
 dropdown_geo = dmc.SegmentedControl(
                             id="segmented_geo",
-                            value="",
+                            value=geos[0],
                             data=geos,
                              orientation="vertical",
                             color = 'gray',
@@ -57,8 +58,7 @@ dropdown_geo = dmc.SegmentedControl(
 # Can only access province for population
 control_type = dmc.SegmentedControl(
                         id="segmented_type",
-                        #value=sol_geo.data_type[0],
-                        value = "",
+                        value=sol_geo.data_type[0],
                         data=sol_geo.data_type,
                         orientation="vertical",
                         color = 'gray',
@@ -67,7 +67,7 @@ control_type = dmc.SegmentedControl(
 dd_dataset = html.Div(children = 
                       dmc.SegmentedControl(
                         id="dataset_type",
-                        #value=sol_geo.data_type[0],
+                        value=sol_geo.data_type[0],
                         value = "Census",
                         data=['Census', 'Population Projections'],
                         orientation="vertical",
@@ -77,17 +77,17 @@ dd_dataset = html.Div(children =
                         id = "dataset_html")
 
 dd_var = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdown', 
-                                    val = '',
+                                    val = list(sol_geo.census_vars.keys())[0],
                                     height = 75))
 dd_measure = html.Div(children = gen_dd(sol_geo.census_vars['Key Statistics'], 'measureDropdown'
-                                    ,val = ''
+                                    ,val = sol_geo.census_vars['Key Statistics'][0]
                                       ))
 
 dd_var_pop = html.Div(children = gen_dd(list(sol_geo.population_vars.keys()), 'varDropdownPop', 
-                                    val = '',
+                                    val = list(sol_geo.population_vars.keys())[0],
                                     height = 75))
 dd_measure_pop = html.Div(children = gen_dd(sol_geo.population_vars[list(sol_geo.population_vars.keys())[0]], 'measureDropdownPop'
-                                    ,val = ''
+                                    ,val = 'Total'
                                       ))
 
 # %% ../nbs/02_app_data.ipynb 12
@@ -122,6 +122,13 @@ sidebar = html.Div(
         html.Hr(),
         dbc.Nav(
             [
+                 html.Div(children = [
+                    html.P("Select Dataset"), # TODO add a little info button here with link to geo explanation
+                    dd_dataset,
+                    html.Br(),],
+                    id = "dataset-html",
+                    style = {'display': 'none'},
+                ),
                 html.P("Geography"), # TODO add a tooltip button here with link to geo explanation
                 dropdown_geo,
                 html.Br(),
@@ -135,13 +142,32 @@ sidebar = html.Div(
                 html.P("Location"), # TODO add a little info button here with link to geo explanation
                 dropdown_location,
                 html.Br(),
-                html.P("Data"), # TODO add a little info button here with link to geo explanation
-                dd_var,
-                dd_measure,
-                html.Br(),
+                html.Div(children = [
+                    html.P("Data"), # TODO add a little info button here with link to geo explanation
+                    dd_var,
+                    dd_measure,
+                    html.Br(),],
+                    id = "census-vars-html",
+                    style = {'display': 'block'},
+                ),
+                html.Div(children = [
+                    html.P("Data"), # TODO add a little info button here with link to geo explanation
+                    dd_var,
+                    dd_measure,
+                    html.Br(),],
+                    id = "pop-vars-html",
+                    style = {'display': 'none'},
+                ),
                 html.P("Data Type"), 
                 control_type,
                 html.Br(),
+                html.Div(children = [
+                    html.P("Dash Grid Rows"), 
+                    grid_rows, # TODO add an info button here explaining that it is only for the dash grid
+                    html.Br(),],
+                    id = "rows-html",
+                    style = {'display': 'none'},
+                ),
 
             ],
             vertical=True,
@@ -152,66 +178,6 @@ sidebar = html.Div(
 )
 
 
-sidebar_population = html.Div(
-    [
-        html.H2("Filters"),
-        html.Hr(),
-        dbc.Nav(
-            [
-                html.P("Geography"), # TODO add a tooltip button here with link to geo explanation
-                dropdown_geo,
-                html.Br(),
-                html.P("Age Group"), # TODO add a tooltip button here with link to geo explanation
-                dd_age,
-                html.Br(),
-                html.P("Location"), # TODO add a little info button here with link to geo explanation
-                dropdown_location,
-                html.Br(),
-                html.P("Data"), # TODO add a little info button here with link to geo explanation
-                dd_var_pop,
-                dd_measure_pop,
-                html.Br(),
-                html.P("Data Type"), 
-                control_type,
-                html.Br(),
-
-            ],
-            vertical=True,
-            pills=True,
-        ),
-    ],
-    #style=SIDEBAR_STYLE,
-)
-
-sidebar_table = html.Div(
-    [
-        html.H2("Filters"),
-        html.Hr(),
-        dbc.Nav(
-            [
-                html.P("Geography"), # TODO add a tooltip button here with link to geo explanation
-                dropdown_geo,
-                html.Br(),
-                html.P("Location"), # TODO add a little info button here with link to geo explanation
-                dropdown_location,
-                html.Br(),
-                html.P("Data"), # TODO add a little info button here with link to geo explanation
-                dd_var,
-                dd_measure,
-                html.Br(),
-                html.P("Data Type"), 
-                control_type,
-                html.Br(),
-                html.P("Dash Grid Rows"), 
-                grid_rows, # TODO add an info button here explaining that it is only for the dash grid
-
-            ],
-            vertical=True,
-            pills=True,
-        ),
-    ],
-    #style=SIDEBAR_STYLE,
-)
 
 
 # %% ../nbs/02_app_data.ipynb 18
