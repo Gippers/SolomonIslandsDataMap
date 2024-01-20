@@ -12,12 +12,12 @@ from nbdev.showdoc import *
 try:
     from SolomonIslandsDataMap.dash_components import gen_bar_plot, gen_dd
     from SolomonIslandsDataMap.app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo, sidebar_census
+        , control_type, dd_var, dd_measure, dropdown_geo
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_bar_plot, gen_dd
     from app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo, sidebar_census
+        , control_type, dd_var, dd_measure, dropdown_geo
     from load_data import SolomonGeo
 import plotly.express as px
 import plotly.graph_objects as go
@@ -49,18 +49,7 @@ init_init = dcc.Store(id="initial-initial", data='census')
 
 # %% ../../nbs/03_map_page.ipynb 7
 def layout():
-    return  dbc.Row(
-        [dbc.Col(sidebar_census, width = 2),
-        dbc.Col([
-            mytitle,
-            map_graph,
-            selectedBarGraph,
-            stored_data, 
-            init_load, 
-            init_init,], width = 10),
-            # fires 1ms after page load
-            dcc.Interval(id="interval-timer", interval=1, max_intervals=1),
-        ], justify = 'center')
+    return  mytitle, map_graph, selectedBarGraph, stored_data, init_load, init_init
 
 # %% ../../nbs/03_map_page.ipynb 10
 # TODO this defintiely seems hacky, must be a better way
@@ -139,6 +128,7 @@ def initial_load(page_trigger:str, # Page that triggered initial load
     Output('segmented_geo', 'disabled'), # On page load, allow for changing geography
     Output("segmented_type", "value"),
     Output("dataset_html", "style"),
+    Output("age-html", "style"),
     Input("initial-initial", 'data'),
     State("stored_values", "data"),
 )
@@ -165,14 +155,25 @@ def geo_load(page_trigger:str, # Page that triggered initial load
         # TODO test that this works with multi tab
 
     # Based on page, update hidden style
+    hide = {'display': 'none'}
+    show = {'display': 'block'} 
     style = ''
-    if page_trigger == 'pop' or page_trigger == 'census':
-        style = {'display': 'none'}
+    if page_trigger == 'census':
+        style = hide
+        ages = hide
+    elif page_trigger == 'pop':
+        style = hide
+        ages = show
     elif page_trigger == 'table':
-        style = {'display': 'block'}  
+        style = show
+        ages = hide
 
 
-    return val_state['geo'], geo_disable, val_state['type'], style
+
+    
+
+
+    return val_state['geo'], geo_disable, val_state['type'], style, ages
 
 # %% ../../nbs/03_map_page.ipynb 15
 @callback(

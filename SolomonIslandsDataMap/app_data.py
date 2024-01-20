@@ -3,9 +3,8 @@
 # %% auto 0
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dd_age', 'dd_years_pop',
            'dropdown_geo', 'control_type', 'dd_dataset', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop',
-           'data_grid', 'grid_rows', 'download_button', 'year_slider', 'SIDEBAR_STYLE', 'sidebar_census',
-           'sidebar_population', 'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph', 'popPyramid',
-           'pyramidTitle', 'popKpi']
+           'data_grid', 'grid_rows', 'download_button', 'year_slider', 'SIDEBAR_STYLE', 'sidebar', 'sidebar_population',
+           'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph', 'popPyramid', 'pyramidTitle', 'popKpi']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -117,7 +116,7 @@ SIDEBAR_STYLE = {
 }
 
 
-sidebar_census = html.Div(
+sidebar = html.Div(
     [
         html.H2("Filters"),
         html.Hr(),
@@ -126,6 +125,13 @@ sidebar_census = html.Div(
                 html.P("Geography"), # TODO add a tooltip button here with link to geo explanation
                 dropdown_geo,
                 html.Br(),
+                html.Div(children = [
+                    html.P("Age Group"), # TODO add a tooltip button here with link to geo explanation
+                    dd_age,
+                    html.Br(),],
+                    id = "age-html",
+                    style = {'display': 'none'},
+                ),
                 html.P("Location"), # TODO add a little info button here with link to geo explanation
                 dropdown_location,
                 html.Br(),
