@@ -98,46 +98,46 @@ def update_measure_pop(new_var:str, # Selected variable
     Input('varDropdownPop', 'value'),
     Input('age_dropdown', 'value'),
     Input("year_slider", "value"),
-    #Input('initial-initial', 'data'),
+    Input('segmented_geo', 'disabled'),
     State('geo_df', 'data'),
     allow_duplicate=True,
     prevent_initial_call=True)
 def update_map_pop(geog:str, # current geography
-    data_type:str, # User input of type of data
-                measure:str, # A string contiaining the census variable and measure split by ':'
-                variable:str, # The state of the variable dropdown
-                age:[str], # Age Brackets to display
-                year:int, # The selected projection year
-                dict_sol:dict, # The dataset in dictionary form
-                #init_trigger:str, # Initial trigger of the map
-              )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
+                    data_type:str, # User input of type of data
+                    measure:str, # A string contiaining the census variable and measure split by ':'
+                    variable:str, # The state of the variable dropdown
+                    age:[str], # Age Brackets to display
+                    year:int, # The selected projection year
+                    geo_trigger:int, # Listening for whether segmented geo is locked, signaling that map
+                                        # page was loaded after geo data was updated.
+                    dict_sol:dict, # The dataset in dictionary form
+              )->type(go.Figure()): # Returns a graph object figure after being updated and the dynamic title
     '''
-    Updates the focus census variable or geography dispalayed on the map
+    Updates the focus census variable or geography dispalayed on the map.
+    Geo_trigger listens for when the geography is blacked out. This happens when the population map page is loaded,
+    in particular, it happens after the geography variable is fixed. In this case, we re update everything on the map
     '''
     # TODO the None workaround might be taxing on the load times, is there a better way
     # or maybe I can check it it needs updating?
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
 
+    init_load = False
+    if geo_trigger == True: init_load = True
+
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
     print("first run, updating map")
-    print(button_clicked)
-
-    print(data_type)
-    print(measure)
-    print(age)
 
     # A None value is passed when the page is first loaded, hence
     # the the values are reset.
     # Hardcoded to province as we only have forcasts by province
-    if button_clicked in [dropdown_geo.id, dropdown_location.id]:# or init_trigger == 'Pop':
+    if button_clicked in [dropdown_geo.id, dropdown_location.id] or init_load == True:
         # Update disaplayed geography 
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
             patched_figure['data'][tn]['visible'] = geog == geo
-            print(geo)
         
-    if button_clicked in [control_type.id]:# or init_trigger == 'Pop':
+    if button_clicked in [control_type.id] or init_load == True:
         # Update the type of data displayed on map and the hover template
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
@@ -161,7 +161,7 @@ def update_map_pop(geog:str, # current geography
             
         
 
-    if button_clicked in ['measureDropdownPop', 'year_slider', 'age_dropdown']:# or init_trigger == 'Pop':
+    if button_clicked in ['measureDropdownPop', 'year_slider', 'age_dropdown'] or init_load == True:
         # Update the z values in map to the data for the requested census variable
         for geo in sol_geo.geo_levels:
         # Ar updates the z value ie. data disaplyed each time
@@ -175,7 +175,6 @@ def update_map_pop(geog:str, # current geography
             ar = all_years.loc[year].values[:, -1]
             all_years = all_years.values[:, -1]
             ar = ar.reshape((ar.shape[0],))
-            print(all_years)
             patched_figure['data'][tn]['z'] = ar
             patched_figure['data'][tn]['zmin'] = np.min(all_years)
             patched_figure['data'][tn]['zmax'] = np.max(all_years)
