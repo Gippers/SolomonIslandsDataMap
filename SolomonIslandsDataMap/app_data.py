@@ -2,9 +2,10 @@
 
 # %% auto 0
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dd_age', 'dd_years_pop',
-           'dropdown_geo', 'control_type', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop', 'data_grid',
-           'grid_rows', 'download_button', 'year_slider', 'SIDEBAR_STYLE', 'sidebar_census', 'sidebar_population',
-           'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph', 'popPyramid', 'pyramidTitle', 'popKpi']
+           'dropdown_geo', 'control_type', 'dd_dataset', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop',
+           'data_grid', 'grid_rows', 'download_button', 'year_slider', 'SIDEBAR_STYLE', 'sidebar_census',
+           'sidebar_population', 'sidebar_table', 'mytitle', 'map_graph', 'selectedBarGraph', 'popPyramid',
+           'pyramidTitle', 'popKpi']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -64,6 +65,18 @@ control_type = dmc.SegmentedControl(
                         color = 'gray',
                         fullWidth = True,)
 
+dd_dataset = html.Div(children = 
+                      dmc.SegmentedControl(
+                        id="dataset_type",
+                        #value=sol_geo.data_type[0],
+                        value = "Census",
+                        data=['Census', 'Population Projections'],
+                        orientation="vertical",
+                        color = 'gray',
+                        fullWidth = True,),
+                        style = {'display': 'none'},
+                        id = "dataset_html")
+
 dd_var = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdown', 
                                     val = '',
                                     height = 75))
@@ -77,7 +90,6 @@ dd_var_pop = html.Div(children = gen_dd(list(sol_geo.population_vars.keys()), 'v
 dd_measure_pop = html.Div(children = gen_dd(sol_geo.population_vars[list(sol_geo.population_vars.keys())[0]], 'measureDropdownPop'
                                     ,val = ''
                                       ))
-
 
 # %% ../nbs/02_app_data.ipynb 12
 data_grid = dbc.Container(

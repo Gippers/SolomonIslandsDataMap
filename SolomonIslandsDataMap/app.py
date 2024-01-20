@@ -6,9 +6,9 @@ __all__ = ['repo', 'fp', 'server', 'pages', 'navbar']
 # %% ../nbs/06_app.ipynb 2
 from nbdev.showdoc import *
 try:
-    from SolomonIslandsDataMap.app_data import stored_data
+    from SolomonIslandsDataMap.app_data import stored_data, dd_dataset
 except: 
-    from app_data import stored_data
+    from app_data import stored_data, dd_dataset
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -76,6 +76,7 @@ app.layout = dbc.Container([
                 ]),
                 page_container, 
                 stored_data, 
+                dd_dataset,
                 dcc.Store('stored_values', storage_type="session", 
                           data = json.dumps({'type': 'Total',
                                     'geo': 'Province',
