@@ -94,8 +94,8 @@ grid_rows = dcc.Input(id="grid-rows", type="number", min=1, max=len(sol_geo.loca
 download_button = dbc.Button("Download", id="csv-button", outline=True, n_clicks=0, color = "primary")
 
 # %% ../nbs/02_app_data.ipynb 14
-year_slider = dcc.Slider(sol_geo.pop_years[0], sol_geo.pop_years[-1], 1, marks=None, id = 'year_slider',
-                tooltip={"placement": "top", "always_visible": True},  included=False, dots = True, updatemode =  "drag", 
+year_slider = dcc.Slider(sol_geo.pop_years[0], sol_geo.pop_years[-1], 1,  value = datetime.now().year, marks=None, id = 'year_slider',
+                tooltip={"placement": "top", "always_visible": True},  included=False, dots = True, updatemode =  "drag"
                 )
 
 # %% ../nbs/02_app_data.ipynb 16
