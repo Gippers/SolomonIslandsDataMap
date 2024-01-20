@@ -50,7 +50,11 @@ init_init = dcc.Store(id="initial-initial", data='pop')
 
 # %% ../../nbs/04_map_population.ipynb 7
 def layout():
-    return mytitle, map_graph, year_slider, pyramidTitle, popPyramid, popKpi, stored_data, init_load, init_init
+    return pyramidTitle, map_graph, year_slider,\
+        dbc.Row([
+                popKpi,
+                dbc.Col([popPyramid], width = 8, align = 'center')
+            ], justify = 'around'), stored_data, init_load, init_init
 
 # %% ../../nbs/04_map_population.ipynb 11
 # TODO this defintiely seems hacky, must be a better way
@@ -182,7 +186,6 @@ def update_measure_pop(new_var:str, # Selected variable
 # TODO - add age here
 @callback(
     Output(map_graph, 'figure', allow_duplicate=True),
-    Output(mytitle, 'children', allow_duplicate=True),
     Input("segmented_geo", 'value'),
     Input("segmented_type", 'value'),
     Input('measureDropdownPop', 'value'),
@@ -274,7 +277,7 @@ def update_map_pop(geog:str, # current geography
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
 
-    return patched_figure, '## Solomon Islands Population Projections - ' + 'Province'
+    return patched_figure
 
 # %% ../../nbs/04_map_population.ipynb 29
 # Callback allows components to interact

@@ -148,8 +148,8 @@ sidebar = html.Div(
                 ),
                 html.Div(children = [
                     html.P("Data"), # TODO add a little info button here with link to geo explanation
-                    dd_var,
-                    dd_measure,
+                    dd_var_pop,
+                    dd_measure_pop,
                     html.Br(),],
                     id = "pop-vars-html",
                     style = {'display': 'none'},

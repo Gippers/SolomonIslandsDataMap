@@ -127,7 +127,7 @@ def initial_load(page_trigger:str, # Page that triggered initial load
     Output("segmented_geo", "value"),
     Output('segmented_geo', 'disabled'), # On page load, allow for changing geography
     Output("segmented_type", "value"),
-    Output("dataset_html", "style"),
+    Output("dataset-html", "style"),
     Output("age-html", "style"),
     Input("initial-initial", 'data'),
     State("stored_values", "data"),

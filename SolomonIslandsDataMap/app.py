@@ -80,7 +80,6 @@ app.layout = dbc.Container([
                     page_container, ], width = 10),
                 ], justify = 'center'),
                 stored_data, 
-                dd_dataset,
                 dcc.Store('stored_values', storage_type="session", 
                           data = json.dumps({'type': 'Total',
                                     'geo': 'Province',
