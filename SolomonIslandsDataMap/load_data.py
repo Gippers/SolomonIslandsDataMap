@@ -308,6 +308,17 @@ class SolomonGeo:
             to_change = pop_df[c1].columns
             for c2 in to_change:
                 pop_df[(c1, c2)] = pop_df[(c1, c2)].apply(lambda x: int(x.split()[0].replace(',', '')))
+
+        # Add proportion to the populdation data
+        pop_p = copy.copy(pop_df)   
+        pop_p.loc[:, ('core', 'type')] = 'Proportion'
+        
+        for col in cols:
+            # For each non core and age column:
+            pop_p[col] = pop_p[col] / pop_p[col].sum() * 100
+            pop_p.loc[:, (col, 'Total')].sum()
+            
+        pop_df = pd.concat([pop_df, pop_p], axis = 0)
         
                 
         # return the transformed dataset
