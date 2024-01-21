@@ -312,13 +312,20 @@ class SolomonGeo:
         # Add proportion to the populdation data
         pop_p = copy.copy(pop_df)   
         pop_p.loc[:, ('core', 'type')] = 'Proportion'
+
+        def totalColumn(data:pd.DataFrame, # Dataset
+                column:[str], # Columns to manipulate
+                ) -> pd.DataFrame:
+            '''Used to Create proportions by year'''
+            data[column] = data[column] / data[column].agg('sum') * 100
+            return data
         
         for col in cols:
             # For each non core and age column:
-            pop_p[col] = pop_p[col] / pop_p[col].sum() * 100
-            pop_p.loc[:, (col, 'Total')].sum()
+            pop_p = pop_p.groupby([('core', 'year')], sort = False).apply(totalColumn, col)
+            pop_p = pop_p.droplevel(0)
             
-        pop_df = pd.concat([pop_df, pop_p], axis = 0)
+        pop_df = pd.concat([pop_df, pop_p], axis = 0) # Created extra index, drop
         
                 
         # return the transformed dataset
@@ -541,10 +548,11 @@ def get_pop(self:SolomonGeo,
         group_by.append(('Age', 'Age_Bracket'))
      # If required, aggregate dataset based on data type
     if agg == True:
-        if type_filter == 'Total':
+        if type_filter in ['Total', 'Proportion']:
             ret = ret.groupby(group_by, sort = False).sum(numeric_only= True)
-        elif type_filter == 'Proportion':
-            ret = ret.groupby(group_by, sort = False).sum(numeric_only= True) / ret.groupby(group_by, sort = False).sum(numeric_only= True).sum(numeric_only= True) * 100
+        # TODO look into second aggregation strat when doing growth
+        #elif type_filter == 'Proportion':
+        #    ret = ret.groupby(group_by, sort = False).sum(numeric_only= True) / ret.groupby(group_by, sort = False).sum(numeric_only= True).sum(numeric_only= True) * 100
         else:
             raise ValueError('The type passed to the aggregate function must be one of the following: \'Total\', \'Proportion\'.')
         
