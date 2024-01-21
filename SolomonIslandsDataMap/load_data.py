@@ -317,7 +317,7 @@ class SolomonGeo:
                 column:[str], # Columns to manipulate
                 ) -> pd.DataFrame:
             '''Used to Create proportions by year'''
-            data[column] = data[column] / data[column].agg('sum') * 100
+            data[column] = data[column] / data[column].agg('sum')
             return data
         
         for col in cols:
