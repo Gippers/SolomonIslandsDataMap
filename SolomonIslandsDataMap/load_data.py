@@ -72,7 +72,10 @@ class SolomonGeo:
         self.geo = geos
 
         # variable that tracks the types of aggregations
-        self.geo_levels = cen_df.loc[:, ('core', 'agg')].unique()
+        # TODO Workout how to get in right order without hardcoding
+        #self.geo_levels = cen_df.loc[:, ('core', 'agg')].unique()
+        # TODO make an array!
+        self.geo_levels = np.array(['Province', 'Constituency', 'Ward'])
 
         # Save a list of census variables, ignoring the core variables
         # Use a dictionary that maps the upper level column names to lower level ones
@@ -99,9 +102,9 @@ class SolomonGeo:
         self.ages = list(np.unique(pop_df['Age']['Age_Bracket'].values))
         self.pop_years = list(np.unique(pop_df['core']['year'].values))
 
-        # TODO should captialise first letter
-        self.data_type = cen_df.loc[:, ('core', 'type')].unique()
-
+        # TODO Workout how to get in right order without hardcoding
+        #self.data_type = cen_df.loc[:, ('core', 'type')].unique()
+        self.data_type = np.array(['Total', 'Proportion'])
         # save a list of locations as a dictionary access by geography level
         locations = {}
         for geo in self.geo_levels:
@@ -327,7 +330,15 @@ class SolomonGeo:
             
         pop_df = pd.concat([pop_df, pop_p], axis = 0) # Created extra index, drop
         
-                
+        # Sort both datasets, this is critical for putting values back into the map.
+        # Sort alphabetically so they are both the same
+        df.sort_values(by = [('core', 'location')], inplace = True)
+        pop_df.sort_values(by = [('core', 'location'), ('core', 'year'), ('Age', 'Numerical_Bracket')], inplace = True)
+        geos.sort_index(inplace = True, sort_remaining = False)  
+
+        #pop_df.index.name = 'index'
+        #pop_df.loc[:, ('core', 'location')] = pop_df.index
+
         # return the transformed dataset
         return df, pop_df, geos
 

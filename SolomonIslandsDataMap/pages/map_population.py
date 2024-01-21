@@ -121,6 +121,8 @@ def update_map_pop(geog:str, # current geography
     # or maybe I can check it it needs updating?
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
+    print("ages")
+    print(age)
 
     init_load = False
     if geo_trigger == True: init_load = True
