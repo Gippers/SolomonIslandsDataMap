@@ -172,8 +172,14 @@ def gen_kpi(sg:SolomonGeo, # Input data object
                         loc_filter = loc,
                         type_filter = type_filter,
                         agg = True).values[0]
-    kpi = dcc.Markdown(children = "# " + str(format(int(df[0]), ",d")))
-    text = dcc.Markdown(children = measure.lower() + " persons in current selection")
+    if type_filter == 'Total':
+        kpi = dcc.Markdown(children = "# " + str(format(int(df[0]), ",d")))
+        text = dcc.Markdown(children = measure.lower() + " persons in current selection")
+    elif type_filter == 'Proportion':
+        kpi = dcc.Markdown(children = "# " + str(format(int(df[0]), ".0%")))
+        text = dcc.Markdown(children = measure.lower() + " per cent projected population in current selection")
+    else:
+        raise ValueError('The type passed to the gen_kpi function must be one of the following: \'Total\', \'Proportion\'.')
     
     return kpi, text
 
