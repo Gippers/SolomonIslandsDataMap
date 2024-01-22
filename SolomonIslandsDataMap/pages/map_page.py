@@ -60,6 +60,8 @@ def layout():
     Output("dataset-html", "style"),
     Output("age-html", "style"),
     Output("rows-html", "style"),
+    Output("census-vars-html", "style"),
+    Output("pop-vars-html", "style"),
     Input("initial-initial", 'data'),
     Input("segmented_geo", "value"),
     Input("locDropdown", "value"),
@@ -84,6 +86,8 @@ def maintain_sidebar(page_trigger:str, # Page that triggered initial load
         displayAges = hide
         displayRows = hide
         dataset = 'Census'
+        censusVars = show
+        popVars = hide
     elif page_trigger == 'pop':
         displayDataset = hide
         displayAges = show
@@ -91,6 +95,8 @@ def maintain_sidebar(page_trigger:str, # Page that triggered initial load
         dataset = 'Population Projections'
         # Disable geo selection on population page and set geo to province
         geo_disable = True 
+        censusVars = hide
+        popVars = show
         if geo != 'Province':
             # When the initial load id triggered by navigation to population page, 
             # if the geo isn't province we reset to this
@@ -101,8 +107,20 @@ def maintain_sidebar(page_trigger:str, # Page that triggered initial load
         displayDataset = show
         displayAges = hide
         displayRows = show
+        if dataset == 'Census':
+            censusVars = show
+            popVars = hide
+        elif dataset == 'Population Projections':
+            censusVars = hide
+            popVars = show
+        else:
+            ValueError("Dataset must be Census or Population")
 
-    return geo, geo_disable, dataset, locs, displayDataset, displayAges, displayRows
+
+    if dataset == 'Population Projections':
+        geo_disable = True
+
+    return geo, geo_disable, dataset, locs, displayDataset, displayAges, displayRows, censusVars, popVars
 
 # %% ../../nbs/03_map_page.ipynb 13
 @callback(
