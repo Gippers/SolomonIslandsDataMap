@@ -51,7 +51,10 @@ def layout():
     Input(control_type, 'value'),
     Input('measureDropdown', 'value'),
     Input('varDropdown', 'value'),
+    Input('measureDropdownPop', 'value'),
+    Input('varDropdownPop', 'value'),
     Input('grid-rows', 'value'),
+    Input("dataset_type", "value"), 
     State('geo_df', 'data'),
     allow_duplicate=True,
 )
@@ -59,7 +62,10 @@ def update_grid(geo_input:str, # User input from the geography dropdownk
                     data_type:str, # User input of type of data
                     measure:str, # A string contiaining the census variable and measure split by ':'
                     variable:str, # The state of the variable dropdown
+                    measurePop:str, # A string contiaining the population measure
+                    variablePop:str, # The variable to display for population dataset
                     grid_rows:int, # The number of rows to display
+                    dataset:str, # The dataset to load
                     dict_sol:dict, # The dataset in dictionary form
               )->(dag.AgGrid, str): # Returns a graph object figure after being updated and the dynamic title
     '''
@@ -81,12 +87,14 @@ def update_grid(geo_input:str, # User input from the geography dropdownk
         # TODO in future update row highlighting
         print("locationselected")
         
-    elif button_clicked in [control_type.id, dropdown_geo.id,  'varDropdown',  'measureDropdown', None]:
-        # Rebuild the table given updated selection
-        # None is the initial call
+    elif dataset == 'Census' and\
+    button_clicked in [control_type.id, dropdown_geo.id,  'varDropdown',  'measureDropdown', 'dataset_type', None]:
         patched_figure = gen_census_grid(sol_geo, geo_input,variable, measure, 
             type_filter = data_type, grid_rows=grid_rows)
-        
+    elif dataset == 'Population Projections' and\
+    button_clicked in [control_type.id, dropdown_geo.id,  'varDropdownPop',  'measureDropdownPop', 'dataset_type', None]:
+        patched_figure = gen_pop_grid(sol_geo, sol_geo.pop_years, variablePop, measurePop, geo_filter = geo_input,
+            type_filter = data_type, grid_rows=grid_rows)
     elif button_clicked == 'grid-rows':
         # In this case, update using patch
         patched_figure.dashGridOptions['paginationPageSize'] = grid_rows
