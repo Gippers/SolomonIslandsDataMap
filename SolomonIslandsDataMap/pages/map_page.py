@@ -58,6 +58,7 @@ def layout():
     Output("locDropdown", "value"),
     Output("dataset-html", "style"),
     Output("age-html", "style"),
+    Output("rows-html", "style"),
     Input("initial-initial", 'data'),
     Input("segmented_geo", "value"),
     Input("locDropdown", "value"),
@@ -78,9 +79,11 @@ def maintain_sidebar(page_trigger:str, # Page that triggered initial load
     if page_trigger == 'census':
         displayDataset = hide
         displayAges = hide
+        displayRows = hide
     elif page_trigger == 'pop':
         displayDataset = hide
         displayAges = show
+        displayRows = hide
         # Disable geo selection on population page and set geo to province
         geo_disable = True 
         if geo != 'Province':
@@ -92,8 +95,9 @@ def maintain_sidebar(page_trigger:str, # Page that triggered initial load
     elif page_trigger == 'table':
         displayDataset = show
         displayAges = hide
+        displayRows = show
 
-    return geo, geo_disable, locs, displayDataset, displayAges
+    return geo, geo_disable, locs, displayDataset, displayAges, displayRows
 
 # %% ../../nbs/03_map_page.ipynb 13
 @callback(
