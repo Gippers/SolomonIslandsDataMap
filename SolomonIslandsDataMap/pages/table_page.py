@@ -114,15 +114,19 @@ def update_grid(geo_input:str, # User input from the geography dropdownk
     Output("grid-rows", "value"),
     Output("grid-rows", "max"),
     Input(dropdown_geo, 'value'),
+    Input("dataset_type", 'value'),
     State(stored_data, 'data'),
     suppress_callback_exceptions = True,
 )
 def update_page_rows(geo_input:str, # User input from the geography dropdown
+                    dataset:str, # Currently selected dataset 
                     dict_sol:dict, # The dataset in dictionary form
                     ) -> (int, int): # New value and max size of the grid selection
     ''' Updates the page size and max of the input selection based on updated geography'''
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
-    return 10, len(sol_geo.locations[geo_input])
+    max_rows = len(sol_geo.locations[geo_input])
+    if dataset == 'Population Projections': max_rows = max_rows * len(sol_geo.pop_years)
+    return 10, max_rows
 
 # %% ../../nbs/05_table_page.ipynb 18
 @callback(
