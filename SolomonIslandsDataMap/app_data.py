@@ -175,7 +175,8 @@ sidebar = html.Div(
 
 # %% ../nbs/02_app_data.ipynb 18
 mytitle = dcc.Markdown(children="## " + list(cen_vars.keys())[0] + " by " + geos[0]) # TODO This needs a default title
-map_graph = dcc.Graph(figure=define_map(sol_geo), selectedData=None,)
+map_graph = dcc.Graph(figure= define_map(sol_geo), # TODO work out how to not auto load this. 
+                       selectedData=None,)
 
 selectedBarGraph = dcc.Graph(figure = gen_bar_plot(sol_geo, sol_geo.geo_levels[0], 
                                                "Key Statistics", 'Total Households'),
