@@ -51,16 +51,16 @@ def layout():
     Input(control_type, 'value'),
     Input('measureDropdown', 'value'),
     Input('varDropdown', 'value'),
+    Input('grid-rows', 'value'),
     State('geo_df', 'data'),
-    State('grid-rows', 'value'),
     allow_duplicate=True,
 )
 def update_grid(geo_input:str, # User input from the geography dropdownk
                     data_type:str, # User input of type of data
                     measure:str, # A string contiaining the census variable and measure split by ':'
                     variable:str, # The state of the variable dropdown
-                    dict_sol:dict, # The dataset in dictionary form
                     grid_rows:int, # The number of rows to display
+                    dict_sol:dict, # The dataset in dictionary form
               )->(dag.AgGrid, str): # Returns a graph object figure after being updated and the dynamic title
     '''
     Updates the focus census variable or geography dispalayed on the map
@@ -79,13 +79,17 @@ def update_grid(geo_input:str, # User input from the geography dropdownk
     if button_clicked == dropdown_location.id:
         # Update disaplayed geography 
         # TODO in future update row highlighting
-        print("locationsleected")
+        print("locationselected")
         
     elif button_clicked in [control_type.id, dropdown_geo.id,  'varDropdown',  'measureDropdown', None]:
         # Rebuild the table given updated selection
         # None is the initial call
         patched_figure = gen_census_grid(sol_geo, geo_input,variable, measure, 
             type_filter = data_type, grid_rows=grid_rows)
+        
+    elif button_clicked == 'grid-rows':
+        # In this case, update using patch
+        patched_figure.dashGridOptions['paginationPageSize'] = grid_rows
 
 
     #elif button_clicked == 'measureDropdown':

@@ -187,7 +187,7 @@ def gen_pop_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data
 
     return dt
 
-# %% ../nbs/01_dash_components.ipynb 26
+# %% ../nbs/01_dash_components.ipynb 27
 # TODO create bottom padding
 
 def gen_kpi(sg:SolomonGeo, # Input data object
@@ -229,7 +229,7 @@ def gen_kpi(sg:SolomonGeo, # Input data object
     
     return kpi, text
 
-# %% ../nbs/01_dash_components.ipynb 30
+# %% ../nbs/01_dash_components.ipynb 31
 def gen_dd(location_list:[str], # a list of locations
            id:str, # Id of the dropdown
            place_holder:str = None, # a placeholder message to display
@@ -252,7 +252,7 @@ def gen_dd(location_list:[str], # a list of locations
                         multi=multi)
     return dd
 
-# %% ../nbs/01_dash_components.ipynb 33
+# %% ../nbs/01_dash_components.ipynb 34
 def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
                     year:str, # Selected year to display on the graph
