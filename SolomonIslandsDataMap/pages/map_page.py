@@ -55,6 +55,7 @@ def layout():
 @callback(
     Output("segmented_geo", "value"),
     Output('segmented_geo', 'disabled'), # On page load, allow for changing geography
+    Output("dataset_type", "value"), # Based on page loaded, change value of current dataset
     Output("locDropdown", "value"),
     Output("dataset-html", "style"),
     Output("age-html", "style"),
@@ -62,10 +63,12 @@ def layout():
     Input("initial-initial", 'data'),
     Input("segmented_geo", "value"),
     Input("locDropdown", "value"),
+    Input("dataset_type", "value")
 )
 def maintain_sidebar(page_trigger:str, # Page that triggered initial load
                         geo:str, # the current geo level selection
                         locs:str, # The current location selection
+                        dataset:str, # Currently selected dataset
                          ) -> dict:
     """Manages the dropdowns actively visable in sidebar based on page loaded"""
 
@@ -80,10 +83,12 @@ def maintain_sidebar(page_trigger:str, # Page that triggered initial load
         displayDataset = hide
         displayAges = hide
         displayRows = hide
+        dataset = 'Census'
     elif page_trigger == 'pop':
         displayDataset = hide
         displayAges = show
         displayRows = hide
+        dataset = 'Population Projections'
         # Disable geo selection on population page and set geo to province
         geo_disable = True 
         if geo != 'Province':
@@ -97,7 +102,7 @@ def maintain_sidebar(page_trigger:str, # Page that triggered initial load
         displayAges = hide
         displayRows = show
 
-    return geo, geo_disable, locs, displayDataset, displayAges, displayRows
+    return geo, geo_disable, dataset, locs, displayDataset, displayAges, displayRows
 
 # %% ../../nbs/03_map_page.ipynb 13
 @callback(
