@@ -151,14 +151,14 @@ def gen_pop_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data
                     locations:[str] = None, # Desired location within aggregation
                     type_filter:str = 'Total', # The type aggregartion
                     grid_rows:int = 10, # The number of rows to display
-                )->dag.AgGrid: # Returns a graph object figure of a barplot
+                ) -> dag.AgGrid: # Returns a graph object figure of a barplot
     '''Creates a basic data table using dash grid'''
     figtext = 'Showing ' + variable + ' Projected Population by ' + geo_filter
-    df = sol_geo.get_pop(years, variable, measure, type_filter = 'Total')
+    df = sol_geo.get_pop(years, variable, measure, type_filter = type_filter,)
     # Remove hierarchical columns
     df.columns = df.columns.get_level_values(1)
     df['location'] = df.index 
-    df = pd.pivot(df, index = ['location', 'year'], columns = 'Age_Bracket', values = 'Total')
+    df = pd.pivot(df, index = ['location', 'year'], columns = 'Age_Bracket', values = measure)
 
     # Change index 
     df.insert(0, 'Year', df.index.get_level_values(1))
