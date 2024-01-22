@@ -88,7 +88,7 @@ dd_measure_pop = html.Div(children = gen_dd(sol_geo.population_vars[list(sol_geo
 
 # %% ../nbs/02_app_data.ipynb 12
 data_grid = dbc.Container(
-                children = gen_dash_grid(sol_geo, sol_geo.geo_levels[0], "Key Statistics", 'Total Households')
+                children = gen_census_grid(sol_geo, sol_geo.geo_levels[0], "Key Statistics", 'Total Households')
             )
 grid_rows = dcc.Input(id="grid-rows", type="number", min=1, max=len(sol_geo.locations['Province']), value=10)
 download_button = dbc.Button("Download", id="csv-button", outline=True, n_clicks=0, color = "primary")

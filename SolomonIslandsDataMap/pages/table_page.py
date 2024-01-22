@@ -8,12 +8,12 @@ __all__ = ['title', 'init_init', 'layout', 'update_grid', 'update_page_rows', 'u
 from nbdev.showdoc import *
 # TODO work out how to get around below hack
 try:
-    from SolomonIslandsDataMap.dash_components import gen_dash_grid, gen_dd
+    from SolomonIslandsDataMap.dash_components import gen_census_grid, gen_dd
     from SolomonIslandsDataMap.app_data import mytitle, data_grid, stored_data, dropdown_location \
         , control_type, dd_var, dd_measure, dropdown_geo, download_button
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
-    from dash_components import gen_dash_grid, gen_dd
+    from dash_components import gen_census_grid, gen_dd
     from app_data import mytitle, data_grid, stored_data, dropdown_location \
         , control_type, dd_var, dd_measure, dropdown_geo, download_button
     from load_data import SolomonGeo
@@ -84,7 +84,7 @@ def update_grid(geo_input:str, # User input from the geography dropdownk
     elif button_clicked in [control_type.id, dropdown_geo.id,  'varDropdown',  'measureDropdown', None]:
         # Rebuild the table given updated selection
         # None is the initial call
-        patched_figure = gen_dash_grid(sol_geo, geo_input,variable, measure, 
+        patched_figure = gen_census_grid(sol_geo, geo_input,variable, measure, 
             type_filter = data_type, grid_rows=grid_rows)
 
 
