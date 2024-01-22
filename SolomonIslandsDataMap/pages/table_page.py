@@ -91,10 +91,12 @@ def update_grid(geo_input:str, # User input from the geography dropdownk
     button_clicked in [control_type.id, dropdown_geo.id,  'varDropdown',  'measureDropdown', 'dataset_type', None]:
         patched_figure = gen_census_grid(sol_geo, geo_input,variable, measure, 
             type_filter = data_type, grid_rows=grid_rows)
+        titleText = '## Census ' + variable + " by " + geo_input
     elif dataset == 'Population Projections' and\
     button_clicked in [control_type.id, dropdown_geo.id,  'varDropdownPop',  'measureDropdownPop', 'dataset_type', None]:
         patched_figure = gen_pop_grid(sol_geo, sol_geo.pop_years, variablePop, measurePop, geo_filter = geo_input,
             type_filter = data_type, grid_rows=grid_rows)
+        titleText = '## Projections of ' + measurePop + " population by " + geo_input
     elif button_clicked == 'grid-rows':
         # In this case, update using patch
         patched_figure.dashGridOptions['paginationPageSize'] = grid_rows
@@ -107,7 +109,7 @@ def update_grid(geo_input:str, # User input from the geography dropdownk
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
 
-    return patched_figure, '## ' + variable + " by " + geo_input
+    return patched_figure, titleText
 
 # %% ../../nbs/05_table_page.ipynb 16
 @callback(
