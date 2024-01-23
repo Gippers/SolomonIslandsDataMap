@@ -247,7 +247,7 @@ class SolomonGeo:
 
             # simplify the geography, use topo to preserver the topology between shapes
             topo = tp.Topology(geo, prequantize=False)
-            geo = topo.toposimplify(720/43200).to_gdf() # old 360/43200
+            geo = topo.toposimplify(360/43200).to_gdf() # old 360/43200
 
             geos = pd.concat([geos, geo])
             
