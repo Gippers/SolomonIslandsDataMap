@@ -349,7 +349,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
                 data_type:str, # User input of type of data
                 measure:str, # A string contiaining the census variable and measure split by ':'
                 variable:str, # The state of the variable dropdown
-                init_load:{}, # An empty dictionary always
+                page:str, # The current page
                 dict_sol:dict, # The dataset in dictionary form
               )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
     '''
@@ -359,49 +359,56 @@ def update_map(geo_input:str, # User input from the geography dropdown
     # or maybe I can check it it needs updating?
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
+    print("Updating map for " + page)
 
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
 
-    # A None value is passed when the page is first loaded, hence
-    # the the values are reset.
-    if button_clicked in ['segmented_geo', 'initial-initial']:
-        # Update disaplayed geography 
-        for geo in sol_geo.geo_levels:
-            tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            patched_figure['data'][tn]['visible'] = geo_input == geo
-        
-    if button_clicked in ["segmented_type", 'initial-initial']:
-        # Update the type of data displayed on map and the hover template
-        for geo in sol_geo.geo_levels:
-            tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_census(geo_filter = geo, type_filter=data_type, var = variable, measure = measure).values
-            ar = ar.reshape((ar.shape[0],))
-            if data_type == 'Total':
-                ht = '%{customdata} <extra>%{z}</extra>'
-            elif data_type == 'Proportion':
-                ht = '%{customdata} <extra>%{z:.1%}</extra>'
-            else:
-                ValueError("Data type of map not recognised and note accounted for")
-            patched_figure['data'][tn]['z'] = ar
-            patched_figure['data'][tn]['zmin'] = np.min(ar)
-            patched_figure['data'][tn]['zmax'] = np.max(ar)
-            patched_figure['data'][tn]['hovertemplate'] = ht
+    if page == 'census':
+        '''Process of updating map when the selected page is census'''
 
+        # A None value is passed when the page is first loaded, hence
+        # the the values are reset.
+        if button_clicked in ['segmented_geo', 'initial-initial']:
+            # Update disaplayed geography 
+            for geo in sol_geo.geo_levels:
+                tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
+                patched_figure['data'][tn]['visible'] = geo_input == geo
             
-        
+        if button_clicked in ["segmented_type", 'initial-initial']:
+            # Update the type of data displayed on map and the hover template
+            for geo in sol_geo.geo_levels:
+                tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
+                ar = sol_geo.get_census(geo_filter = geo, type_filter=data_type, var = variable, measure = measure).values
+                ar = ar.reshape((ar.shape[0],))
+                if data_type == 'Total':
+                    ht = '%{customdata} <extra>%{z}</extra>'
+                elif data_type == 'Proportion':
+                    ht = '%{customdata} <extra>%{z:.1%}</extra>'
+                else:
+                    ValueError("Data type of map not recognised and note accounted for")
+                patched_figure['data'][tn]['z'] = ar
+                patched_figure['data'][tn]['zmin'] = np.min(ar)
+                patched_figure['data'][tn]['zmax'] = np.max(ar)
+                patched_figure['data'][tn]['hovertemplate'] = ht
 
-    if button_clicked in ['measureDropdown', 'initial-initial']:
-        # Update the z values in map to the data for the requested census variable
-        for geo in sol_geo.geo_levels:
-        # Ar updates the z value ie. data disaplyed each time
-        # TODO this is fairly inefficient, as we are processing each time
-        # Maybe faster framework like polars could help? or caching but would require a lot of caching
-            tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
-            ar = sol_geo.get_census(geo_filter = geo, type_filter=data_type, var = variable, measure=measure).values
-            ar = ar.reshape((ar.shape[0],))
-            patched_figure['data'][tn]['z'] = ar
-            patched_figure['data'][tn]['zmin'] = np.min(ar)
-            patched_figure['data'][tn]['zmax'] = np.max(ar)
+                
+            
+
+        if button_clicked in ['measureDropdown', 'initial-initial']:
+            # Update the z values in map to the data for the requested census variable
+            for geo in sol_geo.geo_levels:
+            # Ar updates the z value ie. data disaplyed each time
+            # TODO this is fairly inefficient, as we are processing each time
+            # Maybe faster framework like polars could help? or caching but would require a lot of caching
+                tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
+                ar = sol_geo.get_census(geo_filter = geo, type_filter=data_type, var = variable, measure=measure).values
+                ar = ar.reshape((ar.shape[0],))
+                patched_figure['data'][tn]['z'] = ar
+                patched_figure['data'][tn]['zmin'] = np.min(ar)
+                patched_figure['data'][tn]['zmax'] = np.max(ar)
+
+    elif page == 'pop':
+        '''Process of updating map when the selected page is population projections'''
         
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
