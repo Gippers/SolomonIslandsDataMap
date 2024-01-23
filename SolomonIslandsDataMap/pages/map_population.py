@@ -68,7 +68,6 @@ def update_measure_pop(new_var:str, # Selected variable
     '''
     Updates the dropdown_location dropdown based on the currently selected data aggregation.
     '''
-    print("func um")
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
 
     # Sometimes this callback is triggered when the measure doesn't need to be reset.
@@ -119,14 +118,10 @@ def update_map_pop(geog:str, # current geography
     # or maybe I can check it it needs updating?
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
-    print("ages")
-    print(age)
-
     init_load = False
     if geo_trigger == True: init_load = True
 
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
-    print("first run, updating map")
 
     # A None value is passed when the page is first loaded, hence
     # the the values are reset.
@@ -213,7 +208,6 @@ def update_pyramid(data_type:str, # User input of type of data
     Updates the focus census variable or geography dispalayed on the map
     '''
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
-    print("type: " + data_type)
     fig = gen_pyramid(sol_geo = sol_geo, geo_filter = geo_input, year = year, 
                       variable = variable, locations = loc_selection, type_filter = data_type, ages = ages)
     

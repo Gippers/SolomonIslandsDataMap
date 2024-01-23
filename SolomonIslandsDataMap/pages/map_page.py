@@ -189,26 +189,20 @@ def map_click(clickData:dict, # The currently clicked location on the map
     if clickData is None and selectedData is None:
         # TODO when none, maybe in future return current saved state, for now doing total
         # TODO add a heading and maybe put in an acordian
-        print("Click data was none")
         return prev_locs, None, None
     else:
         # The locations are list of dictionaries
         if selectedData is not None:
-            print(selectedData)
             selections = list(map(lambda x: x['location'], selectedData['points']))
-            print(selections)
 
         elif clickData is not None:
             selections = list(map(lambda x: x['location'], clickData['points']))
-            print(selections)
         locations = []
         if prev_locs: locations = prev_locs
-        print(locations)
         # Check whether the new location is already in the prev locations
         for selection in selections:
             if selection in locations: locations.remove(selection)
             else: locations.append(selection)
-        print("Returning Location " + ', '.join(locations) )
     
         # returned objects are assigned to the component property of the Output
         # After updating fileter, we always reset map selection 
@@ -237,20 +231,18 @@ def map_selections(locations:[str], # The previously selected locations
     Selections is an array of integers indicating the index of the selected points
     '''
     # Using geo from stored values
-    print("Changing map selections")
     sol_geo = SolomonGeo.gen_stored(dict_sol)
-    print(geo_input)
+
     patched_figure = Patch()
-    print(sol_geo.geo_levels == geo_input)
+
     ct = np.where(sol_geo.geo_levels == geo_input)[0][0] # Tracks the trace number
     pot_locs = map_graph.figure['data'][ct]['locations']
-    print(locations)
+
     if locations: 
         selections = np.nonzero(np.in1d(pot_locs, locations))[0]
     else: 
         selections = None 
 
-    print(selections)
     patched_figure['data'][ct]['selectedpoints'] = selections
     
     # returned objects are assigned to the component property of the Output
@@ -279,13 +271,10 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
     
     # If all selected locations are in new geo, then keep old locations
-    print("Does this bit fail")
     new_locations = []
     if locations != [] and set(locations) <= set(sol_geo.locations[geo_input]):
         new_locations = locations
-        print("reset locations - mismatched")
 
-    print('catch this here')
 
     return gen_dd(sol_geo.locations[geo_input], 'locDropdown', "Select a location", clear = True, multi = True, 
                   val = new_locations)
@@ -306,7 +295,6 @@ def update_measure(new_var:str, # Selected variable
     '''
     Updates the dropdown_location dropdown based on the currently selected data aggregation.
     '''
-    print("func um")
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
 
     # Sometimes this callback is triggered when the measure doesn't need to be reset.
@@ -333,10 +321,8 @@ def bar_click(clickData:dict, # The currently clicked location on bar graph
                 dict_sol:dict, # The dataset in dictionary form
                 )->[str]: # Returns the new value for the dropdown
     """This function updates the dropdown menu based on the bar graph click data"""
-    print("func bc")
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
     if clickData is None:
-        print("Click data was none")
         return sol_geo.census_vars[variable][0], None
     else:
         # The measure are list of dictionaries
@@ -375,11 +361,6 @@ def update_map(geo_input:str, # User input from the geography dropdown
     button_clicked = ctx.triggered_id
 
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
-    print("first run, updating map")
-    print(button_clicked)
-    print(geo_input)
-    print(data_type)
-    print(measure)
 
     # A None value is passed when the page is first loaded, hence
     # the the values are reset.
@@ -388,8 +369,6 @@ def update_map(geo_input:str, # User input from the geography dropdown
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
             patched_figure['data'][tn]['visible'] = geo_input == geo
-            print(geo)
-            print(geo_input == geo)
         
     if button_clicked in ["segmented_type", 'initial-initial']:
         # Update the type of data displayed on map and the hover template
@@ -458,13 +437,10 @@ def update_bargraph(data_type:str, # User input of type of data
 
     # Create newly selected barplot
     print("input")
-    print(loc_selection)
     locs = []
     # Multi dropdown can return None or a list of None.
     if len(loc_selection) > 0: 
         locs = loc_selection
-    print("Going in to function")
-    print(locs)
     bg = gen_bar_plot(sol_geo, geo_input, variable, measure, locs, data_type)
 
     # returned objects are assigned to the component property of the Output

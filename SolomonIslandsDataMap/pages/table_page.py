@@ -70,17 +70,13 @@ def update_grid(geo_input:str, # User input from the geography dropdownk
     # TODO decide wether to implment patch later
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
-    print("What happens when auto triggered?")
-    print(button_clicked)
 
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
 
-    print(button_clicked)
     if button_clicked == 'locDropdown':
         # Update disaplayed geography 
         # TODO in future update row highlighting
-        print("locationselected")
-        
+        return patched_figure
     elif dataset == 'Census' and\
     button_clicked in ["segmented_type", "segmented_geo",  'varDropdown',  'measureDropdown', 'dataset_type', None]:
         patched_figure = gen_census_grid(sol_geo, geo_input,variable, measure, 
@@ -92,14 +88,6 @@ def update_grid(geo_input:str, # User input from the geography dropdownk
     elif button_clicked == 'grid-rows':
         # In this case, update using patch
         patched_figure.dashGridOptions['paginationPageSize'] = grid_rows
-
-
-    #elif button_clicked == 'measureDropdown':
-        # TODO in future update for column highlighting/ordering
-    #    print("measure selected")
-        
-    # returned objects are assigned to the component property of the Output
-    # After updating fileter, we always reset map selection 
 
     return patched_figure
 
