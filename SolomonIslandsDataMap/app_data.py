@@ -3,8 +3,8 @@
 # %% auto 0
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dd_age', 'dd_years_pop',
            'dropdown_geo', 'control_type', 'dd_dataset', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop',
-           'data_grid', 'grid_rows', 'download_button', 'year_slider', 'SIDEBAR_STYLE', 'sidebar', 'mytitle',
-           'map_graph', 'selectedBarGraph', 'popPyramid', 'pyramidTitle', 'popKpi']
+           'data_grid', 'grid_rows', 'download_button', 'year_slider', 'fake_slider', 'SIDEBAR_STYLE', 'sidebar',
+           'mytitle', 'map_graph', 'selectedBarGraph', 'popPyramid', 'pyramidTitle', 'popKpi']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -98,6 +98,10 @@ download_button = dbc.Button("Download", id="csv-button", outline=True, n_clicks
 year_slider = dcc.Slider(sol_geo.pop_years[0], sol_geo.pop_years[-1], 1,  value = datetime.now().year, marks=None, id = 'year_slider',
                 tooltip={"placement": "top", "always_visible": True},  included=False, dots = True, updatemode =  "drag"
                 )
+# Fake slider allows you to still have a hidden slider in the graph
+fake_slider = html.Div(dcc.Slider(sol_geo.pop_years[0], sol_geo.pop_years[-1], 1,  value = 2024, marks=None, id = 'year_slider',
+                tooltip={"placement": "top", "always_visible": True},  included=False, dots = True, updatemode =  "drag"
+                ), id = 'hiddenSlider', style = {'display': 'none'})
 
 # %% ../nbs/02_app_data.ipynb 16
 # Note, for now I am not using a sidebar style as I do not want to fix the width
@@ -175,7 +179,7 @@ sidebar = html.Div(
 )
 
 # %% ../nbs/02_app_data.ipynb 18
-mytitle = dcc.Markdown(children="## " + list(cen_vars.keys())[0] + " by " + geos[0], id = 'title') # TODO This needs a default title
+mytitle = dcc.Markdown(children="## Loading Page", id = 'title') # TODO This needs a default title
 map_graph = dcc.Graph(figure= define_map(sol_geo), # TODO work out how to not auto load this. 
                        selectedData=None, id = 'map')
 

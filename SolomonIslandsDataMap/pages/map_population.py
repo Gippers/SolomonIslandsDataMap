@@ -10,12 +10,12 @@ from nbdev.showdoc import *
 try:
     from SolomonIslandsDataMap.dash_components import gen_pyramid, gen_dd, gen_kpi
     from SolomonIslandsDataMap.app_data import map_graph, stored_data, year_slider\
-        , popPyramid, pyramidTitle, popKpi
+        , popPyramid, popKpi, mytitle
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_pyramid, gen_dd, gen_kpi
     from app_data import  map_graph, stored_data, year_slider\
-        , popPyramid, pyramidTitle, popKpi
+        , popPyramid,  popKpi, mytitle
     from load_data import SolomonGeo
 import plotly.express as px
 import plotly.graph_objects as go
@@ -46,7 +46,7 @@ init_init = dcc.Store(id="initial-initial", data='pop')
 
 # %% ../../nbs/04_map_population.ipynb 8
 def layout():
-    return  init_init, pyramidTitle, map_graph, year_slider,\
+    return  init_init, mytitle, map_graph, year_slider,\
         dbc.Row([
                 popKpi,
                 dbc.Col([popPyramid], width = 8, align = 'center')
@@ -188,7 +188,6 @@ def update_map_pop(geog:str, # current geography
 # Callback allows components to interact
 @callback(
     Output('popPyramid', 'figure'),
-    Output('pyramidTitle', 'children'),
     Input("segmented_type", 'value'),
     Input('measureDropdownPop', 'value'),
     Input('locDropdown', 'value'),
@@ -218,19 +217,7 @@ def update_pyramid(data_type:str, # User input of type of data
     fig = gen_pyramid(sol_geo = sol_geo, geo_filter = geo_input, year = year, 
                       variable = variable, locations = loc_selection, type_filter = data_type, ages = ages)
     
-    
-    # Create a title for the pyramid
-    if loc_selection == []:
-        figtext = '## Projected Population Pyramid for Solomon Islands'
-    else:
-        figtext = '## Aggregated Projected Population Pyramid for ' + ', '.join(loc_selection)
-    figtext += ' in ' + str(year)
-
-    # returned objects are assigned to the component property of the Output
-    # After updating fileter, we always reset map selection 
-    
-
-    return fig, figtext
+    return fig
 
 # %% ../../nbs/04_map_population.ipynb 28
 # Callback allows components to interact
