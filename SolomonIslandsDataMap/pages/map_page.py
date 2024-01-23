@@ -125,10 +125,10 @@ def maintain_sidebar(page_trigger:str, # Page that triggered initial load
 # %% ../../nbs/03_map_page.ipynb 13
 @callback(
     Output('locDropdown', 'value', allow_duplicate=True),
-    Output(map_graph, "clickData"),
-    Output(map_graph, "selectedData"),
-    Input(map_graph, 'clickData'),
-    Input(map_graph, 'selectedData'),
+    Output('map', "clickData"),
+    Output('map', "selectedData"),
+    Input('map', 'clickData'),
+    Input('map', 'selectedData'),
     State('locDropdown', 'value'),
     prevent_initial_call=True,
     allow_duplicate=True,
@@ -171,8 +171,9 @@ def map_click(clickData:dict, # The currently clicked location on the map
 
 
 # %% ../../nbs/03_map_page.ipynb 17
+# TODO merge back into 
 @callback(
-    Output(map_graph, "figure", allow_duplicate=True),
+    Output('map', "figure", allow_duplicate=True),
     # TODO - make this a Row object with children, then use function to recontruct
     # a group of them
     Input('locDropdown', 'value'),
@@ -214,8 +215,8 @@ def map_selections(locations:[str], # The previously selected locations
 
 # %% ../../nbs/03_map_page.ipynb 20
 @callback(
-    Output(dropdown_location, 'children'),
-    Input(dropdown_geo, 'value'),
+    Output('locationDiv', 'children'),
+    Input("segmented_geo", 'value'),
     State('geo_df', 'data'),
     State('locDropdown', 'value'),
     allow_duplicate=True,
@@ -245,7 +246,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
 
 # %% ../../nbs/03_map_page.ipynb 23
 @callback(
-    Output(dd_measure, 'children', allow_duplicate=True),
+    Output('measureDiv', 'children', allow_duplicate=True),
     Input('varDropdown', 'value'),
     State('geo_df', 'data'),
     State('measureDropdown', 'value'),
@@ -274,8 +275,8 @@ def update_measure(new_var:str, # Selected variable
 # %% ../../nbs/03_map_page.ipynb 26
 @callback(
     Output('measureDropdown', 'value', allow_duplicate=True),
-    Output(selectedBarGraph, "clickData"),
-    Input(selectedBarGraph, 'clickData'),
+    Output('bar_graph', "clickData"),
+    Input('bar_graph', 'clickData'),
     State('varDropdown', 'value'),
     State('geo_df', 'data'),
     prevent_initial_call=True,
@@ -303,9 +304,9 @@ def bar_click(clickData:dict, # The currently clicked location on bar graph
 
 # %% ../../nbs/03_map_page.ipynb 29
 @callback(
-    Output(map_graph, 'figure', allow_duplicate=True),
-    Output(mytitle, 'children'),
-    Input(dropdown_geo, 'value'),
+    Output('map', 'figure', allow_duplicate=True),
+    Output('title', 'children'),
+    Input("segmented_geo", 'value'),
     Input("segmented_type", 'value'),
     Input('measureDropdown', 'value'),
     Input('varDropdown', 'value'),
@@ -386,12 +387,12 @@ def update_map(geo_input:str, # User input from the geography dropdown
 # %% ../../nbs/03_map_page.ipynb 33
 # Callback allows components to interact
 @callback(
-    Output(selectedBarGraph, 'figure'),
+    Output('bar_graph', 'figure'),
     Input("segmented_type", 'value'),
     Input('measureDropdown', 'value'),
     Input('locDropdown', 'value'),
     Input('initial-initial', 'data'),
-    State(dropdown_geo, 'value'),
+    State("segmented_geo", 'value'),
     State('varDropdown', 'value'),
     State('geo_df', 'data'),
     allow_duplicate=True,

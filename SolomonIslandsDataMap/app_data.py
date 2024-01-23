@@ -38,7 +38,7 @@ stored_data = sol_geo.get_store()
 dropdown_location = html.Div(children = gen_dd(sol_geo.locations[sol_geo.geo_levels[0]], 
                                                 'locDropdown', clear = True, place_holder='Select Dropdown Location',
                                                 multi = True, 
-                                                val = []))
+                                                val = []), id = 'locationDiv')
 
 # TODO maybe ages should be multi select
 dd_age = html.Div(children = gen_dd(sol_geo.ages, 'age_dropdown'
@@ -74,10 +74,10 @@ dd_dataset = dmc.SegmentedControl(
 
 dd_var = html.Div(children = gen_dd(list(sol_geo.census_vars.keys()), 'varDropdown', 
                                     val = list(sol_geo.census_vars.keys())[0],
-                                    height = 75))
+                                    height = 75), id = 'variableDiv')
 dd_measure = html.Div(children = gen_dd(sol_geo.census_vars['Key Statistics'], 'measureDropdown'
                                     ,val = sol_geo.census_vars['Key Statistics'][0]
-                                      ))
+                                      ), id = 'measureDiv')
 
 dd_var_pop = html.Div(children = gen_dd(list(sol_geo.population_vars.keys()), 'varDropdownPop', 
                                     val = list(sol_geo.population_vars.keys())[0],
@@ -89,6 +89,7 @@ dd_measure_pop = html.Div(children = gen_dd(sol_geo.population_vars[list(sol_geo
 # %% ../nbs/02_app_data.ipynb 12
 data_grid = dbc.Container(
                 children = gen_census_grid(sol_geo, sol_geo.geo_levels[0], "Key Statistics", 'Total Households')
+                , id = 'dataGridContainer'
             )
 grid_rows = dcc.Input(id="grid-rows", type="number", min=1, max=len(sol_geo.locations['Province']), value=10)
 download_button = dbc.Button("Download", id="csv-button", outline=True, n_clicks=0, color = "primary")
@@ -174,9 +175,9 @@ sidebar = html.Div(
 )
 
 # %% ../nbs/02_app_data.ipynb 18
-mytitle = dcc.Markdown(children="## " + list(cen_vars.keys())[0] + " by " + geos[0]) # TODO This needs a default title
+mytitle = dcc.Markdown(children="## " + list(cen_vars.keys())[0] + " by " + geos[0], id = 'title') # TODO This needs a default title
 map_graph = dcc.Graph(figure= define_map(sol_geo), # TODO work out how to not auto load this. 
-                       selectedData=None,)
+                       selectedData=None, id = 'map')
 
 selectedBarGraph = dcc.Graph(figure = gen_bar_plot(sol_geo, sol_geo.geo_levels[0], 
                                                "Key Statistics", 'Total Households'),
