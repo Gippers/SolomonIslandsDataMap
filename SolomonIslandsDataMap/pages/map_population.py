@@ -9,14 +9,12 @@ from nbdev.showdoc import *
 # TODO work out how to get around below hack
 try:
     from SolomonIslandsDataMap.dash_components import gen_pyramid, gen_dd, gen_kpi
-    from SolomonIslandsDataMap.app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location  \
-        , control_type, dd_var_pop, dd_measure_pop, dropdown_geo, dd_var_pop, dd_measure_pop, year_slider\
+    from SolomonIslandsDataMap.app_data import map_graph, stored_data, year_slider\
         , popPyramid, pyramidTitle, popKpi
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_pyramid, gen_dd, gen_kpi
-    from app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo, dd_var_pop, dd_measure_pop, year_slider\
+    from app_data import  map_graph, stored_data, year_slider\
         , popPyramid, pyramidTitle, popKpi
     from load_data import SolomonGeo
 import plotly.express as px
@@ -56,7 +54,7 @@ def layout():
 
 # %% ../../nbs/04_map_population.ipynb 12
 @callback(
-    Output(dd_measure_pop, 'children', allow_duplicate=True),
+    Output('measurePopDiv', 'children', allow_duplicate=True),
     Input('varDropdownPop', 'value'),
     State('geo_df', 'data'),
     State('measureDropdownPop', 'value'),
@@ -91,7 +89,7 @@ def update_measure_pop(new_var:str, # Selected variable
 # TODO - this could quite liekly be in map_page calbback as well
 # TODO - add age here
 @callback(
-    Output(map_graph, 'figure', allow_duplicate=True),
+    Output('map', 'figure', allow_duplicate=True),
     Input("segmented_geo", 'value'),
     Input("segmented_type", 'value'),
     Input('measureDropdownPop', 'value'),
@@ -133,13 +131,13 @@ def update_map_pop(geog:str, # current geography
     # A None value is passed when the page is first loaded, hence
     # the the values are reset.
     # Hardcoded to province as we only have forcasts by province
-    if button_clicked in [dropdown_geo.id, dropdown_location.id] or init_load == True:
+    if button_clicked in ["segmented_geo"] or init_load == True:
         # Update disaplayed geography 
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
             patched_figure['data'][tn]['visible'] = geog == geo
         
-    if button_clicked in [control_type.id] or init_load == True:
+    if button_clicked in ["segmented_type"] or init_load == True:
         # Update the type of data displayed on map and the hover template
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number

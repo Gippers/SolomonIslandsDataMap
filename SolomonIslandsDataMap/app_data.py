@@ -84,7 +84,7 @@ dd_var_pop = html.Div(children = gen_dd(list(sol_geo.population_vars.keys()), 'v
                                     height = 75))
 dd_measure_pop = html.Div(children = gen_dd(sol_geo.population_vars[list(sol_geo.population_vars.keys())[0]], 'measureDropdownPop'
                                     ,val = 'Total'
-                                      ))
+                                      ), id = 'measurePopDiv')
 
 # %% ../nbs/02_app_data.ipynb 12
 data_grid = dbc.Container(
