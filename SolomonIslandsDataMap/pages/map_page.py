@@ -10,13 +10,13 @@ from nbdev.showdoc import *
 # TODO work out how to get around below hack
 try:
     from SolomonIslandsDataMap.dash_components import gen_bar_plot, gen_dd
-    from SolomonIslandsDataMap.app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo
+    from SolomonIslandsDataMap.app_data import mytitle, map_graph, selectedBarGraph, stored_data# dropdown_location \
+        #, control_type, dd_var, dd_measure, dropdown_geo
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_bar_plot, gen_dd
-    from app_data import mytitle, map_graph, selectedBarGraph, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo
+    from app_data import mytitle, map_graph, selectedBarGraph, stored_data#, dropdown_location \
+        #, control_type, dd_var, dd_measure, dropdown_geo
     from load_data import SolomonGeo
 import plotly.express as px
 import plotly.graph_objects as go
@@ -338,7 +338,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
 
     # A None value is passed when the page is first loaded, hence
     # the the values are reset.
-    if button_clicked in [dropdown_geo.id, dropdown_location.id, 'initial-initial']:
+    if button_clicked in ['segmented_geo', 'initial-initial']:
         # Update disaplayed geography 
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
@@ -346,7 +346,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
             print(geo)
             print(geo_input == geo)
         
-    if button_clicked in [control_type.id, 'initial-initial']:
+    if button_clicked in ["segmented_type", 'initial-initial']:
         # Update the type of data displayed on map and the hover template
         for geo in sol_geo.geo_levels:
             tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
