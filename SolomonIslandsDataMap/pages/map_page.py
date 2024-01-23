@@ -126,7 +126,7 @@ def maintain_sidebar(page_trigger:str, # Page that triggered initial load
     Input("segmented_geo", 'value'),
     Input("segmented_type", 'value'),
     Input('measureDropdown', 'value'),
-    Input('variableDropdown', 'value'),
+    Input('varDropdown', 'value'),
     Input('measureDropdownPop', 'value'),
     Input("year_slider", "value"),
     Input('locDropdown', 'value'),
