@@ -342,6 +342,11 @@ def bar_click(clickData:dict, # The currently clicked location on bar graph
     Input('measureDropdown', 'value'),
     Input('varDropdown', 'value'),
     Input('initial-initial', 'data'),
+    Input('measureDropdownPop', 'value'),
+    Input('varDropdownPop', 'value'),
+    Input('age_dropdown', 'value'),
+    Input("year_slider", "value"),
+    Input('segmented_geo', 'disabled'),
     State('geo_df', 'data'),
     allow_duplicate=True,
     prevent_initial_call=True)
@@ -350,8 +355,14 @@ def update_map(geo_input:str, # User input from the geography dropdown
                 measure:str, # A string contiaining the census variable and measure split by ':'
                 variable:str, # The state of the variable dropdown
                 page:str, # The current page
+                measurePop:str, # A string contiaining the census variable and measure split by ':'
+                variablePop:str, # The state of the variable dropdown
+                age:[str], # Age Brackets to display
+                year:int, # The selected projection year
+                geo_trigger:int, # Listening for whether segmented geo is locked, signaling that map
+                                        # page was loaded after geo data was updated.
                 dict_sol:dict, # The dataset in dictionary form
-              )->(type(go.Figure()), str): # Returns a graph object figure after being updated and the dynamic title
+              )->(type(go.Figure())): # Returns a graph object figure after being updated and the dynamic title
     '''
     Updates the focus census variable or geography dispalayed on the map
     '''
@@ -409,7 +420,62 @@ def update_map(geo_input:str, # User input from the geography dropdown
 
     elif page == 'pop':
         '''Process of updating map when the selected page is population projections'''
-        
+        init_load = False
+        if geo_trigger == True: init_load = True
+
+        sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
+
+        # A None value is passed when the page is first loaded, hence
+        # the the values are reset.
+        # Hardcoded to province as we only have forcasts by province
+        if button_clicked in ["segmented_geo"] or init_load == True:
+            # Update disaplayed geography 
+            for geo in sol_geo.geo_levels:
+                tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
+                patched_figure['data'][tn]['visible'] = geo_input == geo
+            
+        if button_clicked in ["segmented_type"] or init_load == True:
+            # Update the type of data displayed on map and the hover template
+            for geo in sol_geo.geo_levels:
+                tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
+                # All years allows us to set the min and max colour as the min and max across all years
+                all_years = sol_geo.get_pop(years = sol_geo.pop_years, var = variablePop, measure = measurePop, type_filter=data_type,
+                                    agg = True, agg_location = True, ages = age)
+                ar = all_years.loc[year].values[:, -1]
+                all_years = all_years.values[:, -1]
+                ar = ar.reshape((ar.shape[0],))
+                if data_type == 'Total':
+                    ht = '%{customdata} <extra>%{z}</extra>'
+                elif data_type == 'Proportion':
+                    ht = '%{customdata} <extra>%{z:.1%}</extra>'
+                else:
+                    ValueError("Data type of map not recognised and note accounted for")
+                patched_figure['data'][tn]['z'] = ar
+                patched_figure['data'][tn]['zmin'] = np.min(all_years)
+                patched_figure['data'][tn]['zmax'] = np.max(all_years)
+                patched_figure['data'][tn]['hovertemplate'] = ht
+
+                
+            
+
+        if button_clicked in ['measureDropdownPop', 'year_slider', 'age_dropdown'] or init_load == True:
+            # Update the z values in map to the data for the requested census variable
+            for geo in sol_geo.geo_levels:
+            # Ar updates the z value ie. data disaplyed each time
+            # TODO this is fairly inefficient, as we are processing each time
+            # Maybe faster framework like polars could help? or caching but would require a lot of caching
+                tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
+                
+                # All years allows us to set the min and max colour as the min and max across all years
+                all_years = sol_geo.get_pop(years = sol_geo.pop_years, var = variablePop, measure = measurePop, type_filter=data_type,
+                                    agg = True, agg_location = True, ages = age)
+                ar = all_years.loc[year].values[:, -1]
+                all_years = all_years.values[:, -1]
+                ar = ar.reshape((ar.shape[0],))
+                patched_figure['data'][tn]['z'] = ar
+                patched_figure['data'][tn]['zmin'] = np.min(all_years)
+                patched_figure['data'][tn]['zmax'] = np.max(all_years)
+
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
 
