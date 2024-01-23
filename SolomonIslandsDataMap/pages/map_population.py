@@ -9,12 +9,12 @@ from nbdev.showdoc import *
 # TODO work out how to get around below hack
 try:
     from SolomonIslandsDataMap.dash_components import gen_pyramid, gen_dd, gen_kpi
-    from SolomonIslandsDataMap.app_data import map_graph, stored_data, year_slider\
+    from SolomonIslandsDataMap.app_data import map_graph, year_slider\
         , popPyramid, popKpi, mytitle
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_pyramid, gen_dd, gen_kpi
-    from app_data import  map_graph, stored_data, year_slider\
+    from app_data import  map_graph, year_slider\
         , popPyramid,  popKpi, mytitle
     from load_data import SolomonGeo
 import plotly.express as px
@@ -50,7 +50,7 @@ def layout():
         dbc.Row([
                 popKpi,
                 dbc.Col([popPyramid], width = 8, align = 'center')
-            ], justify = 'around'), stored_data,
+            ], justify = 'around'), 
 
 # %% ../../nbs/04_map_population.ipynb 12
 @callback(

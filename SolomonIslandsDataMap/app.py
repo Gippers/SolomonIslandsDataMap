@@ -6,9 +6,9 @@ __all__ = ['repo', 'fp', 'server', 'pages', 'navbar']
 # %% ../nbs/06_app.ipynb 2
 from nbdev.showdoc import *
 try:
-    from SolomonIslandsDataMap.app_data import stored_data, dd_dataset, sidebar
+    from SolomonIslandsDataMap.app_data import stored_data, sidebar
 except: 
-    from app_data import stored_data, dd_dataset, sidebar
+    from app_data import stored_data, sidebar
 
 import plotly.express as px
 import plotly.graph_objects as go

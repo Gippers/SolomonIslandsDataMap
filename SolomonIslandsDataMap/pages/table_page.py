@@ -9,13 +9,11 @@ from nbdev.showdoc import *
 # TODO work out how to get around below hack
 try:
     from SolomonIslandsDataMap.dash_components import gen_census_grid, gen_pop_grid, gen_dd
-    from SolomonIslandsDataMap.app_data import mytitle, data_grid, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo, download_button, fake_slider
+    from SolomonIslandsDataMap.app_data import mytitle, data_grid, download_button, fake_slider
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_census_grid, gen_pop_grid, gen_dd
-    from app_data import mytitle, data_grid, stored_data, dropdown_location \
-        , control_type, dd_var, dd_measure, dropdown_geo, download_button, fake_slider
+    from app_data import mytitle, data_grid, download_button, fake_slider
     from load_data import SolomonGeo
 from fastcore.test import *
 from dash import Dash, dcc, callback, Output, Input, State, html, Patch, ctx, register_page, callback_context 
@@ -37,7 +35,7 @@ def layout():
     return dbc.Row([
                 dbc.Col(mytitle, width = 8),
                 dbc.Col(download_button, width = {"size": 2})
-                      ]), data_grid, stored_data, init_init, fake_slider
+                      ]), data_grid, init_init, fake_slider
 
 
 # %% ../../nbs/05_table_page.ipynb 11
@@ -78,17 +76,17 @@ def update_grid(geo_input:str, # User input from the geography dropdownk
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
 
     print(button_clicked)
-    if button_clicked == dropdown_location.id:
+    if button_clicked == 'locDropdown':
         # Update disaplayed geography 
         # TODO in future update row highlighting
         print("locationselected")
         
     elif dataset == 'Census' and\
-    button_clicked in [control_type.id, dropdown_geo.id,  'varDropdown',  'measureDropdown', 'dataset_type', None]:
+    button_clicked in ["segmented_type", "segmented_geo",  'varDropdown',  'measureDropdown', 'dataset_type', None]:
         patched_figure = gen_census_grid(sol_geo, geo_input,variable, measure, 
             type_filter = data_type, grid_rows=grid_rows)
     elif dataset == 'Population Projections' and\
-    button_clicked in [control_type.id, dropdown_geo.id,  'varDropdownPop',  'measureDropdownPop', 'dataset_type', None]:
+    button_clicked in ["segmented_type", "segmented_geo", 'varDropdownPop',  'measureDropdownPop', 'dataset_type', None]:
         patched_figure = gen_pop_grid(sol_geo, sol_geo.pop_years, variablePop, measurePop, geo_filter = geo_input,
             type_filter = data_type, grid_rows=grid_rows)
     elif button_clicked == 'grid-rows':
@@ -111,7 +109,7 @@ def update_grid(geo_input:str, # User input from the geography dropdownk
     Output("grid-rows", "max"),
     Input("segmented_geo", 'value'),
     Input("dataset_type", 'value'),
-    State(stored_data, 'data'),
+    State("geo_df", 'data'),
     suppress_callback_exceptions = True,
 )
 def update_page_rows(geo_input:str, # User input from the geography dropdown

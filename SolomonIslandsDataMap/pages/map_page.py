@@ -10,13 +10,11 @@ from nbdev.showdoc import *
 # TODO work out how to get around below hack
 try:
     from SolomonIslandsDataMap.dash_components import gen_bar_plot, gen_dd
-    from SolomonIslandsDataMap.app_data import mytitle, map_graph, selectedBarGraph, stored_data, fake_slider# dropdown_location \
-        #, control_type, dd_var, dd_measure, dropdown_geo
+    from SolomonIslandsDataMap.app_data import mytitle, map_graph, selectedBarGraph, fake_slider
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_bar_plot, gen_dd
-    from app_data import mytitle, map_graph, selectedBarGraph, stored_data, fake_slider#, dropdown_location \
-        #, control_type, dd_var, dd_measure, dropdown_geo
+    from app_data import mytitle, map_graph, selectedBarGraph, fake_slider
     from load_data import SolomonGeo
 import plotly.express as px
 import plotly.graph_objects as go
@@ -47,7 +45,7 @@ init_init = dcc.Store(id="initial-initial", data='census')
 
 # %% ../../nbs/03_map_page.ipynb 7
 def layout():
-    return  mytitle, map_graph, selectedBarGraph, stored_data, init_init, fake_slider
+    return  mytitle, map_graph, selectedBarGraph, init_init, fake_slider
 
 # %% ../../nbs/03_map_page.ipynb 10
 # TODO this defintiely seems hacky, must be a better way
