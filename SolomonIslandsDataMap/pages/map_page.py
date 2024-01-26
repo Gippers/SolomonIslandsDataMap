@@ -65,7 +65,7 @@ def maintain_sidebar(page_trigger:str, # Page that triggered initial load
                         geo:str, # the current geo level selection
                          ) -> dict:
     """Manages the dropdowns actively visable in sidebar based on page loaded"""
-
+    print("Func: maintain_sidebar")
     # Depending on the page loaded, geogrpahy will or will not be disabled
     geo_disable = False
 
@@ -123,6 +123,7 @@ def dataset_selection(page_trigger:str, # Newly loaded page
                       currDataset:str, # Currenly selected data
                          ) -> str: # New dataset
     """Based on the page selected, update the dataset selected"""
+    print("Func: dataset_selection")
     if page_trigger == 'census':
         dataset = 'Census'
     elif page_trigger == 'pop':
@@ -159,6 +160,7 @@ def update_title(geo_input:str, # User input from the geography dropdown
     '''
     Updates the title for each of the pages
     '''
+    print("Func: update_title")
     title = ''
     if load_trigger == 'census':
       title = '## ' + data_type + " " + measure + ' by ' + geo_input
@@ -197,7 +199,7 @@ def map_click(clickData:dict, # The currently clicked location on the map
                 )->[str]: # Returns the new value for the dropdown
     """This function updates the dropdown menu based on the map click data"""
 
-    print("map clicked updating to:")
+    print("Func: map_click")
     if clickData is None and selectedData is None:
         # TODO when none, maybe in future return current saved state, for now doing total
         # TODO add a heading and maybe put in an acordian
@@ -242,6 +244,7 @@ def map_selections(locations:[str], # The previously selected locations
     Update the selected data on the map for the selected locations
     Selections is an array of integers indicating the index of the selected points
     '''
+    print("Func: map_selections")
     # Using geo from stored values
     sol_geo = SolomonGeo.gen_stored(dict_sol)
 
@@ -280,6 +283,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     Updates the dropdown_location dropdown based on the currently selected data aggregation.
     Check to see if current locations are in geography, if they are not then reset them.
     '''
+    print("Func: update_geography")
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
     
     # If all selected locations are in new geo, then keep old locations
@@ -307,6 +311,7 @@ def update_measure(new_var:str, # Selected variable
     '''
     Updates the dropdown_location dropdown based on the currently selected data aggregation.
     '''
+    print("Func: update_measure")
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
 
     # Sometimes this callback is triggered when the measure doesn't need to be reset.
@@ -333,6 +338,7 @@ def bar_click(clickData:dict, # The currently clicked location on bar graph
                 dict_sol:dict, # The dataset in dictionary form
                 )->[str]: # Returns the new value for the dropdown
     """This function updates the dropdown menu based on the bar graph click data"""
+    print("Func: bar_click")
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
     if clickData is None:
         return sol_geo.census_vars[variable][0], None
@@ -382,6 +388,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
     # or maybe I can check it it needs updating?
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
+    print("Func: update_map")
     print("Updating map for " + page)
 
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
@@ -521,7 +528,7 @@ def update_bargraph(data_type:str, # User input of type of data
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
 
     # Create newly selected barplot
-    print("input")
+    print("Func: update_bargraph")
     locs = []
     # Multi dropdown can return None or a list of None.
     if len(loc_selection) > 0: 
