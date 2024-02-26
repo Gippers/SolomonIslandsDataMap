@@ -56,12 +56,12 @@ def layout():
     Output("rows-html", "style"),
     Output("census-vars-html", "style"),
     Output("pop-vars-html", "style"),
-    Input("initial-initial", 'data'),
     Input("dataset_type", "value"),
+    State("initial-initial", 'data'),
     State("segmented_geo", "value"),
 )
-def maintain_sidebar(page_trigger:str, # Page that triggered initial load
-                        dataset:str, # Currently selected dataset
+def maintain_sidebar(dataset:str, # Currently selected dataset
+                        page_trigger:str, # Page that triggered initial load
                         geo:str, # the current geo level selection
                          ) -> dict:
     """Manages the dropdowns actively visable in sidebar based on page loaded"""
