@@ -24,6 +24,7 @@ from fastcore.test import *
 from dash import Dash, callback, dcc, Output, Input, State, html, Patch, ctx, register_page  # pip install dash
 import dash_bootstrap_components as dbc    # pip install dash-bootstrap-components
 from dash_bootstrap_templates import load_figure_template
+from dash.exceptions import PreventUpdate
 import dash_mantine_components as dmc
 import os
 import json
@@ -57,7 +58,7 @@ def layout():
     Output("census-vars-html", "style"),
     Output("pop-vars-html", "style"),
     Input("dataset_type", "value"),
-    State("initial-initial", 'data'),
+    Input("initial-initial", 'data'),
     State("segmented_geo", "value"),
 )
 def maintain_sidebar(dataset:str, # Currently selected dataset
@@ -201,9 +202,9 @@ def map_click(clickData:dict, # The currently clicked location on the map
 
     print("Func: map_click")
     if clickData is None and selectedData is None:
-        # TODO when none, maybe in future return current saved state, for now doing total
-        # TODO add a heading and maybe put in an acordian
-        return prev_locs, None, None
+        # When nothing is selected or clicked, don't update anything
+        raise PreventUpdate
+        #return prev_locs, None, None
     else:
         # The locations are list of dictionaries
         if selectedData is not None:
@@ -341,7 +342,9 @@ def bar_click(clickData:dict, # The currently clicked location on bar graph
     print("Func: bar_click")
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
     if clickData is None:
-        return sol_geo.census_vars[variable][0], None
+        # Trying to prvent update when nothing is clicked
+        raise PreventUpdate
+        #return sol_geo.census_vars[variable][0], None
     else:
         # The measure are list of dictionaries
         selection = list(map(lambda x: x['x'], clickData['points']))[0]
@@ -359,12 +362,12 @@ def bar_click(clickData:dict, # The currently clicked location on bar graph
     Input("segmented_type", 'value'),
     Input('measureDropdown', 'value'),
     Input('varDropdown', 'value'),
-    Input('initial-initial', 'data'),
     Input('measureDropdownPop', 'value'),
     Input('varDropdownPop', 'value'),
     Input('age_dropdown', 'value'),
     Input("year_slider", "value"),
     Input('segmented_geo', 'disabled'),
+    State('initial-initial', 'data'),
     State('geo_df', 'data'),
     allow_duplicate=True,
     prevent_initial_call=True)
@@ -372,13 +375,13 @@ def update_map(geo_input:str, # User input from the geography dropdown
                 data_type:str, # User input of type of data
                 measure:str, # A string contiaining the census variable and measure split by ':'
                 variable:str, # The state of the variable dropdown
-                page:str, # The current page
                 measurePop:str, # A string contiaining the census variable and measure split by ':'
                 variablePop:str, # The state of the variable dropdown
                 age:[str], # Age Brackets to display
                 year:int, # The selected projection year
                 geo_trigger:int, # Listening for whether segmented geo is locked, signaling that map
                                         # page was loaded after geo data was updated.
+                page:str, # The current page
                 dict_sol:dict, # The dataset in dictionary form
               )->(type(go.Figure())): # Returns a graph object figure after being updated and the dynamic title
     '''
@@ -421,8 +424,6 @@ def update_map(geo_input:str, # User input from the geography dropdown
                 patched_figure['data'][tn]['zmax'] = np.max(ar)
                 patched_figure['data'][tn]['hovertemplate'] = ht
 
-                
-            
 
         if button_clicked in ['measureDropdown', 'initial-initial']:
             # Update the z values in map to the data for the requested census variable
