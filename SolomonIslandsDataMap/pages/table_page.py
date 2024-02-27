@@ -35,7 +35,12 @@ def layout():
     return dbc.Row([
                 dbc.Col(mytitle, width = 8),
                 dbc.Col(download_button, width = {"size": 2})
-                      ]), data_grid, init_init, fake_slider
+                      ]),\
+                dcc.Loading(
+                    id="loading-map",
+                    type="default",
+                    children = data_grid,
+                ), init_init, fake_slider
 
 
 # %% ../../nbs/05_table_page.ipynb 11

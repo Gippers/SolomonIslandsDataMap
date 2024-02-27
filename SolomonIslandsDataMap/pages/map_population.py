@@ -46,11 +46,25 @@ init_init = dcc.Store(id="initial-initial", data='pop')
 
 # %% ../../nbs/04_map_population.ipynb 8
 def layout():
-    return  init_init, mytitle, map_graph, year_slider,\
-        dbc.Row([
-                popKpi,
-                dbc.Col([popPyramid], width = 8, align = 'center')
-            ], justify = 'around'), 
+    return  init_init, mytitle, \
+            dcc.Loading(
+                id="loading-map",
+                type="default",
+                children = map_graph,
+            ),\
+            year_slider,\
+            dbc.Row([
+                    dcc.Loading(
+                        id="loading-map",
+                        type="default",
+                        children = popKpi,
+                    ),
+                    dbc.Col([dcc.Loading(
+                            id="loading-map",
+                            type="default",
+                            children = popPyramid,
+                            )], width = 8, align = 'center')
+                ], justify = 'around'), 
 
 # %% ../../nbs/04_map_population.ipynb 12
 @callback(

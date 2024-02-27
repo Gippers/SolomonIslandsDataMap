@@ -51,8 +51,12 @@ def layout():
                     id="loading-map",
                     type="default",
                     children = map_graph,
-                    #fullscreen = True,
-                ),selectedBarGraph, init_init, fake_slider
+                ),\
+                dcc.Loading(
+                    id="loading-bar-graph",
+                    type="default",
+                    children = selectedBarGraph,), \
+                init_init, fake_slider
 
 # %% ../../nbs/03_map_page.ipynb 10
 @callback(
