@@ -79,7 +79,7 @@ app.layout = dbc.Container([
                 dbc.Col([
                     page_container, ], width = 10),
                 ], justify = 'center'),
-                stored_data,                                                      
+                stored_data,                                                     
                 ], fluid = True)
 
 # %% ../nbs/06_app.ipynb 13

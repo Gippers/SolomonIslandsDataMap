@@ -46,7 +46,13 @@ init_init = dcc.Store(id="initial-initial", data='census')
 
 # %% ../../nbs/03_map_page.ipynb 7
 def layout():
-    return  mytitle, map_graph, selectedBarGraph, init_init, fake_slider
+    return  mytitle, \
+                dcc.Loading(
+                    id="loading-map",
+                    type="default",
+                    children = map_graph,
+                    #fullscreen = True,
+                ),selectedBarGraph, init_init, fake_slider
 
 # %% ../../nbs/03_map_page.ipynb 10
 @callback(
