@@ -325,8 +325,8 @@ class SolomonGeo:
         
         for col in cols:
             # For each non core and age column:
-            pop_p = pop_p.groupby([('core', 'year')], sort = False).apply(totalColumn, col)
-            pop_p = pop_p.droplevel(0)
+            pop_p = pop_p.groupby([('core', 'year')], sort = False, group_keys=False).apply(totalColumn, col)
+            #pop_p = pop_p.droplevel(0)
             
         pop_df = pd.concat([pop_df, pop_p], axis = 0) # Created extra index, drop
         

@@ -367,7 +367,7 @@ def bar_click(clickData:dict, # The currently clicked location on bar graph
     Input('age_dropdown', 'value'),
     Input("year_slider", "value"),
     Input('segmented_geo', 'disabled'),
-    State('initial-initial', 'data'),
+    Input('initial-initial', 'data'),
     State('geo_df', 'data'),
     allow_duplicate=True,
     prevent_initial_call=True)
