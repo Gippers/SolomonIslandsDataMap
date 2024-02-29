@@ -172,26 +172,34 @@ def update_title(geo_input:str, # User input from the geography dropdown
     '''
     Updates the title for each of the pages
     '''
+    print(int(time.time()))
     print("Func: update_title")
+    print(int(time.time()))
     title = ''
     if load_trigger == 'census':
+      print(int(time.time()))
       title = '## ' + data_type + " " + measure + ' by ' + geo_input
       if data_type == 'Proportion': title = '## ' + data_type + " of " + measure + ' by ' + geo_input
+      print(int(time.time()))
     elif load_trigger == 'pop':
+      print(int(time.time()))
       # Create a title for the pyramid
       if loc_selection == []:
           title = '## Projected Population Pyramid for Solomon Islands'
       else:
           title = '## Aggregated Projected Population Pyramid for ' + ', '.join(loc_selection)
       title += ' in ' + str(year)
+      print(int(time.time()))
     elif load_trigger == 'table':
+      print(int(time.time()))
       title = '## Solomon Islands Data map - ' + geo_input
       if dataset == 'Census':
         title = '## Census ' + variable + " by " + geo_input
       elif dataset == 'Population Projections':
         title = '## Projections of ' + measurePop + " population by " + geo_input
+      print(int(time.time()))
   
-
+    print(int(time.time()))
     return title
 
 # %% ../../nbs/03_map_page.ipynb 18
