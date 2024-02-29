@@ -54,16 +54,20 @@ def layout():
             ),\
             year_slider,\
             dbc.Row([
+                       html.Div([
                     dcc.Loading(
-                        id="loading-map",
+                        id="loading-kpi",
                         type="default",
                         children = popKpi,
-                    ),
-                    dbc.Col([dcc.Loading(
-                            id="loading-map",
-                            type="default",
-                            children = popPyramid,
-                            )], width = 8, align = 'center')
+                    ),]),
+                    #dbc.Col([
+                           html.Div([
+                        dcc.Loading(
+                                id="loading-pyramid",
+                                type="default",
+                                children = popPyramid,)])
+                                #]
+                            #,width = 8, align = 'center'),
                 ], justify = 'around'), 
 
 # %% ../../nbs/04_map_population.ipynb 12

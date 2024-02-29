@@ -27,6 +27,7 @@ from dash_bootstrap_templates import load_figure_template
 from dash.exceptions import PreventUpdate
 import dash_mantine_components as dmc
 import os
+import time
 import json
 
 # %% ../../nbs/03_map_page.ipynb 3
@@ -397,15 +398,16 @@ def update_map(geo_input:str, # User input from the geography dropdown
     '''
     Updates the focus census variable or geography dispalayed on the map
     '''
+    print(int(time.time()))
     # TODO the None workaround might be taxing on the load times, is there a better way
     # or maybe I can check it it needs updating?
     patched_figure = Patch()
     button_clicked = ctx.triggered_id
     print("Func: update_map")
     print("Updating map for " + page)
-
+    print(int(time.time()))
     sol_geo = SolomonGeo.gen_stored(dict_sol) # reload the data
-
+    print(int(time.time()))
     if page == 'census':
         '''Process of updating map when the selected page is census'''
 
@@ -413,12 +415,15 @@ def update_map(geo_input:str, # User input from the geography dropdown
         # the the values are reset.
         if button_clicked in ['segmented_geo', 'initial-initial']:
             # Update disaplayed geography 
+            print(int(time.time()))
             for geo in sol_geo.geo_levels:
                 tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
                 patched_figure['data'][tn]['visible'] = geo_input == geo
+                print(int(time.time()))
             
         if button_clicked in ["segmented_type", 'initial-initial']:
             # Update the type of data displayed on map and the hover template
+            print(int(time.time()))
             for geo in sol_geo.geo_levels:
                 tn = np.where(sol_geo.geo_levels == geo)[0][0] # Tracks the trace number
                 ar = sol_geo.get_census(geo_filter = geo, type_filter=data_type, var = variable, measure = measure).values
@@ -433,9 +438,11 @@ def update_map(geo_input:str, # User input from the geography dropdown
                 patched_figure['data'][tn]['zmin'] = np.min(ar)
                 patched_figure['data'][tn]['zmax'] = np.max(ar)
                 patched_figure['data'][tn]['hovertemplate'] = ht
+                print(int(time.time()))
 
 
         if button_clicked in ['measureDropdown', 'initial-initial']:
+            print(int(time.time()))
             # Update the z values in map to the data for the requested census variable
             for geo in sol_geo.geo_levels:
             # Ar updates the z value ie. data disaplyed each time
@@ -447,6 +454,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
                 patched_figure['data'][tn]['z'] = ar
                 patched_figure['data'][tn]['zmin'] = np.min(ar)
                 patched_figure['data'][tn]['zmax'] = np.max(ar)
+            print(int(time.time()))
 
     elif page == 'pop':
         '''Process of updating map when the selected page is population projections'''
