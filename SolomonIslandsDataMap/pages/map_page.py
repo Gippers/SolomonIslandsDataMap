@@ -265,21 +265,27 @@ def map_selections(locations:[str], # The previously selected locations
     Selections is an array of integers indicating the index of the selected points
     '''
     print("Func: map_selections")
+    print(int(time.time()))
     # Using geo from stored values
     sol_geo = SolomonGeo.gen_stored(dict_sol)
-
+    print(int(time.time()))
     patched_figure = Patch()
-
+    print(int(time.time()))
     ct = np.where(sol_geo.geo_levels == geo_input)[0][0] # Tracks the trace number
     pot_locs = map_graph.figure['data'][ct]['locations']
-
+    print(int(time.time()))
     if locations: 
+        print(int(time.time()))
         selections = np.nonzero(np.in1d(pot_locs, locations))[0]
+        print(int(time.time()))
     else: 
+        print(int(time.time()))
         selections = None 
+        print(int(time.time()))
 
+    print(int(time.time()))
     patched_figure['data'][ct]['selectedpoints'] = selections
-    
+    print(int(time.time()))
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
     return patched_figure
