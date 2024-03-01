@@ -62,8 +62,7 @@ def layout():
 # %% ../../nbs/03_map_page.ipynb 11
 clientside_callback(
     """
-    ///var maintain_sidebar = 
-    function(dataset, page_trigger, geo)
+    function maintain_sidebar(dataset, page_trigger, geo)
     {
         //Manages the dropdowns actively visable in sidebar based on page loaded
         console.log("Func: maintain_sidebar");
