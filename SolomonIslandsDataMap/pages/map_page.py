@@ -14,7 +14,7 @@ try:
     from SolomonIslandsDataMap.load_data import SolomonGeo
 except: 
     from dash_components import gen_bar_plot, gen_dd
-    from app_data import mytitle, map_graph, selectedBarGraph, fake_slider
+    from app_data import mytitle, map_graph, selectedBarGraph, fake_slider, stored_data
     from load_data import SolomonGeo
 import plotly.express as px
 import plotly.graph_objects as go
