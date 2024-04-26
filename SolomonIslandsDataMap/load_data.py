@@ -47,7 +47,7 @@ def s3_client()-> boto3.client:
         region_name = REGION_NAME,
     )
 
-# %% ../nbs/00_load_data.ipynb 12
+# %% ../nbs/00_load_data.ipynb 13
 class SolomonGeo:
     # TODO work out how to format the attributes
     # Look at nbdev docs maybe?
@@ -343,7 +343,7 @@ class SolomonGeo:
         return df, pop_df, geos
 
 
-# %% ../nbs/00_load_data.ipynb 22
+# %% ../nbs/00_load_data.ipynb 23
 @patch
 def save_pickle(self:SolomonGeo,
                 aws:bool = True, # Whether to save to aws or locally
@@ -373,7 +373,7 @@ def save_pickle(self:SolomonGeo,
       f.close()
 
 
-# %% ../nbs/00_load_data.ipynb 25
+# %% ../nbs/00_load_data.ipynb 26
 @patch
 def get_geojson(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the geojson to the requested aggregation 
@@ -389,7 +389,7 @@ def get_geojson(self:SolomonGeo,
     # to minise file size
     return json.loads(ret.loc[:, 'geometry'].to_json())
 
-# %% ../nbs/00_load_data.ipynb 28
+# %% ../nbs/00_load_data.ipynb 29
 @patch
 def get_store(self:SolomonGeo, 
             ) -> dcc.Store: # Geo JSON formatted dataset
@@ -419,7 +419,7 @@ def get_store(self:SolomonGeo,
                                             "population": pop_df.to_dict("records"),
                                             "geojson": geos.to_dict()}})
 
-# %% ../nbs/00_load_data.ipynb 31
+# %% ../nbs/00_load_data.ipynb 32
 @patch
 def get_census(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
@@ -478,7 +478,7 @@ def get_census(self:SolomonGeo,
     
     return ret
 
-# %% ../nbs/00_load_data.ipynb 34
+# %% ../nbs/00_load_data.ipynb 35
 @patch
 def get_pop(self:SolomonGeo, 
                 years:[str], # Selects the year/years of data to return
