@@ -75,8 +75,7 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
     return fig
 
 
-# %% ../nbs/01_dash_components.ipynb 22
-# TODO I should build figures and maps in another script
+# %% ../nbs/01_dash_components.ipynb 16
 def election_map(sol_df:SolomonGeo # Solomon geo object containing census data to input into map
                 )->type(go.Figure()): # Returns a graph object figure
     '''
@@ -123,7 +122,7 @@ def election_map(sol_df:SolomonGeo # Solomon geo object containing census data t
     return fig
 
 
-# %% ../nbs/01_dash_components.ipynb 26
+# %% ../nbs/01_dash_components.ipynb 19
 def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
                     variable:str, # The variable to use to create the bar plot
@@ -157,7 +156,39 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
                       , xaxis={'categoryorder':'total descending'})
     return fig
 
-# %% ../nbs/01_dash_components.ipynb 31
+# %% ../nbs/01_dash_components.ipynb 23
+def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
+                    geo_filter:str = "Constituency", # The desired aggregation of the geography
+                    locations:[str] = [], # Desired location within aggregation
+                    type_filter:str = 'Total', # The type aggregartion
+                )->type(go.Figure()): # Returns a graph object figure of a barplot
+    '''Create a bar plot that show the census selected census data'''
+    figtext = 'Showing ' + variable + ' for '
+    if locations == []:
+        df = sol_geo.get_census(geo_filter, variable, type_filter = type_filter, agg = True)
+        df = pd.DataFrame(df).transpose()
+        df.index = ['Total']
+        locations = ['Total']
+        figtext += 'Solomon Islands'
+    else:
+        df = sol_geo.get_census(geo_filter, variable, loc_filter = locations, type_filter = type_filter)
+        figtext += ', '.join(locations)
+    fig = go.Figure()
+    measures = list(df.columns)
+    for loc in locations:
+        fig.add_trace(go.Bar(
+            x = measures,
+            y = df.loc[df.index == loc].values[0],
+            name = loc,
+        ))
+    # TODO create dynamic text with Location name and Variable
+    # TODO add standout text
+    # TODO should this be ordered? Hinders comparison. Can I order the dataset somewhere else?
+    fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text=figtext
+                      , xaxis={'categoryorder':'total descending'})
+    return fig
+
+# %% ../nbs/01_dash_components.ipynb 29
 # TODO should this method be appended to sol_geo??
 def gen_census_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
@@ -190,7 +221,7 @@ def gen_census_grid(sol_geo:SolomonGeo, # Solomon geo object containing census d
 
     return dt
 
-# %% ../nbs/01_dash_components.ipynb 35
+# %% ../nbs/01_dash_components.ipynb 33
 # TODO should this method be appended to sol_geo??
 def gen_pop_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     years:str, # Selected data years
@@ -236,7 +267,7 @@ def gen_pop_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data
 
     return dt
 
-# %% ../nbs/01_dash_components.ipynb 39
+# %% ../nbs/01_dash_components.ipynb 37
 # TODO create bottom padding
 
 def gen_kpi(sg:SolomonGeo, # Input data object
@@ -278,7 +309,7 @@ def gen_kpi(sg:SolomonGeo, # Input data object
     
     return kpi, text
 
-# %% ../nbs/01_dash_components.ipynb 43
+# %% ../nbs/01_dash_components.ipynb 41
 def gen_dd(location_list:[str], # a list of locations
            id:str, # Id of the dropdown
            place_holder:str = None, # a placeholder message to display
@@ -301,7 +332,7 @@ def gen_dd(location_list:[str], # a list of locations
                         multi=multi)
     return dd
 
-# %% ../nbs/01_dash_components.ipynb 46
+# %% ../nbs/01_dash_components.ipynb 44
 def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
                     year:str, # Selected year to display on the graph

@@ -127,6 +127,18 @@ class SolomonGeo:
             ((0.0, '#fccde5'), (1.0, '#fccde5')),
             ((0.0, '#d9d9d9'), (1.0, '#d9d9d9')),
         ]
+
+        self.colormap = {
+            "SID": '#8dd3c7',
+            'OUR': '#80b1d3',
+            'SIP': '#bebada',
+            'UP': '#fb8072',
+            'IND': '#ffffb3',
+            'PFP': '#fdb462',
+            'U4C': '#b3de69',
+            'KAD': '#fccde5',
+            'DAP': '#d9d9d9',
+        }
     
         # TODO: need a list of column sub headings: get from column name split by `:`
 
