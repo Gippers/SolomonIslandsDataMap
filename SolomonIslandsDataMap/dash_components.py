@@ -99,7 +99,7 @@ def election_map(sol_df:SolomonGeo # Solomon geo object containing census data t
                                 #zauto=True,
                                 selectedpoints=None,
                                 hovertemplate = '%{customdata[0]} <extra><b>Winning Party</b>: %{customdata[1]}<br><b>Candidate</b>: %{customdata[2]}</extra>',
-                                legend = "legend",
+                                legend = "legend1",
                                 showlegend = True,
                                 legendgroup = winner,
                                 name = winner,
@@ -117,6 +117,7 @@ def election_map(sol_df:SolomonGeo # Solomon geo object containing census data t
                         mapbox_center={"lat": -9.565766, "lon": 162.012453},
                         margin={"r":0,"t":0,"l":0,"b":0},
                         showlegend = True,
+                        legend_title = "Party",
     )
     
     return fig
