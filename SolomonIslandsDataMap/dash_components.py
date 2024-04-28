@@ -75,7 +75,7 @@ def define_map(sol_df:SolomonGeo # Solomon geo object containing census data to 
     return fig
 
 
-# %% ../nbs/01_dash_components.ipynb 21
+# %% ../nbs/01_dash_components.ipynb 22
 # TODO I should build figures and maps in another script
 def election_map(sol_df:SolomonGeo # Solomon geo object containing census data to input into map
                 )->type(go.Figure()): # Returns a graph object figure
@@ -84,33 +84,25 @@ def election_map(sol_df:SolomonGeo # Solomon geo object containing census data t
     '''
     # define traces and buttons at once
     traces = []
-    
-    colorscales = [
-    ((0.0, '#8dd3c7'), (1.0, '#8dd3c7')),
-    ((0.0, '#80b1d3'), (1.0, '#80b1d3')),
-    ((0.0, '#bebada'), (1.0, '#bebada')),
-    ((0.0, '#fb8072'), (1.0, '#fb8072')),
-    ((0.0, '#ffffb3'), (1.0, '#ffffb3')),
-    ((0.0, '#fdb462'), (1.0, '#fdb462')),
-    ((0.0, '#b3de69'), (1.0, '#b3de69')),
-    ((0.0, '#fccde5'), (1.0, '#fccde5')),
-    ((0.0, '#d9d9d9'), (1.0, '#d9d9d9')),
-]
 
     for i, winner in enumerate(sol_df.elec_wide["Winning Party"].unique()):
         dfp = sol_geo.elec_wide[sol_geo.elec_wide["Winning Party"] == winner]
         traces.append(go.Choroplethmapbox(
                                 geojson=sol_df.get_geojson(geo_filter = "Constituency"),
                                locations=dfp.loc_name,
-                               customdata = np.stack((dfp.loc_name, dfp["Winning Party"]), axis = 1), # Stack to make it display in the right order
+                               customdata = np.stack((dfp.loc_name, dfp["Winning Party"], dfp.iloc[:, 4]), axis = 1), # Stack to make it display in the right order # TODO change column names so I don't need iloc
                                # TODO undo hardcoding
                                z = [i, ] * len(dfp),
-                               colorscale=colorscales[i],
+                               colorscale=sol_df.colorscales[i],
                                showscale = False,
                                 marker_line_width = 0.5,
                                 #zauto=True,
                                 selectedpoints=None,
-                                hovertemplate = '%{customdata[0]} <extra>%{customdata[1]}</extra>',
+                                hovertemplate = '%{customdata[0]} <extra><b>Winning Party</b>: %{customdata[1]}<br><b>Candidate</b>: %{customdata[2]}</extra>',
+                                legend = "legend",
+                                showlegend = True,
+                                legendgroup = winner,
+                                name = winner,
                 #visible= True if value==cols_dd[0] else False,
                 ))
         
@@ -124,6 +116,7 @@ def election_map(sol_df:SolomonGeo # Solomon geo object containing census data t
                         mapbox_zoom = 5,
                         mapbox_center={"lat": -9.565766, "lon": 162.012453},
                         margin={"r":0,"t":0,"l":0,"b":0},
+                        showlegend = True,
     )
     
     return fig
