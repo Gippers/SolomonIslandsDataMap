@@ -114,6 +114,19 @@ class SolomonGeo:
         for geo in self.geo_levels:
             locations[geo] = cen_df.loc[cen_df['core']['agg'] == geo, ('core', 'location')].unique()
         self.locations = locations
+
+        # Colours for the parties:
+        self.colorscales = [
+            ((0.0, '#8dd3c7'), (1.0, '#8dd3c7')),
+            ((0.0, '#80b1d3'), (1.0, '#80b1d3')),
+            ((0.0, '#bebada'), (1.0, '#bebada')),
+            ((0.0, '#fb8072'), (1.0, '#fb8072')),
+            ((0.0, '#ffffb3'), (1.0, '#ffffb3')),
+            ((0.0, '#fdb462'), (1.0, '#fdb462')),
+            ((0.0, '#b3de69'), (1.0, '#b3de69')),
+            ((0.0, '#fccde5'), (1.0, '#fccde5')),
+            ((0.0, '#d9d9d9'), (1.0, '#d9d9d9')),
+        ]
     
         # TODO: need a list of column sub headings: get from column name split by `:`
 
