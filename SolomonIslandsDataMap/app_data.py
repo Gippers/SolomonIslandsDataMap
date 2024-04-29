@@ -219,6 +219,7 @@ popKpi = dbc.Col(children = gen_kpi(sol_geo, datetime.now().year, 'Population', 
 
 # %% ../nbs/02_app_data.ipynb 21
 election_map = dcc.Graph(figure = election_map(sol_geo), 
-                       selectedData=None, id = 'election_map')
-election_bar = dcc.Graph(figure = election_bar_plot(sol_geo),
+                       selectedData=None, id = 'election_map', )
+election_bar = dcc.Graph(figure = election_bar_plot(sol_geo), 
+                            config={'modeBarButtonsToRemove': ['lasso2d', 'select2d']}, 
                             id = 'election_bar')

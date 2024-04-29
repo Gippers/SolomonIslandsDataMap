@@ -47,7 +47,7 @@ def s3_client()-> boto3.client:
         region_name = REGION_NAME,
     )
 
-# %% ../nbs/00_load_data.ipynb 22
+# %% ../nbs/00_load_data.ipynb 23
 class SolomonGeo:
     # TODO work out how to format the attributes
     # Look at nbdev docs maybe?
@@ -142,7 +142,7 @@ class SolomonGeo:
             'PLD': '#bc80bd',
             'GPS': '#ccebc5',
             'NTP': '#ffffb3',
-            'SIP': '#000000',
+            'PAP': '#000000',
         }
 
         self.elections = elec_df.loc[:, 'Type'].unique().tolist() # Types of elections
@@ -431,7 +431,7 @@ class SolomonGeo:
 
         return elec, elec_wide
 
-# %% ../nbs/00_load_data.ipynb 32
+# %% ../nbs/00_load_data.ipynb 33
 @patch
 def save_pickle(self:SolomonGeo,
                 aws:bool = True, # Whether to save to aws or locally
@@ -461,7 +461,7 @@ def save_pickle(self:SolomonGeo,
       f.close()
 
 
-# %% ../nbs/00_load_data.ipynb 35
+# %% ../nbs/00_load_data.ipynb 36
 @patch
 def get_geojson(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the geojson to the requested aggregation 
@@ -477,7 +477,7 @@ def get_geojson(self:SolomonGeo,
     # to minise file size
     return json.loads(ret.loc[:, 'geometry'].to_json())
 
-# %% ../nbs/00_load_data.ipynb 38
+# %% ../nbs/00_load_data.ipynb 39
 @patch
 def get_store(self:SolomonGeo, 
             ) -> dcc.Store: # Geo JSON formatted dataset
@@ -512,7 +512,7 @@ def get_store(self:SolomonGeo,
                                             "elec": elec.to_dict("records"),
                                             "elec_wide": elec_wide.to_dict("records")}})
 
-# %% ../nbs/00_load_data.ipynb 41
+# %% ../nbs/00_load_data.ipynb 42
 @patch
 def get_census(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
@@ -571,7 +571,7 @@ def get_census(self:SolomonGeo,
     
     return ret
 
-# %% ../nbs/00_load_data.ipynb 44
+# %% ../nbs/00_load_data.ipynb 45
 @patch
 def get_pop(self:SolomonGeo, 
                 years:[str], # Selects the year/years of data to return

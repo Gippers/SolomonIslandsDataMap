@@ -161,6 +161,8 @@ clientside_callback(
     Input("initial-initial", 'data'), # Page that triggered initial load
     State("segmented_geo", "value"), # the current geo level selection
 )
+# TODO - clear should be false and set value as central honiara say
+# TODO - or do I make a callback that just inputs a new dropdown in the dropdown with better settings?
 
 # %% ../../nbs/03_map_page.ipynb 18
 clientside_callback(

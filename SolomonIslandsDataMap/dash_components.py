@@ -172,12 +172,12 @@ def election_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census
 
     df = df.loc[(df['loc_name'] == location) & (df['Type'] == election)  & (df['Year'] == year) & (df['Geo'] == geo_filter), :]
 
-    figtext = str(year) + " " + election + ' results in ' + location
+    figtext = str(year) + " " + election + ' Election Results in ' + location
 
     fig = go.Figure()
     measures = list(df.columns)
     fig.add_trace(go.Bar(
-        x = df.loc[df['loc_name'] == location, 'Candidate'].values,
+        x = df.loc[df['loc_name'] == location, 'candParty'].values,
         y = df.loc[df['loc_name'] == location, type_filter].values,
         name = location,
         marker = dict(color = list(map(lambda y: sol_geo.colormap[y], df.loc[df['loc_name'] == location, 'Party'].values))),
