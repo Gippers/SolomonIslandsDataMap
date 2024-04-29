@@ -71,11 +71,13 @@ clientside_callback(
         console.log("Func: maintain_sidebar");
         // Depending on the page loaded, geogrpahy will or will not be disabled
         var geo_disable = false;
-        var locationMulti = true;
 
         // Based on page, update hidden style
         var hide = {'display': 'none'};
         var show = {'display': 'block'};
+
+        var defualtLocation = show;
+        var electionLocation = hide;
         var displayDataset = '';
         if (page_trigger === 'census')
         {
@@ -129,7 +131,8 @@ clientside_callback(
             geo_disable = true; 
             censusVars = hide;
             popVars = hide;
-            locationMulti = false; // For the locations page, can only select one location
+            defualtLocation = hide;
+            electionLocation = show;
             if (geo !== 'Constituency')
             {
                 // When the initial load id triggered by navigation to election page, 
@@ -145,7 +148,7 @@ clientside_callback(
             geo_disable = true;
         };
 
-        return [geo, geo_disable, displayDataset, displayAges, displayRows, censusVars, popVars, displayElections, locationMulti];
+        return [geo, geo_disable, displayDataset, displayAges, displayRows, censusVars, popVars, displayElections, defualtLocation, electionLocation];
     };
     """,
     Output("segmented_geo", "value"),
@@ -156,7 +159,8 @@ clientside_callback(
     Output("census-vars-html", "style"),
     Output("pop-vars-html", "style"),
     Output("elections-dd-html", "style"),
-    Output('locDropdown', "multi"),
+    Output('location-html', "style"),
+    Output('location-election-html', "style"),
     Input("dataset_type", "value"), # Currently selected dataset
     Input("initial-initial", 'data'), # Page that triggered initial load
     State("segmented_geo", "value"), # the current geo level selection
@@ -164,7 +168,7 @@ clientside_callback(
 # TODO - clear should be false and set value as central honiara say
 # TODO - or do I make a callback that just inputs a new dropdown in the dropdown with better settings?
 
-# %% ../../nbs/03_map_page.ipynb 18
+# %% ../../nbs/03_map_page.ipynb 17
 clientside_callback(
     """
     function dataset_selection(page_trigger, currDataset)
@@ -194,7 +198,7 @@ clientside_callback(
     prevent_initial_call=True,
 )
 
-# %% ../../nbs/03_map_page.ipynb 21
+# %% ../../nbs/03_map_page.ipynb 20
 clientside_callback(
     """
     function update_title(geo_input,
@@ -258,7 +262,7 @@ clientside_callback(
     prevent_initial_call=True)
 
 
-# %% ../../nbs/03_map_page.ipynb 23
+# %% ../../nbs/03_map_page.ipynb 22
 @callback(
     Output('locDropdown', 'value', allow_duplicate=True),
     Output('map', "clickData"),
@@ -300,7 +304,7 @@ def map_click(clickData:dict, # The currently clicked location on the map
         
 
 
-# %% ../../nbs/03_map_page.ipynb 27
+# %% ../../nbs/03_map_page.ipynb 26
 # TODO merge back into 
 @callback(
     Output('map', "figure", allow_duplicate=True),
@@ -348,7 +352,7 @@ def map_selections(locations:[str], # The previously selected locations
         
 
 
-# %% ../../nbs/03_map_page.ipynb 30
+# %% ../../nbs/03_map_page.ipynb 29
 @callback(
     Output('locationDiv', 'children'),
     Input("segmented_geo", 'value'),
@@ -377,7 +381,7 @@ def update_geography(geo_input:str, # User input from the geography dropdown
     return gen_dd(sol_geo.locations[geo_input], 'locDropdown', "Select a location", clear = True, multi = True, 
                   val = new_locations)
 
-# %% ../../nbs/03_map_page.ipynb 33
+# %% ../../nbs/03_map_page.ipynb 32
 @callback(
     Output('measureDiv', 'children', allow_duplicate=True),
     Input('varDropdown', 'value'),
@@ -405,7 +409,7 @@ def update_measure(new_var:str, # Selected variable
     return gen_dd(sol_geo.census_vars[new_var], 'measureDropdown', 
                   val = measure)
 
-# %% ../../nbs/03_map_page.ipynb 36
+# %% ../../nbs/03_map_page.ipynb 35
 @callback(
     Output('measureDropdown', 'value', allow_duplicate=True),
     Output('bar_graph', "clickData"),
@@ -434,7 +438,7 @@ def bar_click(clickData:dict, # The currently clicked location on bar graph
         
 
 
-# %% ../../nbs/03_map_page.ipynb 40
+# %% ../../nbs/03_map_page.ipynb 39
 @callback(
     Output('map', 'figure', allow_duplicate=True),
     Input("segmented_geo", 'value'),
@@ -587,7 +591,7 @@ def update_map(geo_input:str, # User input from the geography dropdown
 
     return patched_figure
 
-# %% ../../nbs/03_map_page.ipynb 44
+# %% ../../nbs/03_map_page.ipynb 43
 # Callback allows components to interact
 @callback(
     Output('bar_graph', 'figure'),

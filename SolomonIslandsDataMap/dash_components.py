@@ -343,6 +343,7 @@ def gen_dd(location_list:[str], # a list of locations
     '''
     Create the location dropdown from given list
     '''
+    # TODO this is stupid, I am just wraping the for no reason
     # TODO is this really necessary? I anm
     dd = dcc.Dropdown(options=location_list,
                         value=val,  # initial value displayed when page first loads

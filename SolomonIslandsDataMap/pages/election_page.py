@@ -55,7 +55,7 @@ dict_sol = stored_data.data
     Output('election_bar', 'figure'),
     Input("segmented_type", 'value'),
     Input('electionDropdown', 'value'),
-    Input('locDropdown', 'value'),
+    Input('locElecDropdown', 'value'),
     Input('initial-initial', 'data'),
     Input('elecYearDropdown', 'value'),
     State("segmented_geo", 'value'),
@@ -78,11 +78,8 @@ def update_election_bar(data_type:str, # User input of type of data
 
     # Create newly selected barplot
     print("Func: update_election_bargraph")
-    loc = 'Central Honiara'
-    if len(loc_selection) > 0: 
-        loc = loc_selection[-1]
 
-    bg = election_bar_plot(sol_geo, geo_input, elecYear, election, loc, data_type)
+    bg = election_bar_plot(sol_geo, geo_input, elecYear, election, loc_selection, data_type)
 
     # returned objects are assigned to the component property of the Output
     # After updating fileter, we always reset map selection 
@@ -91,11 +88,11 @@ def update_election_bar(data_type:str, # User input of type of data
 
 # %% ../../nbs/05_election_page.ipynb 11
 @callback(
-    Output('locDropdown', 'value', allow_duplicate=True),
+    Output('locElecDropdown', 'value', allow_duplicate=True),
     Output('election_map', "clickData"),
     Output('election_map', "selectedData"),
     Input('election_map', 'clickData'),
-    State('locDropdown', 'value'),
+    State('locElecDropdown', 'value'),
     prevent_initial_call=True,
     allow_duplicate=True,
 ) # TODO - eventually can I turn this into a clientside callbback?
@@ -112,5 +109,6 @@ def map_click(clickData:dict, # The currently clicked location on the map
         #return prev_locs, None, None
     else:
         selections = list(map(lambda x: x['location'], clickData['points']))
+        print(selections)
         # Return the last selection
-        return selections, None, None
+        return selections.pop(), None, None
