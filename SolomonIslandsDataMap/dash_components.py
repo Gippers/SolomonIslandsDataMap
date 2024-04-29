@@ -151,12 +151,15 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
             name = loc,
             customdata = np.repeat(loc, len(measures)),
             hovertemplate = '%{customdata} <extra>%{x}<br><b>%{y}</extra>',
+            text = df.loc[df.index == loc].values[0],
+            textposition='auto',
         ))
     # TODO create dynamic text with Location name and Variable
     # TODO add standout text
     # TODO should this be ordered? Hinders comparison. Can I order the dataset somewhere else?
     fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text=figtext
                       , xaxis={'categoryorder':'total descending'})
+    fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
     return fig
 
 # %% ../nbs/01_dash_components.ipynb 28
@@ -182,9 +185,12 @@ def election_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census
         name = location,
         marker = dict(color = list(map(lambda y: sol_geo.colormap[y], df.loc[df['loc_name'] == location, 'Party'].values))),
         hovertemplate = '%{x} <extra>%{y}</extra>',
+        text = df.loc[df['loc_name'] == location, type_filter].values,
+        textposition='auto',
     ))
     fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text=figtext,
                     xaxis={'categoryorder':'total descending'})
+    fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
     return fig
 
 # %% ../nbs/01_dash_components.ipynb 32
