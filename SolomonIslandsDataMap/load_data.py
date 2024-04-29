@@ -47,7 +47,7 @@ def s3_client()-> boto3.client:
         region_name = REGION_NAME,
     )
 
-# %% ../nbs/00_load_data.ipynb 12
+# %% ../nbs/00_load_data.ipynb 23
 class SolomonGeo:
     # TODO work out how to format the attributes
     # Look at nbdev docs maybe?
@@ -66,10 +66,14 @@ class SolomonGeo:
                 cen_df:pd.DataFrame, # A dataset containing the census data,
                 pop_df:pd.DataFrame, # A dataset contain the population projection data
                 geos:gpd.GeoDataFrame, # A geodataframe containing geographies of data
+                elec_df:pd.DataFrame, # Long elections dataset
+                elec_wide_df:pd.DataFrame, # Wide elections dataset
     ):
         self.census = cen_df
         self.population = pop_df
         self.geo = geos
+        self.elec = elec_df
+        self.elec_wide = elec_wide_df
 
         # variable that tracks the types of aggregations
         # TODO Workout how to get in right order without hardcoding
@@ -110,7 +114,43 @@ class SolomonGeo:
         for geo in self.geo_levels:
             locations[geo] = cen_df.loc[cen_df['core']['agg'] == geo, ('core', 'location')].unique()
         self.locations = locations
-    
+
+        # Colours for the parties:
+        # TODO undo hardcoding...
+        self.colorscales = [
+            ((0.0, '#8dd3c7'), (1.0, '#8dd3c7')),
+            ((0.0, '#80b1d3'), (1.0, '#80b1d3')),
+            ((0.0, '#bebada'), (1.0, '#bebada')),
+            ((0.0, '#fb8072'), (1.0, '#fb8072')),
+            ((0.0, '#ffed6f'), (1.0, '#ffed6f')),
+            ((0.0, '#fdb462'), (1.0, '#fdb462')),
+            ((0.0, '#b3de69'), (1.0, '#b3de69')),
+            ((0.0, '#fccde5'), (1.0, '#fccde5')),
+            ((0.0, '#d9d9d9'), (1.0, '#d9d9d9')),
+        ]
+
+        self.colormap = {
+            "SID": '#8dd3c7',
+            'OUR': '#80b1d3',
+            'SIP': '#bebada',
+            'UP': '#fb8072',
+            'IND': '#ffed6f',
+            'PFP': '#fdb462',
+            'U4C': '#b3de69',
+            'KAD': '#fccde5',
+            'DAP': '#d9d9d9',
+            'PLD': '#bc80bd',
+            'GPS': '#ccebc5',
+            'NTP': '#ffffb3',
+            'PAP': '#000000',
+        }
+
+        self.elections = elec_df.loc[:, 'Type'].unique().tolist() # Types of elections
+        elec_years = {}
+        for elec in self.elections:
+            '''Creates a dictionary with an entry of each election type that has it's corresponding years of elections '''
+            elec_years[elec] = elec_df.loc[elec_df.Type == elec, 'Year'].unique().tolist() # Year of election per elections
+        self.elec_years = elec_years
         # TODO: need a list of column sub headings: get from column name split by `:`
 
         self.type_default = 'Total'
@@ -127,6 +167,7 @@ class SolomonGeo:
         pw = str(repo.working_tree_dir) + "/testData/"
         df = pd.read_csv(pw + 'full_sol_census_2009.csv', encoding = "ISO-8859-1")
         pop = pd.read_csv(pw + 'solo_pop_proj_2009.csv')
+        elec = pd.read_csv(fp + 'Solomon_Elections_Data_April_2024.csv', thousands=',')
         aggs = df.loc[:, 'agg'].unique()
         geos = []
         for agg in aggs:
@@ -136,10 +177,13 @@ class SolomonGeo:
             geos.append(geo)
 
         ret = cls.__transform(df, pop, geos)
+        elec_ret = cls.__clean_elections(elec)
         return cls(
             cen_df = ret[0],
             pop_df = ret[1],
             geos = ret[2],
+            elec_df = elec_ret[0],
+            elec_wide_df = elec_ret[1],
         )
     
     @classmethod
@@ -180,6 +224,8 @@ class SolomonGeo:
             cen_df = gpd.GeoDataFrame(tmp_geo['census']),
             pop_df = gpd.GeoDataFrame(tmp_geo['population']),
             geos = gpd.GeoDataFrame(tmp_geo['geo']),
+            elec_df = pd.DataFrame(tmp_geo['elec']),
+            elec_wide_df = pd.DataFrame(tmp_geo['elec_wide']),
         )
         
     
@@ -215,10 +261,15 @@ class SolomonGeo:
 
         geo = gpd.GeoDataFrame(json_sol['geojson'])
 
+        elec = pd.DataFrame(json_sol['elec'])
+        elec_wide = pd.DataFrame(json_sol['elec_wide'])
+        
         return cls(
             cen_df = census,
             pop_df = population,
             geos = geo,
+            elec_df = elec,
+            elec_wide_df = elec_wide,
         )
     
     @classmethod
@@ -341,9 +392,46 @@ class SolomonGeo:
 
         # return the transformed dataset
         return df, pop_df, geos
+    
 
+    @classmethod
+    def __clean_elections(cls, 
+                    elec:pd.DataFrame, # The dataframe containing election data
+                 ) -> [pd.DataFrame, pd.DataFrame]: # Returns a normal dataframe with elections data and another joined to the gorpandas data.
+        '''
+        Clean the elections
+        '''
+        candParty = elec['Candidate'].str.split("(", expand = True)
+        elec['candParty'] = elec['Candidate']
+        elec['Candidate'] = candParty.loc[:, 0]
+        elec['Party'] = candParty.loc[:, 1].str.strip(")")
 
-# %% ../nbs/00_load_data.ipynb 22
+        # Fix formatting
+        #elec.Total.astype(int)
+        elec.sort_values(by = ['Type','Year', 'Geo', 'loc_name', 'Total',], inplace = True, ascending= False)
+        elec['Order'] = elec.groupby(by = 'loc_name').cumcount()
+        elec.sort_values(by = ['Type','Year', 'Geo', 'loc_name', 'Total',], inplace = True, ascending= True)
+
+        elec_wide = elec.copy()
+        elec_wide = elec_wide[elec_wide['Order'] <= 2]
+        elec_wide['displayValue'] = elec_wide.candParty.map(str) + " - " + elec_wide.Total.map(str) + " (" + elec_wide.Proportion.map(str) + "%)"
+        elec_wide = pd.pivot(elec_wide, index = ['Type', 'Year', 'Geo', 'loc_name',], columns = ['Order', ], values = ['displayValue']).fillna("")
+        elec_wide = elec_wide.droplevel(0, axis = 1)
+
+        elec_wide2 = elec.copy().loc[elec.Order == 0, :]
+        elec_wide2.set_index(['Type', 'Year', 'Geo', 'loc_name',], inplace = True)
+
+        elec_wide2 = pd.DataFrame(elec_wide2.Party)
+        elec_wide2.rename(columns = {"Party": "Winning Party"}, inplace = True)
+        elec_wide = pd.merge(elec_wide, elec_wide2, how = 'left', left_index = True, right_index = True)
+        # remove the index
+        elec_wide.reset_index(inplace = True)
+
+        elec.Proportion = elec.Proportion / 100
+
+        return elec, elec_wide
+
+# %% ../nbs/00_load_data.ipynb 33
 @patch
 def save_pickle(self:SolomonGeo,
                 aws:bool = True, # Whether to save to aws or locally
@@ -373,7 +461,7 @@ def save_pickle(self:SolomonGeo,
       f.close()
 
 
-# %% ../nbs/00_load_data.ipynb 25
+# %% ../nbs/00_load_data.ipynb 36
 @patch
 def get_geojson(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the geojson to the requested aggregation 
@@ -389,7 +477,7 @@ def get_geojson(self:SolomonGeo,
     # to minise file size
     return json.loads(ret.loc[:, 'geometry'].to_json())
 
-# %% ../nbs/00_load_data.ipynb 28
+# %% ../nbs/00_load_data.ipynb 39
 @patch
 def get_store(self:SolomonGeo, 
             ) -> dcc.Store: # Geo JSON formatted dataset
@@ -414,12 +502,17 @@ def get_store(self:SolomonGeo,
     # Need to drop geometry as it won't serialize
     geos.drop(columns = 'geometry', inplace = True)  
 
+    elec = copy.copy(self.elec)
+    elec_wide = copy.copy(self.elec_wide)
+
     return dcc.Store(id="geo_df", data={"data": {
                                             "census": cen_df.to_dict("records"),
                                             "population": pop_df.to_dict("records"),
-                                            "geojson": geos.to_dict()}})
+                                            "geojson": geos.to_dict(),
+                                            "elec": elec.to_dict("records"),
+                                            "elec_wide": elec_wide.to_dict("records")}})
 
-# %% ../nbs/00_load_data.ipynb 31
+# %% ../nbs/00_load_data.ipynb 42
 @patch
 def get_census(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
@@ -478,7 +571,7 @@ def get_census(self:SolomonGeo,
     
     return ret
 
-# %% ../nbs/00_load_data.ipynb 34
+# %% ../nbs/00_load_data.ipynb 45
 @patch
 def get_pop(self:SolomonGeo, 
                 years:[str], # Selects the year/years of data to return
