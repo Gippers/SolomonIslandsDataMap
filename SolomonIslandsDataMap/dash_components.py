@@ -187,7 +187,7 @@ def election_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census
                     xaxis={'categoryorder':'total descending'})
     return fig
 
-# %% ../nbs/01_dash_components.ipynb 33
+# %% ../nbs/01_dash_components.ipynb 32
 # TODO should this method be appended to sol_geo??
 def gen_census_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
@@ -220,7 +220,7 @@ def gen_census_grid(sol_geo:SolomonGeo, # Solomon geo object containing census d
 
     return dt
 
-# %% ../nbs/01_dash_components.ipynb 37
+# %% ../nbs/01_dash_components.ipynb 36
 # TODO should this method be appended to sol_geo??
 def gen_pop_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     years:str, # Selected data years
@@ -266,7 +266,7 @@ def gen_pop_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data
 
     return dt
 
-# %% ../nbs/01_dash_components.ipynb 41
+# %% ../nbs/01_dash_components.ipynb 40
 # TODO create bottom padding
 
 def gen_kpi(sg:SolomonGeo, # Input data object
@@ -308,7 +308,7 @@ def gen_kpi(sg:SolomonGeo, # Input data object
     
     return kpi, text
 
-# %% ../nbs/01_dash_components.ipynb 45
+# %% ../nbs/01_dash_components.ipynb 44
 def gen_dd(location_list:[str], # a list of locations
            id:str, # Id of the dropdown
            place_holder:str = None, # a placeholder message to display
@@ -331,7 +331,7 @@ def gen_dd(location_list:[str], # a list of locations
                         multi=multi)
     return dd
 
-# %% ../nbs/01_dash_components.ipynb 48
+# %% ../nbs/01_dash_components.ipynb 47
 def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
                     year:str, # Selected year to display on the graph

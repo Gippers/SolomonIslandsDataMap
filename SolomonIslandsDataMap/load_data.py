@@ -144,7 +144,13 @@ class SolomonGeo:
             'NTP': '#ffffb3',
             'SIP': '#000000',
         }
-    
+
+        self.elections = elec_df.loc[:, 'Type'].unique().tolist() # Types of elections
+        elec_years = {}
+        for elec in self.elections:
+            '''Creates a dictionary with an entry of each election type that has it's corresponding years of elections '''
+            elec_years[elec] = elec_df.loc[elec_df.Type == elec, 'Year'].unique().tolist() # Year of election per elections
+        self.elec_year = elec_years
         # TODO: need a list of column sub headings: get from column name split by `:`
 
         self.type_default = 'Total'
@@ -255,10 +261,9 @@ class SolomonGeo:
 
         geo = gpd.GeoDataFrame(json_sol['geojson'])
 
-        elec = pd.DataFrame(json_sol['elec']),
-        elec_wide = pd.DataFrame(json_sol['elec_wide']),
-
-
+        elec = pd.DataFrame(json_sol['elec'])
+        elec_wide = pd.DataFrame(json_sol['elec_wide'])
+        
         return cls(
             cen_df = census,
             pop_df = population,
@@ -497,12 +502,15 @@ def get_store(self:SolomonGeo,
     # Need to drop geometry as it won't serialize
     geos.drop(columns = 'geometry', inplace = True)  
 
+    elec = copy.copy(self.elec)
+    elec_wide = copy.copy(self.elec_wide)
+
     return dcc.Store(id="geo_df", data={"data": {
                                             "census": cen_df.to_dict("records"),
                                             "population": pop_df.to_dict("records"),
                                             "geojson": geos.to_dict(),
-                                            "elec": self.elec.to_dict(),
-                                            "elec_wide": self.elec_wide.to_dict()}})
+                                            "elec": elec.to_dict("records"),
+                                            "elec_wide": elec_wide.to_dict("records")}})
 
 # %% ../nbs/00_load_data.ipynb 41
 @patch
