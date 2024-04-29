@@ -176,7 +176,6 @@ sidebar = html.Div(
                     dd_elec_years,
                     html.Br(),
                     ],
-
                     id = "elections-dd-html",
                     style = {'display': 'none'},
                 ),

@@ -81,6 +81,7 @@ clientside_callback(
             displayDataset = hide;
             displayAges = hide;
             displayRows = hide;
+            displayElections = hide;
             censusVars = show;
             popVars = hide;
         } else if (page_trigger === 'pop')
@@ -88,6 +89,7 @@ clientside_callback(
             displayDataset = hide;
             displayAges = show;
             displayRows = hide;
+            displayElections = hide;
         // Disable geo selection on population page and set geo to province
             geo_disable = true; 
             censusVars = hide;
@@ -103,6 +105,7 @@ clientside_callback(
             displayDataset = show;
             displayAges = hide;
             displayRows = show;
+            displayElections = hide; //TODO should add this into the dataset eventually
             if (dataset === 'Census')
             {
                 censusVars = show;
@@ -116,14 +119,31 @@ clientside_callback(
                 console.log("Dataset must be Census or Population")
             };
                 
+        } else if (page_trigger === 'election')
+        {
+            displayDataset = hide;
+            displayAges = hide;
+            displayRows = hide;
+            displayElections = show;
+            geo_disable = true; 
+            censusVars = hide;
+            popVars = hide;
+            if (geo !== 'Constituency')
+            {
+                // When the initial load id triggered by navigation to election page, 
+                // if the geo isn't constituency we reset to this
+                geo = 'Constituency';
+            };
+                
         };
+
 
         if (dataset == 'Population Projections')
         {
             geo_disable = true;
         };
 
-        return [geo, geo_disable, displayDataset, displayAges, displayRows, censusVars, popVars];
+        return [geo, geo_disable, displayDataset, displayAges, displayRows, censusVars, popVars, displayElections];
     };
     """,
     Output("segmented_geo", "value"),
@@ -133,6 +153,7 @@ clientside_callback(
     Output("rows-html", "style"),
     Output("census-vars-html", "style"),
     Output("pop-vars-html", "style"),
+    Output("elections-dd-html", "style"),
     Input("dataset_type", "value"), # Currently selected dataset
     Input("initial-initial", 'data'), # Page that triggered initial load
     State("segmented_geo", "value"), # the current geo level selection

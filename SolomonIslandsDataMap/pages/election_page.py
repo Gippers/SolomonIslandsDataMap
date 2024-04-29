@@ -30,7 +30,7 @@ except:
     pass
 
 # %% ../../nbs/05_election_page.ipynb 5
-init_init = dcc.Store(id="initial-initial", data='table')
+init_init = dcc.Store(id="initial-initial", data='election')
 def layout():
     return dbc.Col(mytitle, width = 8),\
                 dcc.Loading(
