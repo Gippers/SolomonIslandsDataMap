@@ -116,12 +116,13 @@ class SolomonGeo:
         self.locations = locations
 
         # Colours for the parties:
+        # TODO undo hardcoding...
         self.colorscales = [
             ((0.0, '#8dd3c7'), (1.0, '#8dd3c7')),
             ((0.0, '#80b1d3'), (1.0, '#80b1d3')),
             ((0.0, '#bebada'), (1.0, '#bebada')),
             ((0.0, '#fb8072'), (1.0, '#fb8072')),
-            ((0.0, '#ffffb3'), (1.0, '#ffffb3')),
+            ((0.0, '#ffed6f'), (1.0, '#ffed6f')),
             ((0.0, '#fdb462'), (1.0, '#fdb462')),
             ((0.0, '#b3de69'), (1.0, '#b3de69')),
             ((0.0, '#fccde5'), (1.0, '#fccde5')),
@@ -133,11 +134,15 @@ class SolomonGeo:
             'OUR': '#80b1d3',
             'SIP': '#bebada',
             'UP': '#fb8072',
-            'IND': '#ffffb3',
+            'IND': '#ffed6f',
             'PFP': '#fdb462',
             'U4C': '#b3de69',
             'KAD': '#fccde5',
             'DAP': '#d9d9d9',
+            'PLD': '#bc80bd',
+            'GPS': '#ccebc5',
+            'NTP': '#ffffb3',
+            'SIP': '#000000',
         }
     
         # TODO: need a list of column sub headings: get from column name split by `:`
