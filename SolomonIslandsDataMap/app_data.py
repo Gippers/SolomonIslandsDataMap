@@ -3,9 +3,9 @@
 # %% auto 0
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dd_age', 'dd_years_pop',
            'dropdown_geo', 'control_type', 'dd_dataset', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop',
-           'dd_election', 'dd_elec_years', 'data_grid', 'grid_rows', 'download_button', 'year_slider', 'fake_slider',
-           'SIDEBAR_STYLE', 'sidebar', 'mytitle', 'map_graph', 'selectedBarGraph', 'popPyramid', 'pyramidTitle',
-           'popKpi', 'election_map', 'election_bar']
+           'dd_election', 'dd_elec_years', 'dd_elec_locations', 'data_grid', 'grid_rows', 'download_button',
+           'year_slider', 'fake_slider', 'SIDEBAR_STYLE', 'sidebar', 'mytitle', 'map_graph', 'selectedBarGraph',
+           'popPyramid', 'pyramidTitle', 'popKpi', 'election_map', 'election_bar']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -88,12 +88,16 @@ dd_measure_pop = html.Div(children = gen_dd(sol_geo.population_vars[list(sol_geo
                                       ), id = 'measurePopDiv')
 
 dd_election = html.Div(children = gen_dd(sol_geo.elections, 'electionDropdown'
-                                    ,val = 'National Parilament'
+                                    ,val = 'National Parliament'
                                       ), id = 'electionDropdownDiv') 
 
-dd_elec_years = html.Div(children = gen_dd(sol_geo.elec_years['National Parilament'], 'elecYearDropdown'
-                                    ,val = 'National Parilament'
+dd_elec_years = html.Div(children = gen_dd(sol_geo.elec_years['National Parliament'], 'elecYearDropdown'
+                                    ,val = 2024
                                       ), id = 'elecYearDropdownDiv') 
+# For now hardcoding a solution with constituency only                             
+dd_elec_locations = html.Div(children = gen_dd(sol_geo.locations['Constituency'], 'elecYearDropdown'
+                                    ,val = 'Central Honiara'
+                                      ), id = 'elecLocationDropdownDiv')  
 
 # %% ../nbs/02_app_data.ipynb 12
 data_grid = dbc.Container(
@@ -112,7 +116,7 @@ fake_slider = html.Div(dcc.Slider(sol_geo.pop_years[0], sol_geo.pop_years[-1], 1
                 tooltip={"placement": "top", "always_visible": True},  included=False, dots = True, updatemode =  "drag"
                 ), id = 'hiddenSlider', style = {'display': 'none'})
 
-# %% ../nbs/02_app_data.ipynb 16
+# %% ../nbs/02_app_data.ipynb 17
 # Note, for now I am not using a sidebar style as I do not want to fix the width
 # TODO fix the width of the sidebar, particular on different screens
 SIDEBAR_STYLE = {
@@ -198,7 +202,7 @@ sidebar = html.Div(
     #style=SIDEBAR_STYLE,
 )
 
-# %% ../nbs/02_app_data.ipynb 18
+# %% ../nbs/02_app_data.ipynb 19
 mytitle = dcc.Markdown(children="## Loading Page", id = 'title') # TODO This needs a default title
 map_graph = dcc.Graph(figure= define_map(sol_geo), # TODO work out how to not auto load this. 
                        selectedData=None, id = 'map')
@@ -213,7 +217,7 @@ popKpi = dbc.Col(children = gen_kpi(sol_geo, datetime.now().year, 'Population', 
 
 
 
-# %% ../nbs/02_app_data.ipynb 20
+# %% ../nbs/02_app_data.ipynb 21
 election_map = dcc.Graph(figure = election_map(sol_geo), 
                        selectedData=None, id = 'election_map')
 election_bar = dcc.Graph(figure = election_bar_plot(sol_geo),

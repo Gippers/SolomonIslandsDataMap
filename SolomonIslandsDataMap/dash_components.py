@@ -163,7 +163,7 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
 def election_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str = "Constituency", # The desired aggregation of the geography
                     year:int = 2024, # The year of the elections data
-                    election:str = 'National Parilament', # The type of election.	
+                    election:str = 'National Parliament', # The type of election.	
                     location:str = 'Auki-Langalanga', # Desired location within aggregation
                     type_filter:str = 'Total', # The type of data, eitehr Total of Proportion
                 )->type(go.Figure()): # Returns a graph object figure of a barplot

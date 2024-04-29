@@ -71,6 +71,7 @@ clientside_callback(
         console.log("Func: maintain_sidebar");
         // Depending on the page loaded, geogrpahy will or will not be disabled
         var geo_disable = false;
+        var locationMulti = true;
 
         // Based on page, update hidden style
         var hide = {'display': 'none'};
@@ -128,6 +129,7 @@ clientside_callback(
             geo_disable = true; 
             censusVars = hide;
             popVars = hide;
+            locationMulti = false; // For the locations page, can only select one location
             if (geo !== 'Constituency')
             {
                 // When the initial load id triggered by navigation to election page, 
@@ -143,7 +145,7 @@ clientside_callback(
             geo_disable = true;
         };
 
-        return [geo, geo_disable, displayDataset, displayAges, displayRows, censusVars, popVars, displayElections];
+        return [geo, geo_disable, displayDataset, displayAges, displayRows, censusVars, popVars, displayElections, locationMulti];
     };
     """,
     Output("segmented_geo", "value"),
@@ -154,6 +156,7 @@ clientside_callback(
     Output("census-vars-html", "style"),
     Output("pop-vars-html", "style"),
     Output("elections-dd-html", "style"),
+    Output('locDropdown', "multi"),
     Input("dataset_type", "value"), # Currently selected dataset
     Input("initial-initial", 'data'), # Page that triggered initial load
     State("segmented_geo", "value"), # the current geo level selection
