@@ -86,7 +86,7 @@ def election_map(sol_df:SolomonGeo # Solomon geo object containing census data t
     traces = []
 
     for i, winner in enumerate(sol_df.elec_wide["Winning Party"].unique()):
-        dfp = sol_geo.elec_wide[sol_geo.elec_wide["Winning Party"] == winner]
+        dfp = sol_df.elec_wide[sol_df.elec_wide["Winning Party"] == winner]
         traces.append(go.Choroplethmapbox(
                                 geojson=sol_df.get_geojson(geo_filter = "Constituency"),
                                locations=dfp.loc_name,
@@ -177,10 +177,10 @@ def election_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census
     fig = go.Figure()
     measures = list(df.columns)
     fig.add_trace(go.Bar(
-        x = df.loc[df['loc_name'] == loc, 'Candidate'].values,
-        y = df.loc[df['loc_name'] == loc, type_filter].values,
-        name = loc,
-        marker = dict(color = list(map(lambda y: sol_geo.colormap[y], df.loc[df['loc_name'] == loc, 'Party'].values))),
+        x = df.loc[df['loc_name'] == location, 'Candidate'].values,
+        y = df.loc[df['loc_name'] == location, type_filter].values,
+        name = location,
+        marker = dict(color = list(map(lambda y: sol_geo.colormap[y], df.loc[df['loc_name'] == location, 'Party'].values))),
         hovertemplate = '%{x} <extra>%{y}</extra>',
     ))
     fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text=figtext,

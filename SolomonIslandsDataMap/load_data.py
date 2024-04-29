@@ -150,7 +150,7 @@ class SolomonGeo:
         for elec in self.elections:
             '''Creates a dictionary with an entry of each election type that has it's corresponding years of elections '''
             elec_years[elec] = elec_df.loc[elec_df.Type == elec, 'Year'].unique().tolist() # Year of election per elections
-        self.elec_year = elec_years
+        self.elec_years = elec_years
         # TODO: need a list of column sub headings: get from column name split by `:`
 
         self.type_default = 'Total'

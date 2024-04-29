@@ -3,8 +3,9 @@
 # %% auto 0
 __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_location', 'dd_age', 'dd_years_pop',
            'dropdown_geo', 'control_type', 'dd_dataset', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop',
-           'data_grid', 'grid_rows', 'download_button', 'year_slider', 'fake_slider', 'SIDEBAR_STYLE', 'sidebar',
-           'mytitle', 'map_graph', 'selectedBarGraph', 'popPyramid', 'pyramidTitle', 'popKpi']
+           'dd_election', 'dd_elec_years', 'data_grid', 'grid_rows', 'download_button', 'year_slider', 'fake_slider',
+           'SIDEBAR_STYLE', 'sidebar', 'mytitle', 'map_graph', 'selectedBarGraph', 'popPyramid', 'pyramidTitle',
+           'popKpi']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -86,6 +87,14 @@ dd_measure_pop = html.Div(children = gen_dd(sol_geo.population_vars[list(sol_geo
                                     ,val = 'Total'
                                       ), id = 'measurePopDiv')
 
+dd_election = html.Div(children = gen_dd(sol_geo.elections, 'electionDropdown'
+                                    ,val = 'National Parilament'
+                                      ), id = 'electionDropdownDiv') 
+
+dd_elec_years = html.Div(children = gen_dd(sol_geo.elec_years['National Parilament'], 'elecYearDropdown'
+                                    ,val = 'National Parilament'
+                                      ), id = 'elecYearDropdownDiv') 
+
 # %% ../nbs/02_app_data.ipynb 12
 data_grid = dbc.Container(
                 children = gen_census_grid(sol_geo, sol_geo.geo_levels[0], "Key Statistics", 'Total Households')
@@ -159,6 +168,18 @@ sidebar = html.Div(
                     id = "pop-vars-html",
                     style = {'display': 'none'},
                 ),
+                html.Div(children = [
+                    html.P("Election Type"), 
+                    dd_election,
+                    html.Br(),
+                    html.P("Election Year"), 
+                    dd_elec_years,
+                    html.Br(),
+                    ],
+
+                    id = "elections-dd-html",
+                    style = {'display': 'none'},
+                ),
                 html.P("Data Type"), 
                 control_type,
                 html.Br(),
@@ -190,4 +211,5 @@ popPyramid = dcc.Graph(figure = gen_pyramid(sol_geo, 'Province', 2024), id = 'po
 pyramidTitle = dcc.Markdown(children ='## Projected Population Pyramid for Solomon Islands', id = 'pyramidTitle')
 popKpi = dbc.Col(children = gen_kpi(sol_geo, datetime.now().year, 'Population', 'Total', sol_geo.ages), id = 'popKpi',
                  width = 2, align = 'center')
-# testing
+
+
