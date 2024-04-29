@@ -144,14 +144,19 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
         figtext += ', '.join(locations)
     fig = go.Figure()
     measures = list(df.columns)
+
     for loc in locations:
+        displayText = df.loc[df.index == loc].values[0]
+        if type_filter == 'Proportion': 
+            displayText = np.round(displayText * 100, decimals = 2)
+            displayText = [item + "%" for item in displayText.astype(str)]
         fig.add_trace(go.Bar(
             x = measures,
             y = df.loc[df.index == loc].values[0],
             name = loc,
             customdata = np.repeat(loc, len(measures)),
             hovertemplate = '%{customdata} <extra>%{x}<br><b>%{y}</extra>',
-            text = df.loc[df.index == loc].values[0],
+            text = displayText,
             textposition='auto',
         ))
     # TODO create dynamic text with Location name and Variable
@@ -160,6 +165,10 @@ def gen_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census data
     fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text=figtext
                       , xaxis={'categoryorder':'total descending'})
     fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+    if type_filter == 'Proportion':
+        '''If proportion, display proportion!'''
+        fig.update_layout(yaxis_tickformat='.1%')
+        fig.update_layout(hovermode="x unified")
     return fig
 
 # %% ../nbs/01_dash_components.ipynb 28
@@ -178,19 +187,27 @@ def election_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census
     figtext = str(year) + " " + election + ' Election Results in ' + location
 
     fig = go.Figure()
-    measures = list(df.columns)
+    displayText = df.loc[df['loc_name'] == location, type_filter].values
+    if type_filter == 'Proportion': 
+        # Turn into % when it's a proportion
+        displayText = np.round(displayText * 100, decimals = 2)
+        displayText = [item + "%" for item in displayText.astype(str)]
     fig.add_trace(go.Bar(
         x = df.loc[df['loc_name'] == location, 'candParty'].values,
         y = df.loc[df['loc_name'] == location, type_filter].values,
         name = location,
         marker = dict(color = list(map(lambda y: sol_geo.colormap[y], df.loc[df['loc_name'] == location, 'Party'].values))),
         hovertemplate = '%{x} <extra>%{y}</extra>',
-        text = df.loc[df['loc_name'] == location, type_filter].values,
+        text = displayText,
         textposition='auto',
     ))
     fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text=figtext,
                     xaxis={'categoryorder':'total descending'})
     fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+    if type_filter == 'Proportion':
+        '''If proportion, display proportion!'''
+        fig.update_layout(yaxis_tickformat='.1%')
+        fig.update_layout(hovermode="x unified")
     return fig
 
 # %% ../nbs/01_dash_components.ipynb 32
