@@ -5,7 +5,7 @@ __all__ = ['sol_geo', 'geos', 'cen_vars', 'NUM_GEOS', 'stored_data', 'dropdown_l
            'dropdown_geo', 'control_type', 'dd_dataset', 'dd_var', 'dd_measure', 'dd_var_pop', 'dd_measure_pop',
            'dd_election', 'dd_elec_years', 'data_grid', 'grid_rows', 'download_button', 'year_slider', 'fake_slider',
            'SIDEBAR_STYLE', 'sidebar', 'mytitle', 'map_graph', 'selectedBarGraph', 'popPyramid', 'pyramidTitle',
-           'popKpi']
+           'popKpi', 'election_map', 'election_bar']
 
 # %% ../nbs/02_app_data.ipynb 3
 from nbdev.showdoc import *
@@ -213,3 +213,9 @@ popKpi = dbc.Col(children = gen_kpi(sol_geo, datetime.now().year, 'Population', 
                  width = 2, align = 'center')
 
 
+
+# %% ../nbs/02_app_data.ipynb 20
+election_map = dcc.Graph(figure = election_map(sol_geo), 
+                       selectedData=None, id = 'election_map')
+election_bar = dcc.Graph(figure = election_bar_plot(sol_geo),
+                            id = 'election_bar')
