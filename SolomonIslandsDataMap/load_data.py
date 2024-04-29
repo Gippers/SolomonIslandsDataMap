@@ -402,14 +402,14 @@ class SolomonGeo:
         elec['Party'] = candParty.loc[:, 1].str.strip(")")
 
         # Fix formatting
-        #elec.Votes.astype(int)
-        elec.sort_values(by = ['Type','Year', 'Geo', 'loc_name', 'Votes',], inplace = True, ascending= False)
+        #elec.Total.astype(int)
+        elec.sort_values(by = ['Type','Year', 'Geo', 'loc_name', 'Total',], inplace = True, ascending= False)
         elec['Order'] = elec.groupby(by = 'loc_name').cumcount()
-        elec.sort_values(by = ['Type','Year', 'Geo', 'loc_name', 'Votes',], inplace = True, ascending= True)
+        elec.sort_values(by = ['Type','Year', 'Geo', 'loc_name', 'Total',], inplace = True, ascending= True)
 
         elec_wide = elec.copy()
         elec_wide = elec_wide[elec_wide['Order'] <= 2]
-        elec_wide['displayValue'] = elec_wide.candParty.map(str) + " - " + elec_wide.Votes.map(str) + " (" + elec_wide.Proportion.map(str) + "%)"
+        elec_wide['displayValue'] = elec_wide.candParty.map(str) + " - " + elec_wide.Total.map(str) + " (" + elec_wide.Proportion.map(str) + "%)"
         elec_wide = pd.pivot(elec_wide, index = ['Type', 'Year', 'Geo', 'loc_name',], columns = ['Order', ], values = ['displayValue']).fillna("")
         elec_wide = elec_wide.droplevel(0, axis = 1)
 

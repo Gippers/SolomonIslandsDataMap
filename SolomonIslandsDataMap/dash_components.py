@@ -165,29 +165,29 @@ def election_bar_plot(sol_geo:SolomonGeo, # Solomon geo object containing census
                     year:int = 2024, # The year of the elections data
                     election:str = 'National Parilament', # The type of election.	
                     location:str = 'Auki-Langalanga', # Desired location within aggregation
-                    type_filter:str = 'Votes', # The type of data, eitehr Votes of Proportion
+                    type_filter:str = 'Total', # The type of data, eitehr Total of Proportion
                 )->type(go.Figure()): # Returns a graph object figure of a barplot
     '''Create a bar plot that show the census selected election data'''
     df = sol_geo.elec
 
-    df = df.loc[df['loc_name'] == location and df['Type'] == election  and df['Year'] == year, :]
+    df = df.loc[(df['loc_name'] == location) & (df['Type'] == election)  & (df['Year'] == year) & (df['Geo'] == geo_filter), :]
 
-    figtext = year + " " + election + ' results in ' + location
+    figtext = str(year) + " " + election + ' results in ' + location
 
     fig = go.Figure()
     measures = list(df.columns)
     fig.add_trace(go.Bar(
         x = df.loc[df['loc_name'] == loc, 'Candidate'].values,
-        y = df.loc[df['loc_name'] == loc, 'Votes'].values,
+        y = df.loc[df['loc_name'] == loc, type_filter].values,
         name = loc,
         marker = dict(color = list(map(lambda y: sol_geo.colormap[y], df.loc[df['loc_name'] == loc, 'Party'].values))),
         hovertemplate = '%{x} <extra>%{y}</extra>',
     ))
-    fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text="Title",
+    fig.update_layout(barmode='group', xaxis_tickangle=-45, title_text=figtext,
                     xaxis={'categoryorder':'total descending'})
     return fig
 
-# %% ../nbs/01_dash_components.ipynb 32
+# %% ../nbs/01_dash_components.ipynb 33
 # TODO should this method be appended to sol_geo??
 def gen_census_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
@@ -220,7 +220,7 @@ def gen_census_grid(sol_geo:SolomonGeo, # Solomon geo object containing census d
 
     return dt
 
-# %% ../nbs/01_dash_components.ipynb 36
+# %% ../nbs/01_dash_components.ipynb 37
 # TODO should this method be appended to sol_geo??
 def gen_pop_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     years:str, # Selected data years
@@ -266,7 +266,7 @@ def gen_pop_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data
 
     return dt
 
-# %% ../nbs/01_dash_components.ipynb 40
+# %% ../nbs/01_dash_components.ipynb 41
 # TODO create bottom padding
 
 def gen_kpi(sg:SolomonGeo, # Input data object
@@ -308,7 +308,7 @@ def gen_kpi(sg:SolomonGeo, # Input data object
     
     return kpi, text
 
-# %% ../nbs/01_dash_components.ipynb 44
+# %% ../nbs/01_dash_components.ipynb 45
 def gen_dd(location_list:[str], # a list of locations
            id:str, # Id of the dropdown
            place_holder:str = None, # a placeholder message to display
@@ -331,7 +331,7 @@ def gen_dd(location_list:[str], # a list of locations
                         multi=multi)
     return dd
 
-# %% ../nbs/01_dash_components.ipynb 47
+# %% ../nbs/01_dash_components.ipynb 48
 def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data to input into map
                     geo_filter:str, # The desired aggregation of the geography
                     year:str, # Selected year to display on the graph
