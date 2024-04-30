@@ -11,7 +11,7 @@ dash==2.14.0
 gunicorn
 topojson
 dash-bootstrap-templates
-dash-mantine-components
+dash-mantine-components==0.9.0
 python-dotenv
 boto3>=1.29.3
 dash-ag-grid>=2.3.0
