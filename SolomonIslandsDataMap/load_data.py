@@ -568,9 +568,12 @@ def get_census(self:SolomonGeo,
             ret = ret.sum()
         elif type_filter == 'Proportion':
             ret = ret.sum() / ret.sum().sum()
-            if var == "Key Statistics":
+            if var == "Key Statistics" and measure == None and loc_filter == None:
                 # For key statistics, replace all with 100% for display.
                 ret[:] = 1.0
+                ret['Male population'] = .513
+                ret['Female population'] = .487
+                # TODO hardcode male and female
         else:
             raise ValueError('The type passed to the aggregate function must be one of the following: \'Total\', \'Proportion\'.')
 
