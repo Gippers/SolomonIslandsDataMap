@@ -45,15 +45,15 @@ for page in page_registry.values():
 navbar = dbc.NavbarSimple(
     children=[
         # TODO make this a dbc tab with calbback to make it active
-        dbc.NavItem(dbc.NavLink('Census Map', href=pages['Census Map'], active=True)),
-        dbc.NavItem(dbc.NavLink('Election Map', href=pages['Election Map'])),
-        dbc.NavItem(dbc.NavLink('Population Projections', href=pages['Population Projections'])),
-        dbc.NavItem(dbc.NavLink('Data Table', href=pages['Data Table'])),
+        dbc.NavItem(dbc.NavLink('2009 Census', href=pages['Census Map'], active=True, id = 'censusNav')),
+        dbc.NavItem(dbc.NavLink('Election Map', href=pages['Election Map'], active=False, id = 'electionNav')),
+        dbc.NavItem(dbc.NavLink('Population Projections', href=pages['Population Projections'], active=False, id = 'popNav')),
+        dbc.NavItem(dbc.NavLink('Data Table', href=pages['Data Table'], active=False, id = 'tableNav')),
         dbc.DropdownMenu(
             children=[
                 #dbc.DropdownMenuItem("More pages coming soon", header=True),
                 
-                dbc.DropdownMenuItem('Census Map', href=pages['Census Map']),
+                dbc.DropdownMenuItem('2009 Census', href=pages['Census Map']),
                 dbc.DropdownMenuItem('Election Map', href=pages['Election Map']),
                 dbc.DropdownMenuItem('Population Projections', href=pages['Population Projections']),
                 dbc.DropdownMenuItem('Data Table', href=pages['Data Table']),
