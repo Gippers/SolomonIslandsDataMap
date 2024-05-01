@@ -530,7 +530,8 @@ def get_census(self:SolomonGeo,
     - Optionally can aggregate the dataset, uses weighted aggregation for proportional data
     '''
     ret = self.census
-    ret = ret.loc[ret['core']['type'] == type_filter, :] 
+    if agg == True: ret = ret.loc[ret['core']['type'] == 'Total', :]  # If required, aggregate dataset based on data type
+    else: ret = ret.loc[ret['core']['type'] == type_filter, :] # When not aggregating set to type
     ret = ret.set_index(ret.loc[:, ('core', 'location')]) # Change index to location as it's more desriptive
     # TODO check that filter is valid
     if geo_filter is not None:
@@ -565,10 +566,10 @@ def get_census(self:SolomonGeo,
         if type_filter == 'Total':
             ret = ret.sum()
         elif type_filter == 'Proportion':
-            ret = ret.sum() / ret.sum().sum() * 100
+            ret = ret.sum() / ret.sum().sum()
         else:
             raise ValueError('The type passed to the aggregate function must be one of the following: \'Total\', \'Proportion\'.')
-    
+
     return ret
 
 # %% ../nbs/00_load_data.ipynb 45
