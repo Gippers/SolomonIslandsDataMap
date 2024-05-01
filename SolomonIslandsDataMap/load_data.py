@@ -516,7 +516,7 @@ def get_store(self:SolomonGeo,
 @patch
 def get_census(self:SolomonGeo, 
                 geo_filter:str = None, # Filters the dataframe to the requested geography 
-                var:str = None, # Selects an upper level 
+                var:str = 'Key Statistics', # Selects an upper level 
                 measure:str = None, # Selects the lower level variable, if var 1 is used, measure must be used.
                 loc_filter:[str] = None, # Filters one of more locations
                 # TODO remove hardcoding here?
@@ -528,6 +528,7 @@ def get_census(self:SolomonGeo,
     the id variable and the requested census data. This is the minimal data required
     to display on the map. 
     - Optionally can aggregate the dataset, uses weighted aggregation for proportional data
+    - You should always provide a variable to this function or proportional aggregation won't work
     '''
     ret = self.census
     if agg == True: ret = ret.loc[ret['core']['type'] == 'Total', :]  # If required, aggregate dataset based on data type
@@ -567,6 +568,9 @@ def get_census(self:SolomonGeo,
             ret = ret.sum()
         elif type_filter == 'Proportion':
             ret = ret.sum() / ret.sum().sum()
+            if var == "Key Statistics":
+                # For key statistics, replace all with 100% for display.
+                ret[:] = 1.0
         else:
             raise ValueError('The type passed to the aggregate function must be one of the following: \'Total\', \'Proportion\'.')
 
