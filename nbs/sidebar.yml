@@ -6,5 +6,7 @@ website:
       - 01_dash_components.ipynb
       - 02_app_data.ipynb
       - 03_map_page.ipynb
-      - 04_table_page.ipynb
-      - 05_app.ipynb
+      - 04_map_population.ipynb
+      - 05_election_page.ipynb
+      - 06_table_page.ipynb
+      - 07_app.ipynb

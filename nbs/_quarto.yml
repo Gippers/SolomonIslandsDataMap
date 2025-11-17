@@ -14,6 +14,14 @@ website:
   navbar:
     background: primary
     search: true
+    right:
+    - icon: github
+      aria-label: GitHub
+      href: https://github.com/Gippers
+    - icon: globe
+      aria-label: Personal Website
+      href: https://www.thomasmartin.id.au
+
   sidebar:
     style: floating
 
