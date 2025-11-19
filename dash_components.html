@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Class that generates the data map">
+
+<title>Generate Map – SolomonIslandsDataMap</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-000f0825b9c55ed21d14970d810c14a9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="Generate Map – SolomonIslandsDataMap">
+<meta property="og:description" content="Class that generates the data map">
+<meta property="og:site_name" content="SolomonIslandsDataMap">
+<meta name="twitter:title" content="Generate Map – SolomonIslandsDataMap">
+<meta name="twitter:description" content="Class that generates the data map">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">SolomonIslandsDataMap</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/Gippers"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.thomasmartin.id.au"> <i class="bi bi-globe" role="img" aria-label="Personal Website">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./dash_components.html">Generate Map</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Solomon Islands Data Map</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./load_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Load Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dash_components.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Generate Map</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">App Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./map_page.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Map Page</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./map_population.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Map Page</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./election_page.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Election Page</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./table_page.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Table Page</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Generate Map</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#load-data" id="toc-load-data" class="nav-link active" data-scroll-target="#load-data">Load Data</a></li>
+  <li><a href="#build-the-cloreopath-map" id="toc-build-the-cloreopath-map" class="nav-link" data-scroll-target="#build-the-cloreopath-map">Build the Cloreopath Map</a>
+  <ul class="collapse">
+  <li><a href="#election-maps" id="toc-election-maps" class="nav-link" data-scroll-target="#election-maps">Election Maps</a></li>
+  </ul></li>
+  <li><a href="#todo" id="toc-todo" class="nav-link" data-scroll-target="#todo">TODO</a>
+  <ul class="collapse">
+  <li><a href="#election_map" id="toc-election_map" class="nav-link" data-scroll-target="#election_map">election_map</a></li>
+  <li><a href="#create-a-bar-graph-to-display-current-data" id="toc-create-a-bar-graph-to-display-current-data" class="nav-link" data-scroll-target="#create-a-bar-graph-to-display-current-data">Create a bar graph to display current data</a>
+  <ul class="collapse">
+  <li><a href="#bar-plot-for-elections-data" id="toc-bar-plot-for-elections-data" class="nav-link" data-scroll-target="#bar-plot-for-elections-data">Bar Plot for Elections Data</a></li>
+  <li><a href="#election_bar_plot" id="toc-election_bar_plot" class="nav-link" data-scroll-target="#election_bar_plot">election_bar_plot</a></li>
+  </ul></li>
+  <li><a href="#create-data-tables" id="toc-create-data-tables" class="nav-link" data-scroll-target="#create-data-tables">Create Data Tables</a>
+  <ul class="collapse">
+  <li><a href="#census-data-table" id="toc-census-data-table" class="nav-link" data-scroll-target="#census-data-table">Census Data Table</a></li>
+  <li><a href="#gen_census_grid" id="toc-gen_census_grid" class="nav-link" data-scroll-target="#gen_census_grid">gen_census_grid</a></li>
+  <li><a href="#create-a-population-grid" id="toc-create-a-population-grid" class="nav-link" data-scroll-target="#create-a-population-grid">Create a Population Grid</a></li>
+  <li><a href="#gen_pop_grid" id="toc-gen_pop_grid" class="nav-link" data-scroll-target="#gen_pop_grid">gen_pop_grid</a></li>
+  </ul></li>
+  <li><a href="#create-kpi" id="toc-create-kpi" class="nav-link" data-scroll-target="#create-kpi">Create KPI</a></li>
+  <li><a href="#create-function-to-make-dropdowns" id="toc-create-function-to-make-dropdowns" class="nav-link" data-scroll-target="#create-function-to-make-dropdowns">Create function to make dropdowns</a>
+  <ul class="collapse">
+  <li><a href="#gen_dd" id="toc-gen_dd" class="nav-link" data-scroll-target="#gen_dd">gen_dd</a></li>
+  </ul></li>
+  <li><a href="#create-population-pyramid" id="toc-create-population-pyramid" class="nav-link" data-scroll-target="#create-population-pyramid">Create Population Pyramid</a>
+  <ul class="collapse">
+  <li><a href="#gen_pyramid" id="toc-gen_pyramid" class="nav-link" data-scroll-target="#gen_pyramid">gen_pyramid</a></li>
+  </ul></li>
+  <li><a href="#testing" id="toc-testing" class="nav-link" data-scroll-target="#testing">Testing</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/Gippers/SolomonIslandsDataMap/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Generate Map</h1>
+</div>
+
+<div>
+  <div class="description">
+    Class that generates the data map
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<div id="cell-2" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> - do a need a state class that tracks the state of different website objects to help with</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># updating etc. </span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> - not even state, should it be an object that contains everythin to track. Execpt if I am patching,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># then the tracking in mem is unessary, so better to just track necesary values like: last changes card etc.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="load-data" class="level2">
+<h2 class="anchored" data-anchor-id="load-data">Load Data</h2>
+<div id="cell-4" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sol_geo <span class="op">=</span> SolomonGeo.load_pickle(<span class="st">"/testData/"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="build-the-cloreopath-map" class="level2">
+<h2 class="anchored" data-anchor-id="build-the-cloreopath-map">Build the Cloreopath Map</h2>
+<p>go.</p>
+<div id="cell-7" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>z_vals <span class="op">=</span> sol_geo.get_census(geo_filter <span class="op">=</span> <span class="st">'Province'</span>, var <span class="op">=</span> <span class="st">'Key Statistics'</span>, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                                                 measure <span class="op">=</span> <span class="st">'Total Households'</span>).values</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">min</span>(z_vals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>688</code></pre>
+</div>
+</div>
+<div id="cell-8" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> define_map(sol_geo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-9" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fig[<span class="st">'data'</span>][<span class="dv">0</span>][<span class="st">'zmin'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>688</code></pre>
+</div>
+</div>
+<section id="election-maps" class="level3">
+<h3 class="anchored" data-anchor-id="election-maps">Election Maps</h3>
+<p>Slightly different as they have less geographies and colour based on winning party</p>
+<div id="cell-11" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sol_geo.elec_wide.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Type</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Geo</th>
+<th data-quarto-table-cell-role="th">loc_name</th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">Winning Party</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>National Parliament</td>
+<td>2024</td>
+<td>Constituency</td>
+<td>Auki-Langalanga</td>
+<td>Cooper Wale (SID) - 4314 (66.2%)</td>
+<td>David Filia (OUR) - 1348 (20.7%)</td>
+<td>Talauburi Anisi (KAD) - 488 (7.5%)</td>
+<td>SID</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>National Parliament</td>
+<td>2024</td>
+<td>Constituency</td>
+<td>Baegu-Asifola</td>
+<td>Tagini Makario (OUR) - 2391 (37.4%)</td>
+<td>Celsus Talifilu (U4C) - 2147 (33.6%)</td>
+<td>Douglas Buga (SIP) - 1009 (15.8%)</td>
+<td>OUR</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>National Parliament</td>
+<td>2024</td>
+<td>Constituency</td>
+<td>Central Guadalcanal</td>
+<td>Shanel Agovaka (OUR) - 3454 (43.1%)</td>
+<td>Manengelea Rex (IND) - 1592 (19.8%)</td>
+<td>Denson Denni (KAD) - 1381 (17.2%)</td>
+<td>OUR</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>National Parliament</td>
+<td>2024</td>
+<td>Constituency</td>
+<td>Central Honiara</td>
+<td>Darcy Lilo (SIP) - 8223 (63.4%)</td>
+<td>Alfred Efona (UP) - 3632 (28.0%)</td>
+<td>Francis Idu (OUR) - 669 (5.2%)</td>
+<td>SIP</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>National Parliament</td>
+<td>2024</td>
+<td>Constituency</td>
+<td>Central Kwara'ae</td>
+<td>Ricky Fuo'o (UP) - 5208 (47.9%)</td>
+<td>Jackson Fiulaua (OUR) - 1831 (16.8%)</td>
+<td>Young Wate (IND) - 1537 (14.1%)</td>
+<td>UP</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-12" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sol_geo.elec_wide[<span class="st">"Winning Party"</span>].unique()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>array(['SID', 'OUR', 'SIP', 'UP', 'IND', 'PFP', 'U4C', 'KAD', 'DAP'],
+      dtype=object)</code></pre>
+</div>
+</div>
+<div id="cell-13" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>sol_geo.elec[<span class="st">"Party"</span>].unique()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>array(['UP', 'PLD', 'KAD', 'OUR', 'SID', 'IND', 'SIP', 'U4C', 'PAP',
+       'PFP', 'DAP', 'NTP', 'GPS'], dtype=object)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="todo" class="level1">
+<h1>TODO</h1>
+<p>I need to make a unique color for each party, then colorscale will need to have all as an option. Probably a dictionary is better. Use the color brewer colors plus maybe another colour like black https://colorbrewer2.org/#type=qualitative&amp;scheme=Set3&amp;n=12</p>
+<hr>
+<p><a href="https://github.com/Gippers/SolomonIslandsDataMap/blob/main/SolomonIslandsDataMap/dash_components.py#L82" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="election_map" class="level3">
+<h3 class="anchored" data-anchor-id="election_map">election_map</h3>
+<blockquote class="blockquote">
+<pre><code> election_map (sol_df:SolomonIslandsDataMap.load_data.SolomonGeo)</code></pre>
+</blockquote>
+<p><em>Creates and returns a chloreopath map for election</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 38%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sol_df</td>
+<td>SolomonGeo</td>
+<td>Solomon geo object containing census data to input into map</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>Figure</strong></td>
+<td><strong>Returns a graph object figure</strong></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-16" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#election_map(sol_geo).show()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-17" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>election_map(sol_geo)[<span class="st">'data'</span>][<span class="dv">0</span>][<span class="st">'colorscale'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>((0.0, '#8dd3c7'), (1.0, '#8dd3c7'))</code></pre>
+</div>
+</div>
+</section>
+<section id="create-a-bar-graph-to-display-current-data" class="level2">
+<h2 class="anchored" data-anchor-id="create-a-bar-graph-to-display-current-data">Create a bar graph to display current data</h2>
+<div id="cell-19" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>gen_bar_plot(sol_geo, <span class="st">'Ward'</span>, <span class="st">"Main source of household income in last 12 months"</span>, <span class="st">'Wages Salary'</span>, [<span class="st">'Cruz'</span>, <span class="st">'Vavaea'</span>], <span class="st">'Proportion'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>                            <div id="7f742bfe-845d-471f-8474-83f23f778801" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("7f742bfe-845d-471f-8474-83f23f778801")) {                    Plotly.newPlot(                        "7f742bfe-845d-471f-8474-83f23f778801",                        [{"customdata":["Cruz","Cruz","Cruz","Cruz","Cruz","Cruz","Cruz","Cruz"],"hovertemplate":"%{customdata} \u003cextra\u003e%{x}\u003cbr\u003e\u003cb\u003e%{y}\u003c\u002fextra\u003e","name":"Cruz","text":["0.0%","76.47%","17.65%","0.0%","0.0%","0.0%","0.0%","5.88%"],"textposition":"outside","x":["No income","Wages Salary","Own business","Sale fish crop craft","Land lease","House rent","Remittances","Other source"],"y":[0.0,0.7647,0.1765,0.0,0.0,0.0,0.0,0.0588],"type":"bar","textfont":{"size":12},"cliponaxis":false,"textangle":0},{"customdata":["Vavaea","Vavaea","Vavaea","Vavaea","Vavaea","Vavaea","Vavaea","Vavaea"],"hovertemplate":"%{customdata} \u003cextra\u003e%{x}\u003cbr\u003e\u003cb\u003e%{y}\u003c\u002fextra\u003e","name":"Vavaea","text":["0.64%","78.98%","8.17%","1.91%","0.32%","2.76%","0.21%","7.01%"],"textposition":"outside","x":["No income","Wages Salary","Own business","Sale fish crop craft","Land lease","House rent","Remittances","Other source"],"y":[0.0064,0.7898,0.0817,0.0191,0.0032,0.0276,0.0021,0.0701],"type":"bar","textfont":{"size":12},"cliponaxis":false,"textangle":0}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"tickangle":-45,"categoryorder":"total descending"},"title":{"text":"Showing Main source of household income in last 12 months for Cruz, Vavaea"},"barmode":"group","yaxis":{"tickformat":".1%"},"hovermode":"x unified"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('7f742bfe-845d-471f-8474-83f23f778801');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+</div>
+</div>
+<section id="bar-plot-for-elections-data" class="level3">
+<h3 class="anchored" data-anchor-id="bar-plot-for-elections-data">Bar Plot for Elections Data</h3>
+<p>Example plot for Auki-Langalanga</p>
+<div id="cell-21" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> sol_geo.elec</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>loc <span class="op">=</span> <span class="st">'Auki-Langalanga'</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>df.loc[df[<span class="st">'loc_name'</span>] <span class="op">==</span> loc, <span class="st">'candParty'</span>].values</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>array(['Joseph Waleanisia (UP)', 'Obadiah Koti (PLD)',
+       'Talauburi Anisi (KAD)', 'David Filia (OUR)', 'Cooper Wale (SID)'],
+      dtype=object)</code></pre>
+</div>
+</div>
+<div id="cell-22" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> go.Figure()</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>measures <span class="op">=</span> <span class="bu">list</span>(df.columns)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>fig.add_trace(go.Bar(</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> df.loc[df[<span class="st">'loc_name'</span>] <span class="op">==</span> loc, <span class="st">'Candidate'</span>].values,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> df.loc[df[<span class="st">'loc_name'</span>] <span class="op">==</span> loc, <span class="st">'Total'</span>].values,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> loc,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    marker <span class="op">=</span> <span class="bu">dict</span>(color <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="kw">lambda</span> y: sol_geo.colormap[y], df.loc[df[<span class="st">'loc_name'</span>] <span class="op">==</span> loc, <span class="st">'Party'</span>].values))),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    hovertemplate <span class="op">=</span> <span class="st">'%</span><span class="sc">{x}</span><span class="st"> &lt;extra&gt;%</span><span class="sc">{y}</span><span class="st">&lt;/extra&gt;'</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> df.loc[df[<span class="st">'loc_name'</span>] <span class="op">==</span> loc, <span class="st">'Total'</span>].values,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    textposition<span class="op">=</span><span class="st">'auto'</span>,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>fig.update_layout(barmode<span class="op">=</span><span class="st">'group'</span>, xaxis_tickangle<span class="op">=-</span><span class="dv">45</span>, title_text<span class="op">=</span><span class="st">"Title"</span>,</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>                   xaxis<span class="op">=</span>{<span class="st">'categoryorder'</span>:<span class="st">'total descending'</span>}, )</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>fig.update_traces(textfont_size<span class="op">=</span><span class="dv">12</span>, textangle<span class="op">=</span><span class="dv">0</span>, textposition<span class="op">=</span><span class="st">"outside"</span>, cliponaxis<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>                            <div id="7e421a68-267c-48f6-ad4e-849e9df74550" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("7e421a68-267c-48f6-ad4e-849e9df74550")) {                    Plotly.newPlot(                        "7e421a68-267c-48f6-ad4e-849e9df74550",                        [{"hovertemplate":"%{x} \u003cextra\u003e%{y}\u003c\u002fextra\u003e","marker":{"color":["#fb8072","#bc80bd","#fccde5","#80b1d3","#8dd3c7"]},"name":"Auki-Langalanga","text":[108.0,257.0,488.0,1348.0,4314.0],"textposition":"outside","x":["Joseph Waleanisia ","Obadiah Koti ","Talauburi Anisi ","David Filia ","Cooper Wale "],"y":[108,257,488,1348,4314],"type":"bar","textfont":{"size":12},"cliponaxis":false,"textangle":0}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"tickangle":-45,"categoryorder":"total descending"},"title":{"text":"Title"},"barmode":"group"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('7e421a68-267c-48f6-ad4e-849e9df74550');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/Gippers/SolomonIslandsDataMap/blob/main/SolomonIslandsDataMap/dash_components.py#L177" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="election_bar_plot" class="level3">
+<h3 class="anchored" data-anchor-id="election_bar_plot">election_bar_plot</h3>
+<blockquote class="blockquote">
+<pre><code> election_bar_plot (sol_geo:SolomonIslandsDataMap.load_data.SolomonGeo,
+                    geo_filter:str='Constituency', year:int=2024,
+                    election:str='National Parliament',
+                    location:str='Auki-Langalanga',
+                    type_filter:str='Total')</code></pre>
+</blockquote>
+<p><em>Create a bar plot that show the census selected election data</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sol_geo</td>
+<td>SolomonGeo</td>
+<td></td>
+<td>Solomon geo object containing census data to input into map</td>
+</tr>
+<tr class="even">
+<td>geo_filter</td>
+<td>str</td>
+<td>Constituency</td>
+<td>The desired aggregation of the geography</td>
+</tr>
+<tr class="odd">
+<td>year</td>
+<td>int</td>
+<td>2024</td>
+<td>The year of the elections data</td>
+</tr>
+<tr class="even">
+<td>election</td>
+<td>str</td>
+<td>National Parliament</td>
+<td>The type of election.</td>
+</tr>
+<tr class="odd">
+<td>location</td>
+<td>str</td>
+<td>Auki-Langalanga</td>
+<td>Desired location within aggregation</td>
+</tr>
+<tr class="even">
+<td>type_filter</td>
+<td>str</td>
+<td>Total</td>
+<td>The type of data, eitehr Total of Proportion</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>Figure</strong></td>
+<td></td>
+<td><strong>Returns a graph object figure of a barplot</strong></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-24" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>election_bar_plot(sol_geo, type_filter <span class="op">=</span> <span class="st">'Proportion'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>                            <div id="d5592511-e2b2-4717-b641-bb6ace8a4331" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("d5592511-e2b2-4717-b641-bb6ace8a4331")) {                    Plotly.newPlot(                        "d5592511-e2b2-4717-b641-bb6ace8a4331",                        [{"hovertemplate":"%{x} \u003cextra\u003e%{y}\u003c\u002fextra\u003e","marker":{"color":["#fb8072","#bc80bd","#fccde5","#80b1d3","#8dd3c7"]},"name":"Auki-Langalanga","text":["1.7%","3.9%","7.5%","20.7%","66.2%"],"textposition":"outside","x":["Joseph Waleanisia (UP)","Obadiah Koti (PLD)","Talauburi Anisi (KAD)","David Filia (OUR)","Cooper Wale (SID)"],"y":[0.017,0.039,0.075,0.207,0.662],"type":"bar","textfont":{"size":12},"cliponaxis":false,"textangle":0}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"tickangle":-45,"categoryorder":"total descending"},"title":{"text":"2024 National Parliament Election Results in Auki-Langalanga"},"barmode":"group","yaxis":{"tickformat":".1%"},"hovermode":"x unified"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('d5592511-e2b2-4717-b641-bb6ace8a4331');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+</div>
+</div>
+</section>
+</section>
+<section id="create-data-tables" class="level2">
+<h2 class="anchored" data-anchor-id="create-data-tables">Create Data Tables</h2>
+<section id="census-data-table" class="level3">
+<h3 class="anchored" data-anchor-id="census-data-table">Census Data Table</h3>
+<p>A method that creates data tables for census</p>
+<hr>
+<p><a href="https://github.com/Gippers/SolomonIslandsDataMap/blob/main/SolomonIslandsDataMap/dash_components.py#L217" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="gen_census_grid" class="level3">
+<h3 class="anchored" data-anchor-id="gen_census_grid">gen_census_grid</h3>
+<blockquote class="blockquote">
+<pre><code> gen_census_grid (sol_geo:SolomonIslandsDataMap.load_data.SolomonGeo,
+                  geo_filter:str, variable:str, measure:str,
+                  locations:[&lt;class'str'&gt;]=None, type_filter:str='Total',
+                  grid_rows:int=10)</code></pre>
+</blockquote>
+<p><em>Creates a basic data table using dash grid</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sol_geo</td>
+<td>SolomonGeo</td>
+<td></td>
+<td>Solomon geo object containing census data to input into map</td>
+</tr>
+<tr class="even">
+<td>geo_filter</td>
+<td>str</td>
+<td></td>
+<td>The desired aggregation of the geography</td>
+</tr>
+<tr class="odd">
+<td>variable</td>
+<td>str</td>
+<td></td>
+<td>The variable to use to create the bar plot</td>
+</tr>
+<tr class="even">
+<td>measure</td>
+<td>str</td>
+<td></td>
+<td>The measure to highlight on the bar graph</td>
+</tr>
+<tr class="odd">
+<td>locations</td>
+<td>[&lt;class ‘str’&gt;]</td>
+<td>None</td>
+<td>Desired location within aggregation</td>
+</tr>
+<tr class="even">
+<td>type_filter</td>
+<td>str</td>
+<td>Total</td>
+<td>The type aggregartion</td>
+</tr>
+<tr class="odd">
+<td>grid_rows</td>
+<td>int</td>
+<td>10</td>
+<td>The number of rows to display</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>AgGrid</strong></td>
+<td></td>
+<td><strong>Returns a graph object figure of a barplot</strong></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-27" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>gen_census_grid(sol_geo, <span class="st">'Province'</span>, <span class="st">"Main source of household income in last 12 months"</span>, <span class="st">'Wages Salary'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>AgGrid(id='dash-grid', columnDefs=[{'field': 'Province', 'headerName': 'Province', 'filter': True, 'lockPinned': True, 'cellClass': 'lock-pinned'}, {'field': 'No income', 'headerName': 'No income'}, {'field': 'Wages Salary', 'headerName': 'Wages Salary'}, {'field': 'Own business', 'headerName': 'Own business'}, {'field': 'Sale fish crop craft', 'headerName': 'Sale fish crop craft'}, {'field': 'Land lease', 'headerName': 'Land lease'}, {'field': 'House rent', 'headerName': 'House rent'}, {'field': 'Remittances', 'headerName': 'Remittances'}, {'field': 'Other source', 'headerName': 'Other source'}], columnSize='sizeToFit', csvExportParams={'fileName': 'Solomons 2009 Census Data Main source of household income in last 12 months by Province - Total.csv'}, dashGridOptions={'pagination': True, 'domLayout': 'autoHeight', 'paginationPageSize': 10, 'wrapHeaderText': True, 'autoHeaderHeight': True}, defaultColDef={'resizable': True, 'sortable': True, 'minWidth': 100}, rowData=[{'Province': 'Central', 'No income': 66.0, 'Wages Salary': 665.0, 'Own business': 373.0, 'Sale fish crop craft': 2518.0, 'Land lease': 1.0, 'House rent': 5.0, 'Remittances': 88.0, 'Other source': 1189.0}, {'Province': 'Choiseul', 'No income': 88.0, 'Wages Salary': 892.0, 'Own business': 206.0, 'Sale fish crop craft': 2443.0, 'Land lease': 6.0, 'House rent': 16.0, 'Remittances': 206.0, 'Other source': 855.0}, {'Province': 'Guadalcanal', 'No income': 538.0, 'Wages Salary': 3978.0, 'Own business': 868.0, 'Sale fish crop craft': 7702.0, 'Land lease': 20.0, 'House rent': 102.0, 'Remittances': 182.0, 'Other source': 3773.0}, {'Province': 'Honiara', 'No income': 75.0, 'Wages Salary': 6984.0, 'Own business': 783.0, 'Sale fish crop craft': 393.0, 'Land lease': 54.0, 'House rent': 179.0, 'Remittances': 48.0, 'Other source': 465.0}, {'Province': 'Isabel', 'No income': 92.0, 'Wages Salary': 907.0, 'Own business': 310.0, 'Sale fish crop craft': 2900.0, 'Land lease': 4.0, 'House rent': 18.0, 'Remittances': 174.0, 'Other source': 738.0}, {'Province': 'Makira-Ulawa', 'No income': 315.0, 'Wages Salary': 1007.0, 'Own business': 459.0, 'Sale fish crop craft': 3293.0, 'Land lease': 14.0, 'House rent': 28.0, 'Remittances': 90.0, 'Other source': 1967.0}, {'Province': 'Malaita', 'No income': 1404.0, 'Wages Salary': 2942.0, 'Own business': 1290.0, 'Sale fish crop craft': 11075.0, 'Land lease': 15.0, 'House rent': 154.0, 'Remittances': 584.0, 'Other source': 6957.0}, {'Province': 'Rennell-Bell', 'No income': 114.0, 'Wages Salary': 147.0, 'Own business': 40.0, 'Sale fish crop craft': 244.0, 'Land lease': 1.0, 'House rent': 13.0, 'Remittances': 82.0, 'Other source': 47.0}, {'Province': 'Temotu', 'No income': 159.0, 'Wages Salary': 612.0, 'Own business': 166.0, 'Sale fish crop craft': 2505.0, 'Land lease': 10.0, 'House rent': 14.0, 'Remittances': 120.0, 'Other source': 717.0}, {'Province': 'Western', 'No income': 182.0, 'Wages Salary': 3732.0, 'Own business': 618.0, 'Sale fish crop craft': 7518.0, 'Land lease': 8.0, 'House rent': 48.0, 'Remittances': 410.0, 'Other source': 1246.0}], style={'height': None})</code></pre>
+</div>
+</div>
+</section>
+<section id="create-a-population-grid" class="level3">
+<h3 class="anchored" data-anchor-id="create-a-population-grid">Create a Population Grid</h3>
+<hr>
+<p><a href="https://github.com/Gippers/SolomonIslandsDataMap/blob/main/SolomonIslandsDataMap/dash_components.py#L250" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="gen_pop_grid" class="level3">
+<h3 class="anchored" data-anchor-id="gen_pop_grid">gen_pop_grid</h3>
+<blockquote class="blockquote">
+<pre><code> gen_pop_grid (sol_geo:SolomonIslandsDataMap.load_data.SolomonGeo,
+               years:str, variable:str, measure:str,
+               geo_filter:str='Province', locations:[&lt;class'str'&gt;]=None,
+               type_filter:str='Total', grid_rows:int=10)</code></pre>
+</blockquote>
+<p><em>Creates a basic data table using dash grid</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sol_geo</td>
+<td>SolomonGeo</td>
+<td></td>
+<td>Solomon geo object containing census data to input into map</td>
+</tr>
+<tr class="even">
+<td>years</td>
+<td>str</td>
+<td></td>
+<td>Selected data years</td>
+</tr>
+<tr class="odd">
+<td>variable</td>
+<td>str</td>
+<td></td>
+<td>The variable to use to create the bar plot</td>
+</tr>
+<tr class="even">
+<td>measure</td>
+<td>str</td>
+<td></td>
+<td>The measure to highlight on the bar graph</td>
+</tr>
+<tr class="odd">
+<td>geo_filter</td>
+<td>str</td>
+<td>Province</td>
+<td>The desired aggregation of the geography</td>
+</tr>
+<tr class="even">
+<td>locations</td>
+<td>[&lt;class ‘str’&gt;]</td>
+<td>None</td>
+<td>Desired location within aggregation</td>
+</tr>
+<tr class="odd">
+<td>type_filter</td>
+<td>str</td>
+<td>Total</td>
+<td>The type aggregartion</td>
+</tr>
+<tr class="even">
+<td>grid_rows</td>
+<td>int</td>
+<td>10</td>
+<td>The number of rows to display</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>AgGrid</strong></td>
+<td></td>
+<td><strong>Returns a graph object figure of a barplot</strong></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-30" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>gen_pop_grid(sol_geo, [<span class="dv">2023</span>, <span class="dv">2024</span>, <span class="dv">2025</span>], <span class="st">'Population'</span>, <span class="st">'Total'</span>,)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>AgGrid(id='dash-grid', columnDefs=[{'field': 'Province', 'headerName': 'Province', 'filter': True, 'lockPinned': True, 'cellClass': 'lock-pinned'}, {'field': 'Year', 'headerName': 'Year', 'filter': True, 'lockPinned': True, 'cellClass': 'lock-pinned'}, {'field': '0-4', 'headerName': '0-4'}, {'field': '5-9', 'headerName': '5-9'}, {'field': '10-14', 'headerName': '10-14'}, {'field': '15-19', 'headerName': '15-19'}, {'field': '20-24', 'headerName': '20-24'}, {'field': '25-29', 'headerName': '25-29'}, {'field': '30-34', 'headerName': '30-34'}, {'field': '35-39', 'headerName': '35-39'}, {'field': '40-44', 'headerName': '40-44'}, {'field': '45-49', 'headerName': '45-49'}, {'field': '50-54', 'headerName': '50-54'}, {'field': '55-59', 'headerName': '55-59'}, {'field': '60-64', 'headerName': '60-64'}, {'field': '65-69', 'headerName': '65-69'}, {'field': '70-74', 'headerName': '70-74'}, {'field': '75-79', 'headerName': '75-79'}, {'field': '80+', 'headerName': '80+'}], columnSize='sizeToFit', csvExportParams={'fileName': 'Solomons 2009 Population Projections for Population Population by Province - Total.csv'}, dashGridOptions={'pagination': True, 'domLayout': 'autoHeight', 'paginationPageSize': 10, 'wrapHeaderText': True, 'autoHeaderHeight': True}, defaultColDef={'resizable': True, 'sortable': True, 'minWidth': 100}, rowData=[{'Year': 2023, 'Province': 'Central', '0-4': 3621.0, '5-9': 3642.0, '10-14': 3915.0, '15-19': 4036.0, '20-24': 3534.0, '25-29': 2622.0, '30-34': 1920.0, '35-39': 1740.0, '40-44': 1830.0, '45-49': 1786.0, '50-54': 1610.0, '55-59': 1073.0, '60-64': 891.0, '65-69': 597.0, '70-74': 483.0, '75-79': 321.0, '80+': 296.0}, {'Year': 2024, 'Province': 'Central', '0-4': 3641.0, '5-9': 3603.0, '10-14': 3861.0, '15-19': 4019.0, '20-24': 3656.0, '25-29': 2773.0, '30-34': 1995.0, '35-39': 1719.0, '40-44': 1811.0, '45-49': 1776.0, '50-54': 1689.0, '55-59': 1127.0, '60-64': 933.0, '65-69': 620.0, '70-74': 493.0, '75-79': 334.0, '80+': 309.0}, {'Year': 2025, 'Province': 'Central', '0-4': 3671.0, '5-9': 3576.0, '10-14': 3788.0, '15-19': 4001.0, '20-24': 3757.0, '25-29': 2928.0, '30-34': 2091.0, '35-39': 1716.0, '40-44': 1779.0, '45-49': 1773.0, '50-54': 1732.0, '55-59': 1212.0, '60-64': 958.0, '65-69': 659.0, '70-74': 499.0, '75-79': 348.0, '80+': 322.0}, {'Year': 2023, 'Province': 'Choiseul', '0-4': 4900.0, '5-9': 4586.0, '10-14': 4396.0, '15-19': 4266.0, '20-24': 3885.0, '25-29': 3128.0, '30-34': 2539.0, '35-39': 2187.0, '40-44': 2007.0, '45-49': 1851.0, '50-54': 1668.0, '55-59': 1208.0, '60-64': 937.0, '65-69': 641.0, '70-74': 499.0, '75-79': 309.0, '80+': 330.0}, {'Year': 2024, 'Province': 'Choiseul', '0-4': 4973.0, '5-9': 4630.0, '10-14': 4458.0, '15-19': 4258.0, '20-24': 4013.0, '25-29': 3274.0, '30-34': 2640.0, '35-39': 2238.0, '40-44': 2040.0, '45-49': 1865.0, '50-54': 1735.0, '55-59': 1268.0, '60-64': 989.0, '65-69': 665.0, '70-74': 522.0, '75-79': 313.0, '80+': 345.0}, {'Year': 2025, 'Province': 'Choiseul', '0-4': 5048.0, '5-9': 4682.0, '10-14': 4479.0, '15-19': 4289.0, '20-24': 4117.0, '25-29': 3429.0, '30-34': 2750.0, '35-39': 2299.0, '40-44': 2071.0, '45-49': 1888.0, '50-54': 1777.0, '55-59': 1346.0, '60-64': 1032.0, '65-69': 704.0, '70-74': 536.0, '75-79': 328.0, '80+': 355.0}, {'Year': 2023, 'Province': 'Guadalcanal', '0-4': 21745.0, '5-9': 20158.0, '10-14': 17946.0, '15-19': 16342.0, '20-24': 15215.0, '25-29': 14197.0, '30-34': 13723.0, '35-39': 13159.0, '40-44': 10683.0, '45-49': 8749.0, '50-54': 6879.0, '55-59': 4715.0, '60-64': 3450.0, '65-69': 2140.0, '70-74': 1608.0, '75-79': 941.0, '80+': 870.0}, {'Year': 2024, 'Province': 'Guadalcanal', '0-4': 22087.0, '5-9': 20561.0, '10-14': 18484.0, '15-19': 16701.0, '20-24': 15766.0, '25-29': 14668.0, '30-34': 13976.0, '35-39': 13660.0, '40-44': 11240.0, '45-49': 9147.0, '50-54': 7337.0, '55-59': 5032.0, '60-64': 3717.0, '65-69': 2273.0, '70-74': 1697.0, '75-79': 980.0, '80+': 912.0}, {'Year': 2025, 'Province': 'Guadalcanal', '0-4': 22419.0, '5-9': 20948.0, '10-14': 18986.0, '15-19': 17102.0, '20-24': 16290.0, '25-29': 15166.0, '30-34': 14301.0, '35-39': 14036.0, '40-44': 11849.0, '45-49': 9569.0, '50-54': 7749.0, '55-59': 5425.0, '60-64': 3947.0, '65-69': 2466.0, '70-74': 1760.0, '75-79': 1044.0, '80+': 947.0}, {'Year': 2023, 'Province': 'Honiara', '0-4': 8666.0, '5-9': 9207.0, '10-14': 9041.0, '15-19': 8060.0, '20-24': 7380.0, '25-29': 7291.0, '30-34': 8878.0, '35-39': 10220.0, '40-44': 7840.0, '45-49': 5991.0, '50-54': 4628.0, '55-59': 3193.0, '60-64': 2359.0, '65-69': 1509.0, '70-74': 943.0, '75-79': 507.0, '80+': 313.0}, {'Year': 2024, 'Province': 'Honiara', '0-4': 8535.0, '5-9': 9146.0, '10-14': 9172.0, '15-19': 8285.0, '20-24': 7595.0, '25-29': 7252.0, '30-34': 8475.0, '35-39': 10381.0, '40-44': 8319.0, '45-49': 6300.0, '50-54': 4918.0, '55-59': 3392.0, '60-64': 2507.0, '65-69': 1620.0, '70-74': 1014.0, '75-79': 547.0, '80+': 343.0}, {'Year': 2025, 'Province': 'Honiara', '0-4': 8404.0, '5-9': 9065.0, '10-14': 9241.0, '15-19': 8536.0, '20-24': 7802.0, '25-29': 7291.0, '30-34': 8159.0, '35-39': 10294.0, '40-44': 8849.0, '45-49': 6643.0, '50-54': 5182.0, '55-59': 3636.0, '60-64': 2642.0, '65-69': 1746.0, '70-74': 1085.0, '75-79': 593.0, '80+': 374.0}, {'Year': 2023, 'Province': 'Isabel', '0-4': 4165.0, '5-9': 4041.0, '10-14': 4026.0, '15-19': 4005.0, '20-24': 3680.0, '25-29': 2958.0, '30-34': 2468.0, '35-39': 2128.0, '40-44': 2054.0, '45-49': 1985.0, '50-54': 1666.0, '55-59': 1131.0, '60-64': 993.0, '65-69': 764.0, '70-74': 590.0, '75-79': 379.0, '80+': 377.0}, {'Year': 2024, 'Province': 'Isabel', '0-4': 4203.0, '5-9': 4051.0, '10-14': 4047.0, '15-19': 3992.0, '20-24': 3804.0, '25-29': 3087.0, '30-34': 2562.0, '35-39': 2171.0, '40-44': 2059.0, '45-49': 2004.0, '50-54': 1764.0, '55-59': 1185.0, '60-64': 1020.0, '65-69': 786.0, '70-74': 613.0, '75-79': 394.0, '80+': 392.0}, {'Year': 2025, 'Province': 'Isabel', '0-4': 4244.0, '5-9': 4068.0, '10-14': 4038.0, '15-19': 4002.0, '20-24': 3900.0, '25-29': 3232.0, '30-34': 2657.0, '35-39': 2228.0, '40-44': 2067.0, '45-49': 2019.0, '50-54': 1838.0, '55-59': 1271.0, '60-64': 1036.0, '65-69': 816.0, '70-74': 632.0, '75-79': 413.0, '80+': 407.0}, {'Year': 2023, 'Province': 'Makira-Ulawa', '0-4': 7179.0, '5-9': 7037.0, '10-14': 7244.0, '15-19': 6960.0, '20-24': 5670.0, '25-29': 4277.0, '30-34': 3355.0, '35-39': 3440.0, '40-44': 3220.0, '45-49': 2842.0, '50-54': 2267.0, '55-59': 1512.0, '60-64': 1238.0, '65-69': 832.0, '70-74': 658.0, '75-79': 417.0, '80+': 398.0}, {'Year': 2024, 'Province': 'Makira-Ulawa', '0-4': 7242.0, '5-9': 7021.0, '10-14': 7177.0, '15-19': 7117.0, '20-24': 5929.0, '25-29': 4533.0, '30-34': 3405.0, '35-39': 3428.0, '40-44': 3263.0, '45-49': 2910.0, '50-54': 2410.0, '55-59': 1589.0, '60-64': 1297.0, '65-69': 864.0, '70-74': 679.0, '75-79': 427.0, '80+': 414.0}, {'Year': 2025, 'Province': 'Makira-Ulawa', '0-4': 7321.0, '5-9': 7021.0, '10-14': 7120.0, '15-19': 7209.0, '20-24': 6185.0, '25-29': 4788.0, '30-34': 3525.0, '35-39': 3390.0, '40-44': 3302.0, '45-49': 2977.0, '50-54': 2526.0, '55-59': 1706.0, '60-64': 1335.0, '65-69': 916.0, '70-74': 691.0, '75-79': 446.0, '80+': 427.0}, {'Year': 2023, 'Province': 'Malaita', '0-4': 18990.0, '5-9': 18896.0, '10-14': 20187.0, '15-19': 20945.0, '20-24': 18277.0, '25-29': 13286.0, '30-34': 9337.0, '35-39': 7805.0, '40-44': 7425.0, '45-49': 6991.0, '50-54': 5924.0, '55-59': 4453.0, '60-64': 3759.0, '65-69': 2804.0, '70-74': 2244.0, '75-79': 1627.0, '80+': 1394.0}, {'Year': 2024, 'Province': 'Malaita', '0-4': 19039.0, '5-9': 18690.0, '10-14': 19891.0, '15-19': 20718.0, '20-24': 18748.0, '25-29': 13942.0, '30-34': 9648.0, '35-39': 7769.0, '40-44': 7338.0, '45-49': 7010.0, '50-54': 6134.0, '55-59': 4578.0, '60-64': 3859.0, '65-69': 2871.0, '70-74': 2255.0, '75-79': 1667.0, '80+': 1453.0}, {'Year': 2025, 'Province': 'Malaita', '0-4': 19122.0, '5-9': 18543.0, '10-14': 19503.0, '15-19': 20502.0, '20-24': 19118.0, '25-29': 14609.0, '30-34': 10052.0, '35-39': 7776.0, '40-44': 7246.0, '45-49': 7006.0, '50-54': 6295.0, '55-59': 4766.0, '60-64': 3924.0, '65-69': 2967.0, '70-74': 2267.0, '75-79': 1696.0, '80+': 1516.0}, {'Year': 2023, 'Province': 'Rennell-Bell', '0-4': 566.0, '5-9': 491.0, '10-14': 424.0, '15-19': 428.0, '20-24': 444.0, '25-29': 449.0, '30-34': 299.0, '35-39': 264.0, '40-44': 189.0, '45-49': 227.0, '50-54': 172.0, '55-59': 127.0, '60-64': 132.0, '65-69': 126.0, '70-74': 113.0, '75-79': 65.0, '80+': 67.0}, {'Year': 2024, 'Province': 'Rennell-Bell', '0-4': 581.0, '5-9': 506.0, '10-14': 441.0, '15-19': 421.0, '20-24': 437.0, '25-29': 473.0, '30-34': 317.0, '35-39': 282.0, '40-44': 190.0, '45-49': 229.0, '50-54': 184.0, '55-59': 130.0, '60-64': 131.0, '65-69': 124.0, '70-74': 116.0, '75-79': 72.0, '80+': 68.0}, {'Year': 2025, 'Province': 'Rennell-Bell', '0-4': 595.0, '5-9': 521.0, '10-14': 453.0, '15-19': 420.0, '20-24': 435.0, '25-29': 483.0, '30-34': 346.0, '35-39': 293.0, '40-44': 201.0, '45-49': 223.0, '50-54': 197.0, '55-59': 137.0, '60-64': 129.0, '65-69': 124.0, '70-74': 117.0, '75-79': 78.0, '80+': 70.0}, {'Year': 2023, 'Province': 'Temotu', '0-4': 2686.0, '5-9': 2674.0, '10-14': 2813.0, '15-19': 3071.0, '20-24': 2905.0, '25-29': 2072.0, '30-34': 1578.0, '35-39': 1250.0, '40-44': 1220.0, '45-49': 1168.0, '50-54': 1197.0, '55-59': 910.0, '60-64': 765.0, '65-69': 586.0, '70-74': 460.0, '75-79': 269.0, '80+': 315.0}, {'Year': 2024, 'Province': 'Temotu', '0-4': 2697.0, '5-9': 2650.0, '10-14': 2805.0, '15-19': 2959.0, '20-24': 2996.0, '25-29': 2179.0, '30-34': 1646.0, '35-39': 1259.0, '40-44': 1221.0, '45-49': 1144.0, '50-54': 1219.0, '55-59': 941.0, '60-64': 789.0, '65-69': 598.0, '70-74': 479.0, '75-79': 283.0, '80+': 317.0}, {'Year': 2025, 'Province': 'Temotu', '0-4': 2710.0, '5-9': 2636.0, '10-14': 2756.0, '15-19': 2891.0, '20-24': 3043.0, '25-29': 2309.0, '30-34': 1709.0, '35-39': 1288.0, '40-44': 1210.0, '45-49': 1136.0, '50-54': 1215.0, '55-59': 986.0, '60-64': 806.0, '65-69': 617.0, '70-74': 490.0, '75-79': 301.0, '80+': 319.0}, {'Year': 2023, 'Province': 'Western', '0-4': 11762.0, '5-9': 11511.0, '10-14': 11679.0, '15-19': 11368.0, '20-24': 10110.0, '25-29': 8167.0, '30-34': 6990.0, '35-39': 5802.0, '40-44': 5338.0, '45-49': 4928.0, '50-54': 4599.0, '55-59': 3756.0, '60-64': 2749.0, '65-69': 1874.0, '70-74': 1368.0, '75-79': 889.0, '80+': 833.0}, {'Year': 2024, 'Province': 'Western', '0-4': 11834.0, '5-9': 11500.0, '10-14': 11631.0, '15-19': 11449.0, '20-24': 10408.0, '25-29': 8406.0, '30-34': 7198.0, '35-39': 5919.0, '40-44': 5398.0, '45-49': 4953.0, '50-54': 4678.0, '55-59': 3908.0, '60-64': 2914.0, '65-69': 1965.0, '70-74': 1420.0, '75-79': 921.0, '80+': 865.0}, {'Year': 2025, 'Province': 'Western', '0-4': 11916.0, '5-9': 11508.0, '10-14': 11564.0, '15-19': 11520.0, '20-24': 10650.0, '25-29': 8704.0, '30-34': 7373.0, '35-39': 6083.0, '40-44': 5447.0, '45-49': 4995.0, '50-54': 4729.0, '55-59': 4054.0, '60-64': 3076.0, '65-69': 2080.0, '70-74': 1468.0, '75-79': 959.0, '80+': 897.0}], style={'height': None})</code></pre>
+</div>
+</div>
+<p>dashGridOptions={‘pagination’: True, ‘domLayout’: ‘autoHeight’, ‘paginationPageSize’: 10},</p>
+</section>
+</section>
+<section id="create-kpi" class="level2">
+<h2 class="anchored" data-anchor-id="create-kpi">Create KPI</h2>
+<p>The kpi card is useful for displaying a particular value as a standout kpi</p>
+<div id="cell-33" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build and test a card</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>gen_kpi(sol_geo, <span class="dv">2022</span>, <span class="st">'Population'</span>, <span class="st">'Total'</span>, [<span class="st">"0-4"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>(Markdown('# 83,808'), Markdown('total persons in current selection'))</code></pre>
+</div>
+</div>
+</section>
+<section id="create-function-to-make-dropdowns" class="level2">
+<h2 class="anchored" data-anchor-id="create-function-to-make-dropdowns">Create function to make dropdowns</h2>
+<hr>
+<p><a href="https://github.com/Gippers/SolomonIslandsDataMap/blob/main/SolomonIslandsDataMap/dash_components.py#L337" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="gen_dd" class="level3">
+<h3 class="anchored" data-anchor-id="gen_dd">gen_dd</h3>
+<blockquote class="blockquote">
+<pre><code> gen_dd (location_list:[&lt;class'str'&gt;], id:str, place_holder:str=None,
+         val:str=None, clear:bool=False, height:int=35, multi:bool=False)</code></pre>
+</blockquote>
+<p><em>Create the location dropdown from given list</em></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>location_list</td>
+<td>[&lt;class ‘str’&gt;]</td>
+<td></td>
+<td>a list of locations</td>
+</tr>
+<tr class="even">
+<td>id</td>
+<td>str</td>
+<td></td>
+<td>Id of the dropdown</td>
+</tr>
+<tr class="odd">
+<td>place_holder</td>
+<td>str</td>
+<td>None</td>
+<td>a placeholder message to display</td>
+</tr>
+<tr class="even">
+<td>val</td>
+<td>str</td>
+<td>None</td>
+<td>The starting value of the dropdown</td>
+</tr>
+<tr class="odd">
+<td>clear</td>
+<td>bool</td>
+<td>False</td>
+<td>pick whether the ]</td>
+</tr>
+<tr class="even">
+<td>height</td>
+<td>int</td>
+<td>35</td>
+<td>height of the dropdown text</td>
+</tr>
+<tr class="odd">
+<td>multi</td>
+<td>bool</td>
+<td>False</td>
+<td>Is the dropdown multi select</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>Dropdown</strong></td>
+<td></td>
+<td><strong>Returns a dropdown</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="create-population-pyramid" class="level2">
+<h2 class="anchored" data-anchor-id="create-population-pyramid">Create Population Pyramid</h2>
+<p>For use to demonstrate the population pyramid of solomon islands. It should highlight age groups based on selection</p>
+<hr>
+<p><a href="https://github.com/Gippers/SolomonIslandsDataMap/blob/main/SolomonIslandsDataMap/dash_components.py#L361" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="gen_pyramid" class="level3">
+<h3 class="anchored" data-anchor-id="gen_pyramid">gen_pyramid</h3>
+<blockquote class="blockquote">
+<pre><code> gen_pyramid (sol_geo:SolomonIslandsDataMap.load_data.SolomonGeo,
+              geo_filter:str, year:str, variable:str='Population',
+              locations:[&lt;class'str'&gt;]=[], type_filter:str='Total',
+              ages:[&lt;class'str'&gt;]=[])</code></pre>
+</blockquote>
+<p><em>Create a population pyramid of selected population data</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sol_geo</td>
+<td>SolomonGeo</td>
+<td></td>
+<td>Solomon geo object containing census data to input into map</td>
+</tr>
+<tr class="even">
+<td>geo_filter</td>
+<td>str</td>
+<td></td>
+<td>The desired aggregation of the geography</td>
+</tr>
+<tr class="odd">
+<td>year</td>
+<td>str</td>
+<td></td>
+<td>Selected year to display on the graph</td>
+</tr>
+<tr class="even">
+<td>variable</td>
+<td>str</td>
+<td>Population</td>
+<td>The variable to use to create the bar plot</td>
+</tr>
+<tr class="odd">
+<td>locations</td>
+<td>[&lt;class ‘str’&gt;]</td>
+<td>[]</td>
+<td>Desired location within aggregation</td>
+</tr>
+<tr class="even">
+<td>type_filter</td>
+<td>str</td>
+<td>Total</td>
+<td>The type aggregartion</td>
+</tr>
+<tr class="odd">
+<td>ages</td>
+<td>[&lt;class ‘str’&gt;]</td>
+<td>[]</td>
+<td>Currenly selected ages for highlighting</td>
+</tr>
+<tr class="even">
+<td><strong>Returns</strong></td>
+<td><strong>Figure</strong></td>
+<td></td>
+<td><strong>Returns a population pyramid and it’s title</strong></td>
+</tr>
+</tbody>
+</table>
+<div id="cell-38" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>gen_pyramid(sol_geo, geo_filter <span class="op">=</span> <span class="st">'Province'</span>, year <span class="op">=</span> <span class="dv">2024</span>, variable <span class="op">=</span> <span class="st">"Population"</span>, locations <span class="op">=</span> [<span class="st">'Western'</span>], type_filter <span class="op">=</span> <span class="st">"Proportion"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>                            <div id="712ec1ca-93c2-407b-8f28-c985b50d562f" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("712ec1ca-93c2-407b-8f28-c985b50d562f")) {                    Plotly.newPlot(                        "712ec1ca-93c2-407b-8f28-c985b50d562f",                        [{"hovertemplate":"%{y}: %{x:.1f}%\u003cextra\u003eFemale\u003c\u002fextra\u003e","name":"Female","orientation":"h","x":[1.5431947773809718,1.5002527599758655,1.517918779794422,1.4969913409324398,1.3763188363256853,1.0909446700259282,0.9324940614994918,0.7555620783936424,0.6848979991194168,0.6536427332865863,0.6318999396637477,0.5087813707744239,0.37343248047225347,0.25629317982921035,0.19486978784469122,0.12801069745446242,0.11713930064304312],"y":["0-4","5-9","10-14","15-19","20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59","60-64","65-69","70-74","75-79","80+"],"type":"bar"},{"hovertemplate":"%{y}: %{x:.1f}%\u003cextra\u003eMale\u003c\u002fextra\u003e","name":"Male","orientation":"h","x":[-1.6101530913788686,-1.5638647858446701,-1.5811248319760662,-1.5536656676761178,-1.3978022207926022,-1.1483160994387869,-0.9853917245924276,-0.820898254643214,-0.7523811018185812,-0.6663423870120768,-0.6153467961693159,-0.5324462715685198,-0.4027344097325739,-0.26726919918616265,-0.18384564288441524,-0.11768213271406379,-0.11349787910645265],"y":["0-4","5-9","10-14","15-19","20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59","60-64","65-69","70-74","75-79","80+"],"type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"title":{"font":{"size":24}},"xaxis":{"title":{"text":"Population (%)","font":{"size":14}},"range":[-1.6101530913788686,1.6101530913788686],"tickformat":".1f"},"barmode":"relative","bargap":0.0,"bargroupgap":0,"yaxis":{"title":{"text":"Age Group"}}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('712ec1ca-93c2-407b-8f28-c985b50d562f');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+</div>
+</div>
+</section>
+</section>
+<section id="testing" class="level2">
+<h2 class="anchored" data-anchor-id="testing">Testing</h2>
+<div id="cell-40" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> implementing testing, everything should at least be run here and execute and be displayed</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Gippers\.github\.io\/SolomonIslandsDataMap");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Gippers/SolomonIslandsDataMap/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

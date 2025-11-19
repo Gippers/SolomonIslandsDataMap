@@ -1,0 +1,572 @@
+[
+  {
+    "objectID": "app_data.html",
+    "href": "app_data.html",
+    "title": "App Data",
+    "section": "",
+    "text": "# TODO think about what differentiates dash_components and app_data",
+    "crumbs": [
+      "App Data"
+    ]
+  },
+  {
+    "objectID": "app_data.html#load-data",
+    "href": "app_data.html#load-data",
+    "title": "App Data",
+    "section": "Load Data",
+    "text": "Load Data",
+    "crumbs": [
+      "App Data"
+    ]
+  },
+  {
+    "objectID": "app_data.html#instatialise-data-and-dash-components",
+    "href": "app_data.html#instatialise-data-and-dash-components",
+    "title": "App Data",
+    "section": "Instatialise Data and Dash Components",
+    "text": "Instatialise Data and Dash Components\nThe plan for the data is to store it in a dcc.Store object. This is import as if the app scales, variables will only be global if they are stored in a store or another dash component. As an aside, dash uses this strategy so that each app is stateless and multiple different workers can be assigned to run processes.\nThis stored data and additional components will then be refereced via imports used by each page so that each pages shares the common data and components and they will not need to be reloaded. Because the data is imported as a module by each page and app that uses them, it will be global and it will run before the rest of the code.\nSolomonGeo.gen_stored() can be used to reconstuct the SolomonGeo object from the dict format.\nThe following components and data objects are created:\n\nstored_data: The dict version of the dataset,\ndropdown_location: Dropdown for location selection,\ndropdown_geo: Dropdown for the type of geographical aggregation selected,\ncontrol_type: The type of data, Proportion or Total,\ndd_var: Dropdown for the variable to be displayed,\ndd_measure: Dropdown for the emasure to be displayed.",
+    "crumbs": [
+      "App Data"
+    ]
+  },
+  {
+    "objectID": "app_data.html#setup-and-create-the-dropdowns",
+    "href": "app_data.html#setup-and-create-the-dropdowns",
+    "title": "App Data",
+    "section": "Setup and create the dropdowns",
+    "text": "Setup and create the dropdowns\n\nDate Slider\nLets you pick a date for the population projection map\n\ndropdown_location\n\nDiv(children=Dropdown(options=array(['Central', 'Choiseul', 'Guadalcanal', 'Honiara', 'Isabel',\n       'Makira-Ulawa', 'Malaita', 'Rennell-Bell', 'Temotu', 'Western'],\n      dtype=object), value=[], multi=True, clearable=True, searchable=True, placeholder='Select Dropdown Location', optionHeight=35, id='locDropdown'), id='locationDiv')",
+    "crumbs": [
+      "App Data"
+    ]
+  },
+  {
+    "objectID": "app_data.html#create-a-sidebar",
+    "href": "app_data.html#create-a-sidebar",
+    "title": "App Data",
+    "section": "Create a sidebar",
+    "text": "Create a sidebar\nThe sidebar will house all of the relevant dropdowns",
+    "crumbs": [
+      "App Data"
+    ]
+  },
+  {
+    "objectID": "app_data.html#intialise-page-data-components",
+    "href": "app_data.html#intialise-page-data-components",
+    "title": "App Data",
+    "section": "Intialise page data components",
+    "text": "Intialise page data components\nIt will create:\n\nmytitle: title for the apge\nmap_graph: map object for the page\nselectedBarGraph: bar graph object for the page\n\nElections data",
+    "crumbs": [
+      "App Data"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Solomon Islands Data Map",
+    "section": "",
+    "text": "Image Credit",
+    "crumbs": [
+      "Solomon Islands Data Map"
+    ]
+  },
+  {
+    "objectID": "index.html#click-here-to-view-the-map",
+    "href": "index.html#click-here-to-view-the-map",
+    "title": "Solomon Islands Data Map",
+    "section": "",
+    "text": "Image Credit",
+    "crumbs": [
+      "Solomon Islands Data Map"
+    ]
+  },
+  {
+    "objectID": "load_data.html",
+    "href": "load_data.html",
+    "title": "Load Data",
+    "section": "",
+    "text": "Contents\nSolomon Geospatial Data - SolomonGeo: A class that cleans the solomon islandas census and geography data - SolomonGeo.read_test: Loads and transforms the test data - SolomonGeo.get_geojson: Returns the geo_df as a geojson datatset",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "load_data.html#solomon-geospatial-data",
+    "href": "load_data.html#solomon-geospatial-data",
+    "title": "Load Data",
+    "section": "Solomon Geospatial Data",
+    "text": "Solomon Geospatial Data\n\nLoad the geography and census data ### Geography Data Solomons islands geography data is organised at the levels - adm0 - The country as as whole, Solomon Islands - adm1 - Also referred to as the province e.g. Honiara, Malaita - adm2 - The Consituency e.g. Central Honiara - adm3 - Ward, the smallest geography I am reporting. E.g. Cruz\n\n\nCensus Data\nSolomon islands census data has been used from the 2009 and 2019 census. For the respective census: 2009 - We have the total population in for each of the administration regions 2019 - There is only data available down to the province level\n\n\nTest that the .env variables exist\n\n# Test that the environment variables can be loaded\ntest(ACCESS_KEY, None, nequals)\ntest(SECRET_ACCCESS_KEY, None, nequals)\ntest(REGION_NAME, None, nequals)\ntest_eq(REGION_NAME, 'ap-southeast-2')",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "load_data.html#function-for-connecting-to-aws-s3-client",
+    "href": "load_data.html#function-for-connecting-to-aws-s3-client",
+    "title": "Load Data",
+    "section": "Function for connecting to AWS S3 client",
+    "text": "Function for connecting to AWS S3 client",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "load_data.html#load-and-prepare-elections-data",
+    "href": "load_data.html#load-and-prepare-elections-data",
+    "title": "Load Data",
+    "section": "Load and Prepare Elections Data",
+    "text": "Load and Prepare Elections Data\nLoad and manipulate the elections data. Below data will be manipulated in SolomonGeo.__clean_elections function.\n\nelec = pd.read_csv(fp + 'Solomon_Elections_Data_April_2024.csv', thousands=',')\n#elec['Party'] = \ncandParty = elec['Candidate'].str.split(\"(\", expand = True)\nelec['candParty'] = elec['Candidate']\nelec['Candidate'] = candParty.loc[:, 0]\nelec['Party'] = candParty.loc[:, 1].str.strip(\")\")\n\n# Fix formatting\n#elec.Total.astype(int)\nelec.sort_values(by = ['Type','Year', 'Geo', 'loc_name', 'Total',], inplace = True, ascending= False)\nelec['Order'] = elec.groupby(by = 'loc_name').cumcount()\nelec.sort_values(by = ['Type','Year', 'Geo', 'loc_name', 'Total',], inplace = True, ascending= True)\nelec.head()\n\n\n\n\n\n\n\n\nType\nYear\nGeo\nloc_name\nCandidate\nTotal\nProportion\ncandParty\nParty\nOrder\n\n\n\n\n4\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nJoseph Waleanisia\n108\n1.7\nJoseph Waleanisia (UP)\nUP\n4\n\n\n3\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nObadiah Koti\n257\n3.9\nObadiah Koti (PLD)\nPLD\n3\n\n\n2\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nTalauburi Anisi\n488\n7.5\nTalauburi Anisi (KAD)\nKAD\n2\n\n\n1\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nDavid Filia\n1348\n20.7\nDavid Filia (OUR)\nOUR\n1\n\n\n0\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nCooper Wale\n4314\n66.2\nCooper Wale (SID)\nSID\n0\n\n\n\n\n\n\n\nMake a wide dataset that has the top three finishing candidates per election and electorate.\n\nelec_wide = elec.copy()\nelec_wide = elec_wide[elec_wide['Order'] &lt;= 2]\nelec_wide['displayValue'] = elec_wide.candParty.map(str) + \" - \" + elec_wide.Total.map(str) + \" (\" + elec_wide.Proportion.map(str) + \"%)\"\nelec_wide = pd.pivot(elec_wide, index = ['Type', 'Year', 'Geo', 'loc_name',], columns = ['Order', ], values = ['displayValue']).fillna(\"\")\nelec_wide = elec_wide.droplevel(0, axis = 1)\nelec_wide.head()\n\n\n\n\n\n\n\n\n\n\nOrder\n0\n1\n2\n\n\nType\nYear\nGeo\nloc_name\n\n\n\n\n\n\n\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nCooper Wale (SID) - 4314 (66.2%)\nDavid Filia (OUR) - 1348 (20.7%)\nTalauburi Anisi (KAD) - 488 (7.5%)\n\n\nBaegu-Asifola\nTagini Makario (OUR) - 2391 (37.4%)\nCelsus Talifilu (U4C) - 2147 (33.6%)\nDouglas Buga (SIP) - 1009 (15.8%)\n\n\nCentral Guadalcanal\nShanel Agovaka (OUR) - 3454 (43.1%)\nManengelea Rex (IND) - 1592 (19.8%)\nDenson Denni (KAD) - 1381 (17.2%)\n\n\nCentral Honiara\nDarcy Lilo (SIP) - 8223 (63.4%)\nAlfred Efona (UP) - 3632 (28.0%)\nFrancis Idu (OUR) - 669 (5.2%)\n\n\nCentral Kwara'ae\nRicky Fuo'o (UP) - 5208 (47.9%)\nJackson Fiulaua (OUR) - 1831 (16.8%)\nYoung Wate (IND) - 1537 (14.1%)\n\n\n\n\n\n\n\nFind winning candidate in each location and election\n\nelec_wide2 = elec.copy().loc[elec.Order == 0, :]\nelec_wide2.set_index(['Type', 'Year', 'Geo', 'loc_name',], inplace = True)\n\nelec_wide2.head()\n\n\n\n\n\n\n\n\n\n\n\nCandidate\nTotal\nProportion\ncandParty\nParty\nOrder\n\n\nType\nYear\nGeo\nloc_name\n\n\n\n\n\n\n\n\n\n\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nCooper Wale\n4314\n66.2\nCooper Wale (SID)\nSID\n0\n\n\nBaegu-Asifola\nTagini Makario\n2391\n37.4\nTagini Makario (OUR)\nOUR\n0\n\n\nCentral Guadalcanal\nShanel Agovaka\n3454\n43.1\nShanel Agovaka (OUR)\nOUR\n0\n\n\nCentral Honiara\nDarcy Lilo\n8223\n63.4\nDarcy Lilo (SIP)\nSIP\n0\n\n\nCentral Kwara'ae\nRicky Fuo'o\n5208\n47.9\nRicky Fuo'o (UP)\nUP\n0\n\n\n\n\n\n\n\nMerge back together the two datasets\n\nelec_wide2 = pd.DataFrame(elec_wide2.Party)\nelec_wide2.rename(columns = {\"Party\": \"Winning Party\"}, inplace = True)\nelec_wide = pd.merge(elec_wide, elec_wide2, how = 'left', left_index = True, right_index = True)\n# remove the index\nelec_wide.reset_index(inplace = True)\n\n\nelec.Party.unique()\n\narray(['UP', 'PLD', 'KAD', 'OUR', 'SID', 'IND', 'SIP', 'U4C', 'PAP',\n       'PFP', 'DAP', 'NTP', 'GPS'], dtype=object)\n\n\nMake the Proportion column a decimal to be displayed properly\n\nelec.Proportion = elec.Proportion / 100",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "load_data.html#constructors-for-solomongeo-class",
+    "href": "load_data.html#constructors-for-solomongeo-class",
+    "title": "Load Data",
+    "section": "Constructors for SolomonGeo class",
+    "text": "Constructors for SolomonGeo class\nThese constudctors are used to build the SolomonGeo objects from various inputs\n\nsource\n\nSolomonGeo.load_pickle\n\n SolomonGeo.load_pickle (folder:str='/testData/', aws:bool=True,\n                         file_name:str='sol_geo.pickle')\n\nA constuctor that initialises the object from aws pickle\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nfolder\nstr\n/testData/\nfile path of the folder to save in\n\n\naws\nbool\nTrue\nWhether to load from github or local\n\n\nfile_name\nstr\nsol_geo.pickle\nfile name of the saved class",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "load_data.html#test-that-dataset-and-geography-merge-perfectly",
+    "href": "load_data.html#test-that-dataset-and-geography-merge-perfectly",
+    "title": "Load Data",
+    "section": "Test that dataset and geography merge perfectly",
+    "text": "Test that dataset and geography merge perfectly\n\n# TODO should this method be callable from the class\ndef test_geo(df:pd.DataFrame, # The dataframe to test\n                geo:gpd.GeoDataFrame, # The geographys\n                ):\n    '''\n    Tests that the provided geography and data merge perfectly. I.e. all data\n    has a coresponding geography. The primary key to merge id and agg\n    '''\n    # Use outer join to see if anything is missing\n    geo_df = geo.merge(df, left_on=['id', 'agg'], right_on=['core: id', 'core: agg'], how = 'outer', indicator = True)\n    test_eq(sum(geo_df['_merge'] != 'both'), 0) # The total of non-joined rows should be 0",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "load_data.html#save-solomongeo",
+    "href": "load_data.html#save-solomongeo",
+    "title": "Load Data",
+    "section": "Save SolomonGeo",
+    "text": "Save SolomonGeo\nSave as a pickled object\n\nsource\n\nSolomonGeo.save_pickle\n\n SolomonGeo.save_pickle (aws:bool=True, folder:str='/testData/',\n                         file_name:str='sol_geo.pickle')\n\nSave a pickle of the SolomonGeo class in backblaze b2\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\naws\nbool\nTrue\nWhether to save to aws or locally\n\n\nfolder\nstr\n/testData/\nfile path of the folder to save in, only necesasry for local saving\n\n\nfile_name\nstr\nsol_geo.pickle\nfile name of the saved class\n\n\n\n\nsource\n\n\nSolomonGeo.save_pickle\n\n SolomonGeo.save_pickle (aws:bool=True, folder:str='/testData/',\n                         file_name:str='sol_geo.pickle')\n\nSave a pickle of the SolomonGeo class in backblaze b2\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\naws\nbool\nTrue\nWhether to save to aws or locally\n\n\nfolder\nstr\n/testData/\nfile path of the folder to save in, only necesasry for local saving\n\n\nfile_name\nstr\nsol_geo.pickle\nfile name of the saved class",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "load_data.html#get-geo-json",
+    "href": "load_data.html#get-geo-json",
+    "title": "Load Data",
+    "section": "Get Geo JSON",
+    "text": "Get Geo JSON\nA getter method for the geometry portion of the dataset that returns a geoJson formated geography.\nIt only includes the geography and location name as id\n\nsource\n\nSolomonGeo.get_geojson\n\n SolomonGeo.get_geojson (geo_filter:str=None)\n\nA getter method for the SolomonGeo class that returns a Geo JSON formatted dataset\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\ngeo_filter\nstr\nNone\nFilters the geojson to the requested aggregation\n\n\nReturns\ndict\n\nGeo JSON formatted dataset",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "load_data.html#store-json",
+    "href": "load_data.html#store-json",
+    "title": "Load Data",
+    "section": "Store JSON",
+    "text": "Store JSON\nA getter method that returns a dcc.Store object with the data of the SolomonGeo class converted to a dictionary for storing with dash. We use a dictionary instead of geojson as the time to convert dictionary back to geopandas is much faster than geojson. (0.01s vs 1.2s) This makes the map much more snappy and responsive\nOn storing, we drop the geometry as it won’t store as json. Note that you can get around this by using a geojson, but this increases reload time by a lot.\n\nsource\n\nSolomonGeo.get_store\n\n SolomonGeo.get_store ()\n\nA getter method that returns a dcc.Store object with the data of the SolomonGeo class converted to a dictionary for storing with dash.",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "load_data.html#get-census-data",
+    "href": "load_data.html#get-census-data",
+    "title": "Load Data",
+    "section": "Get Census Data",
+    "text": "Get Census Data\nReturns the census dataset for a particular aggregation\n\nsource\n\nSolomonGeo.get_census\n\n SolomonGeo.get_census (geo_filter:str=None, var:str='Key Statistics',\n                        measure:str=None, loc_filter:[&lt;class'str'&gt;]=None,\n                        type_filter:str='Total', agg=False)\n\nA getter method for the SolomonGeo class that returns a pandas dataset containg the id variable and the requested census data. This is the minimal data required to display on the map. - Optionally can aggregate the dataset, uses weighted aggregation for proportional data - You should always provide a variable to this function or proportional aggregation won’t work\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\ngeo_filter\nstr\nNone\nFilters the dataframe to the requested geography\n\n\nvar\nstr\nKey Statistics\nSelects an upper level\n\n\nmeasure\nstr\nNone\nSelects the lower level variable, if var 1 is used, measure must be used.\n\n\nloc_filter\n[&lt;class ‘str’&gt;]\nNone\nFilters one of more locations\n\n\ntype_filter\nstr\nTotal\nReturn either number of proportion\n\n\nagg\nbool\nFalse\nWhether to return the dataset aggregated for the given selection\n\n\nReturns\nDataFrame\n\nPandas Dataframe containing population data",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "load_data.html#get-population-data",
+    "href": "load_data.html#get-population-data",
+    "title": "Load Data",
+    "section": "Get Population Data",
+    "text": "Get Population Data\nReturns the population projection data for a given aggregation\n\nsource\n\nSolomonGeo.get_pop\n\n SolomonGeo.get_pop (years:[&lt;class'str'&gt;], var:str=None, measure:str=None,\n                     loc_filter:[&lt;class'str'&gt;]=None,\n                     type_filter:str='Total', agg=False,\n                     agg_location=False, agg_ages=False,\n                     ages:[&lt;class'str'&gt;]=None)\n\nA getter method for the SolomonGeo class that returns a pandas dataset containg the id variable and the requested popultion data. This is the minimal data required to display on the map.\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nyears\n[&lt;class ‘str’&gt;]\n\nSelects the year/years of data to return\n\n\nvar\nstr\nNone\nSelects an upper level variable\n\n\nmeasure\nstr\nNone\nSelects the lower level variable, if var 1 is used, measure must be used.\n\n\nloc_filter\n[&lt;class ‘str’&gt;]\nNone\nFilters one of more locations\n\n\ntype_filter\nstr\nTotal\nReturn either number of proportion\n\n\nagg\nbool\nFalse\nWhether to return the dataset aggregated for the given selection\n\n\nagg_location\nbool\nFalse\nIf true, don’t aggregate the population data by location\n\n\nagg_ages\nbool\nFalse\nIf true, don’t aggregate the population data by age\n\n\nages\n[&lt;class ‘str’&gt;]\nNone\nFilters for one or more Age Brackets, if none returns all\n\n\nReturns\nDataFrame\n\nPandas Dataframe containing population data",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "load_data.html#save-and-load",
+    "href": "load_data.html#save-and-load",
+    "title": "Load Data",
+    "section": "Save and Load",
+    "text": "Save and Load\nTest that the newly created solomon geo object can be saved to aws\n\nsol_geo.save_pickle()\n\nTest that we can connect to the aws s3 bucket\n\n# Create the S3 object\nobj = s3_client().get_object(\n    Bucket = 'hobby-data',\n    Key = 'test.txt', \n)\n\n# Read in the pickle\ntry:\n    data = obj['Body'].read()\nexcept:\n    raise ValueError(\"Issue dowloading test file from AWS.\")\n\n\nSolomonGeo.load_pickle('/testData/', aws=True)\n\n&lt;__main__.SolomonGeo&gt;\n\n\nTest that gen_stored creates a copy correctly from a json serialised dataframe\n\nstored_geo = sol_geo.get_store()\n# TODO I need to potentially created a function to check if two objects are the same\n\n\npd.DataFrame(stored_geo.data['data']['elec'])\n\n\n\n\n\n\n\n\nType\nYear\nGeo\nloc_name\nCandidate\nTotal\nProportion\ncandParty\nParty\nOrder\n\n\n\n\n0\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nJoseph Waleanisia\n108\n0.017\nJoseph Waleanisia (UP)\nUP\n4\n\n\n1\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nObadiah Koti\n257\n0.039\nObadiah Koti (PLD)\nPLD\n3\n\n\n2\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nTalauburi Anisi\n488\n0.075\nTalauburi Anisi (KAD)\nKAD\n2\n\n\n3\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nDavid Filia\n1348\n0.207\nDavid Filia (OUR)\nOUR\n1\n\n\n4\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nCooper Wale\n4314\n0.662\nCooper Wale (SID)\nSID\n0\n\n\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n\n\n329\nNational Parliament\n2024\nConstituency\nWest New Georgia-Vonavona\nUsa Kama\n11\n0.001\nUsa Kama (IND)\nIND\n4\n\n\n330\nNational Parliament\n2024\nConstituency\nWest New Georgia-Vonavona\nBen Anikwai\n45\n0.006\nBen Anikwai (IND)\nIND\n3\n\n\n331\nNational Parliament\n2024\nConstituency\nWest New Georgia-Vonavona\nTrevor Veo\n1514\n0.190\nTrevor Veo (OUR)\nOUR\n2\n\n\n332\nNational Parliament\n2024\nConstituency\nWest New Georgia-Vonavona\nV Tausinga\n2524\n0.317\nV Tausinga (UP)\nUP\n1\n\n\n333\nNational Parliament\n2024\nConstituency\nWest New Georgia-Vonavona\nGeorge Temahua\n3869\n0.486\nGeorge Temahua (SID)\nSID\n0\n\n\n\n\n334 rows × 10 columns\n\n\n\n\nrestored_geo = SolomonGeo.gen_stored(stored_geo.data)\n\n\nrestored_geo.get_census(geo_filter = 'Constituency', loc_filter=['Nggela', 'East AreAre'])\n\n\n\n\n\n\n\n\nTotal Households\nTotal population\nMale population\nFemale population\n\n\n(core, location)\n\n\n\n\n\n\n\n\nEast AreAre\n1105\n7099\n3567.0\n3532.0\n\n\nNggela\n3315\n16811\n8500.0\n8311.0\n\n\n\n\n\n\n\n\n# TODO create a test to check that two object are the same. Probably need to write defualt behaviour into\n# object. Maybe use fastcore test_eq\n#test_eq(stored_geo.geo_df, sol_geo.geo_df)\n\nTest filtering of down to multiple locations\n\n#test_eq(sol_geo.get_census(geo_filter = 'constituency')['total_pop'].sum(), const_df['total_pop'].sum())\nsol_geo.get_census(geo_filter = 'Constituency', loc_filter=['Nggela', 'East AreAre'])\n\n\n\n\n\n\n\n\nTotal Households\nTotal population\nMale population\nFemale population\n\n\n(core, location)\n\n\n\n\n\n\n\n\nEast AreAre\n1105\n7099\n3567.0\n3532.0\n\n\nNggela\n3315\n16811\n8500.0\n8311.0\n\n\n\n\n\n\n\nTest Proportions\n\n#test_eq(sol_geo.get_census(geo_filter = 'constituency')['total_pop'].sum(), const_df['total_pop'].sum())\npd.DataFrame(sol_geo.get_census(geo_filter = 'Constituency', loc_filter=['Nggela', 'East AreAre'], agg = True, type_filter='Proportion'))\n\n\n\n\n\n\n\n\n0\n\n\n\n\nTotal Households\n0.084609\n\n\nTotal population\n0.457695\n\n\nMale population\n0.230992\n\n\nFemale population\n0.226704\n\n\n\n\n\n\n\n\n# TODO work out how to check save and load are the same as a test\n# Might need to wreite and equality function\nrestored_geo.population\n\n\n\n\n\n\n\n\ncore\nAge\nPopulation\n\n\n\nid\nagg\ntype\nyear\nAge_Bracket\nNumerical_Bracket\nMales\nFemales\nTotal\n\n\n(core, location)\n\n\n\n\n\n\n\n\n\n\n\n\n\nCentral\n4\nProvince\nTotal\n2010\n0-4\n0\n2119.000000\n2037.000000\n4156.000000\n\n\nCentral\n4\nProvince\nProportion\n2010\n0-4\n0\n0.007116\n0.007210\n0.007162\n\n\nCentral\n4\nProvince\nTotal\n2010\n5-9\n5\n2074.000000\n1914.000000\n3988.000000\n\n\nCentral\n4\nProvince\nProportion\n2010\n5-9\n5\n0.006965\n0.006775\n0.006872\n\n\nCentral\n4\nProvince\nTotal\n2010\n10-14\n10\n1732.000000\n1556.000000\n3289.000000\n\n\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n\n\nWestern\n2\nProvince\nProportion\n2025\n70-74\n70\n0.001877\n0.001965\n0.001920\n\n\nWestern\n2\nProvince\nTotal\n2025\n75-79\n75\n466.000000\n493.000000\n959.000000\n\n\nWestern\n2\nProvince\nProportion\n2025\n75-79\n75\n0.001197\n0.001315\n0.001255\n\n\nWestern\n2\nProvince\nTotal\n2025\n80+\n80\n448.000000\n449.000000\n897.000000\n\n\nWestern\n2\nProvince\nProportion\n2025\n80+\n80\n0.001150\n0.001197\n0.001173\n\n\n\n\n5440 rows × 9 columns\n\n\n\n\ntest = sol_geo.population\ntest.loc[:, ('core', 'location')] = test.index\n\n\ntest\n\n\n\n\n\n\n\n\ncore\nAge\nPopulation\ncore\n\n\n\nid\nagg\ntype\nyear\nAge_Bracket\nNumerical_Bracket\nMales\nFemales\nTotal\nlocation\n\n\n(core, location)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCentral\n4\nProvince\nTotal\n2010\n0-4\n0\n2119.000000\n2037.000000\n4156.000000\nCentral\n\n\nCentral\n4\nProvince\nProportion\n2010\n0-4\n0\n0.007116\n0.007210\n0.007162\nCentral\n\n\nCentral\n4\nProvince\nTotal\n2010\n5-9\n5\n2074.000000\n1914.000000\n3988.000000\nCentral\n\n\nCentral\n4\nProvince\nProportion\n2010\n5-9\n5\n0.006965\n0.006775\n0.006872\nCentral\n\n\nCentral\n4\nProvince\nTotal\n2010\n10-14\n10\n1732.000000\n1556.000000\n3289.000000\nCentral\n\n\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n\n\nWestern\n2\nProvince\nProportion\n2025\n70-74\n70\n0.001877\n0.001965\n0.001920\nWestern\n\n\nWestern\n2\nProvince\nTotal\n2025\n75-79\n75\n466.000000\n493.000000\n959.000000\nWestern\n\n\nWestern\n2\nProvince\nProportion\n2025\n75-79\n75\n0.001197\n0.001315\n0.001255\nWestern\n\n\nWestern\n2\nProvince\nTotal\n2025\n80+\n80\n448.000000\n449.000000\n897.000000\nWestern\n\n\nWestern\n2\nProvince\nProportion\n2025\n80+\n80\n0.001150\n0.001197\n0.001173\nWestern\n\n\n\n\n5440 rows × 10 columns\n\n\n\n\n# TODO should do a count check for the geojson similar to this\nsol_geo.census[sol_geo.census['core']['agg'] == 'Constituency'].count()\n\ncore                    id                         100\n                        location                   100\n                        agg                        100\n                        type                       100\nKey Statistics          Total Households           100\n                                                  ... \nDisability walking      Some Difficulty            100\n                        Cannot perform the task    100\nDisability remembering  No Difficulty at all       100\n                        Some Difficulty            100\n                        Cannot perform the task    100\nLength: 339, dtype: int64",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "load_data.html#check-some-of-the-datasets",
+    "href": "load_data.html#check-some-of-the-datasets",
+    "title": "Load Data",
+    "section": "Check Some of the datasets",
+    "text": "Check Some of the datasets\nnecessary??\n\nsol_geo.census\n\n\n\n\n\n\n\n\ncore\nKey Statistics\nMain source of household drinking water\n...\nDisability seeing\nDisability hearing\nDisability walking\nDisability remembering\n\n\n\nid\nlocation\nagg\ntype\nTotal Households\nmetered SIWA drinking water\ncommunal standpipe\nprivate water tank\ncommunal water tank\nwell - protected\n...\nCannot perform the task\nNo Difficulty at all\nSome Difficulty\nCannot perform the task\nNo Difficulty at all\nSome Difficulty\nCannot perform the task\nNo Difficulty at all\nSome Difficulty\nCannot perform the task\n\n\npk\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAba - Asimeuru_Proportion\n722\nAba - Asimeuru\nWard\nProportion\n1\n0.0000\n0.5378\n0.0245\n0.0085\n0.0011\n...\n0.003849\n0.940843\n0.054295\n0.004862\n0.880065\n0.105754\n0.014182\n0.906807\n0.081645\n0.011548\n\n\nAba - Asimeuru_Total\n722\nAba - Asimeuru\nWard\nTotal\n939\n0.0000\n505.0000\n23.0000\n8.0000\n1.0000\n...\n19.000000\n4644.000000\n268.000000\n24.000000\n4344.000000\n522.000000\n70.000000\n4476.000000\n403.000000\n57.000000\n\n\nAiaisi_Total\n719\nAiaisi\nWard\nTotal\n561\n1.0000\n403.0000\n9.0000\n3.0000\n1.0000\n...\n9.000000\n3415.000000\n149.000000\n10.000000\n3316.000000\n239.000000\n19.000000\n3349.000000\n205.000000\n20.000000\n\n\nAiaisi_Proportion\n719\nAiaisi\nWard\nProportion\n1\n0.0018\n0.7184\n0.0160\n0.0053\n0.0018\n...\n0.002518\n0.955512\n0.041690\n0.002798\n0.927812\n0.066872\n0.005316\n0.937045\n0.057359\n0.005596\n\n\nAimela_Proportion\n702\nAimela\nWard\nProportion\n1\n0.0164\n0.2937\n0.0762\n0.1921\n0.1360\n...\n0.001571\n0.959288\n0.038749\n0.001964\n0.954444\n0.039796\n0.005760\n0.951172\n0.043330\n0.005498\n\n\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n\n\nWest Te Nggano_Proportion\n502\nWest Te Nggano\nWard\nProportion\n1\n0.0000\n0.0000\n0.3704\n0.4568\n0.0000\n...\n0.000000\n0.978836\n0.018519\n0.002646\n0.968254\n0.031746\n0.000000\n0.986772\n0.013228\n0.000000\n\n\nWest Ulawa_Proportion\n803\nWest Ulawa\nWard\nProportion\n1\n0.0099\n0.7673\n0.0050\n0.0050\n0.0000\n...\n0.000000\n0.929070\n0.069767\n0.001163\n0.886047\n0.113953\n0.000000\n0.920930\n0.077907\n0.001163\n\n\nWest Ulawa_Total\n803\nWest Ulawa\nWard\nTotal\n202\n2.0000\n155.0000\n1.0000\n1.0000\n0.0000\n...\n0.000000\n799.000000\n60.000000\n1.000000\n762.000000\n98.000000\n0.000000\n792.000000\n67.000000\n1.000000\n\n\nWestern_Total\n2\nWestern\nProvince\nTotal\n13762\n37.0000\n4151.0000\n4596.0000\n2426.0000\n46.0000\n...\n159.000000\n72641.000000\n3788.000000\n220.000000\n71496.000000\n4644.000000\n509.000000\n69162.000000\n6901.000000\n586.000000\n\n\nWestern_Proportion\n2\nWestern\nProvince\nProportion\n1\n0.0027\n0.3016\n0.3340\n0.1763\n0.0033\n...\n0.002074\n0.947710\n0.049420\n0.002870\n0.932771\n0.060588\n0.006641\n0.902321\n0.090034\n0.007645\n\n\n\n\n486 rows × 339 columns\n\n\n\n\nsol_geo.geo\n\n\n\n\n\n\n\n\ngeometry\nid\nagg\nyear\nlocation\n\n\nlocation\n\n\n\n\n\n\n\n\n\nAba - Asimeuru\nMULTIPOLYGON (((161.54336 -9.54751, 161.54367 ...\n722\nWard\n2009\nAba - Asimeuru\n\n\nAiaisi\nMULTIPOLYGON (((161.26900 -9.21229, 161.27144 ...\n719\nWard\n2009\nAiaisi\n\n\nAimela\nMULTIPOLYGON (((160.68653 -8.71158, 160.67020 ...\n702\nWard\n2009\nAimela\n\n\nAola\nMULTIPOLYGON (((160.50139 -9.52996, 160.50196 ...\n616\nWard\n2009\nAola\n\n\nAreare\nMULTIPOLYGON (((161.35878 -9.46664, 161.35859 ...\n720\nWard\n2009\nAreare\n\n\n...\n...\n...\n...\n...\n...\n\n\nWest Makira\nMULTIPOLYGON (((161.50441 -10.51180, 161.50559...\n844\nConstituency\n2009\nWest Makira\n\n\nWest New Georgia-Vonavona\nMULTIPOLYGON (((157.27598 -8.35143, 157.26991 ...\n209\nConstituency\n2009\nWest New Georgia-Vonavona\n\n\nWest Te Nggano\nMULTIPOLYGON (((160.35206 -11.66366, 160.30721...\n502\nWard\n2009\nWest Te Nggano\n\n\nWest Ulawa\nMULTIPOLYGON (((161.97730 -9.77521, 161.94899 ...\n803\nWard\n2009\nWest Ulawa\n\n\nWestern\nMULTIPOLYGON (((158.25148 -8.78861, 158.24885 ...\n2\nProvince\n2009\nWestern\n\n\n\n\n243 rows × 5 columns\n\n\n\n\n# TODO write testing that checks that different methods create equilvalent objects.\n# TODO - need to write an equality object\n\n\ntest.loc[2024]\n\n\n\n\n\n\n\n\nPopulation\n\n\n\nTotal\n\n\n(core, location)\n\n\n\n\n\nCentral\n34359.0\n\n\nChoiseul\n40226.0\n\n\nGuadalcanal\n178238.0\n\n\nHoniara\n97801.0\n\n\nIsabel\n38134.0\n\n\nMakira-Ulawa\n59705.0\n\n\nMalaita\n165610.0\n\n\nRennell-Bell\n4702.0\n\n\nTemotu\n26182.0\n\n\nWestern\n105367.0\n\n\n\n\n\n\n\n\nlen(sol_geo.pop_years)\n\n16\n\n\n\nTest that the election data Exists\n\nsol_geo.elec.head()\n\n\n\n\n\n\n\n\nType\nYear\nGeo\nloc_name\nCandidate\nTotal\nProportion\ncandParty\nParty\nOrder\n\n\n\n\n4\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nJoseph Waleanisia\n108\n0.017\nJoseph Waleanisia (UP)\nUP\n4\n\n\n3\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nObadiah Koti\n257\n0.039\nObadiah Koti (PLD)\nPLD\n3\n\n\n2\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nTalauburi Anisi\n488\n0.075\nTalauburi Anisi (KAD)\nKAD\n2\n\n\n1\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nDavid Filia\n1348\n0.207\nDavid Filia (OUR)\nOUR\n1\n\n\n0\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nCooper Wale\n4314\n0.662\nCooper Wale (SID)\nSID\n0\n\n\n\n\n\n\n\n\nsol_geo.elec_wide.head()\n\n\n\n\n\n\n\n\nType\nYear\nGeo\nloc_name\n0\n1\n2\nWinning Party\n\n\n\n\n0\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nCooper Wale (SID) - 4314 (66.2%)\nDavid Filia (OUR) - 1348 (20.7%)\nTalauburi Anisi (KAD) - 488 (7.5%)\nSID\n\n\n1\nNational Parliament\n2024\nConstituency\nBaegu-Asifola\nTagini Makario (OUR) - 2391 (37.4%)\nCelsus Talifilu (U4C) - 2147 (33.6%)\nDouglas Buga (SIP) - 1009 (15.8%)\nOUR\n\n\n2\nNational Parliament\n2024\nConstituency\nCentral Guadalcanal\nShanel Agovaka (OUR) - 3454 (43.1%)\nManengelea Rex (IND) - 1592 (19.8%)\nDenson Denni (KAD) - 1381 (17.2%)\nOUR\n\n\n3\nNational Parliament\n2024\nConstituency\nCentral Honiara\nDarcy Lilo (SIP) - 8223 (63.4%)\nAlfred Efona (UP) - 3632 (28.0%)\nFrancis Idu (OUR) - 669 (5.2%)\nSIP\n\n\n4\nNational Parliament\n2024\nConstituency\nCentral Kwara'ae\nRicky Fuo'o (UP) - 5208 (47.9%)\nJackson Fiulaua (OUR) - 1831 (16.8%)\nYoung Wate (IND) - 1537 (14.1%)\nUP",
+    "crumbs": [
+      "Load Data"
+    ]
+  },
+  {
+    "objectID": "election_page.html",
+    "href": "election_page.html",
+    "title": "Election Page",
+    "section": "",
+    "text": "Setup some of the key data contiaining objects\nsource",
+    "crumbs": [
+      "Election Page"
+    ]
+  },
+  {
+    "objectID": "election_page.html#global-variables",
+    "href": "election_page.html#global-variables",
+    "title": "Election Page",
+    "section": "Global Variables",
+    "text": "Global Variables",
+    "crumbs": [
+      "Election Page"
+    ]
+  },
+  {
+    "objectID": "app.html",
+    "href": "app.html",
+    "title": "Generate Map",
+    "section": "",
+    "text": "Setup the app and global variables\n\nprint(fp)\n\n/home/tom/git/SolomonIslandsDataMap/SolomonIslandsDataMap/pages/\n\n\nCreate a navbar\nImport the sidebar",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "app.html#setup-app-and-server",
+    "href": "app.html#setup-app-and-server",
+    "title": "Generate Map",
+    "section": "",
+    "text": "Setup the app and global variables\n\nprint(fp)\n\n/home/tom/git/SolomonIslandsDataMap/SolomonIslandsDataMap/pages/\n\n\nCreate a navbar\nImport the sidebar",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "app.html#create-the-layout",
+    "href": "app.html#create-the-layout",
+    "title": "Generate Map",
+    "section": "Create the Layout",
+    "text": "Create the Layout",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "app.html#run-the-dash-app",
+    "href": "app.html#run-the-dash-app",
+    "title": "Generate Map",
+    "section": "Run the dash app",
+    "text": "Run the dash app",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "dash_components.html",
+    "href": "dash_components.html",
+    "title": "Generate Map",
+    "section": "",
+    "text": "# TODO - do a need a state class that tracks the state of different website objects to help with\n# updating etc. \n# TODO - not even state, should it be an object that contains everythin to track. Execpt if I am patching,\n# then the tracking in mem is unessary, so better to just track necesary values like: last changes card etc.",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "dash_components.html#load-data",
+    "href": "dash_components.html#load-data",
+    "title": "Generate Map",
+    "section": "Load Data",
+    "text": "Load Data\n\nsol_geo = SolomonGeo.load_pickle(\"/testData/\")",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "dash_components.html#build-the-cloreopath-map",
+    "href": "dash_components.html#build-the-cloreopath-map",
+    "title": "Generate Map",
+    "section": "Build the Cloreopath Map",
+    "text": "Build the Cloreopath Map\ngo.\n\nz_vals = sol_geo.get_census(geo_filter = 'Province', var = 'Key Statistics', \n                                                 measure = 'Total Households').values\nnp.min(z_vals)\n\n688\n\n\n\nfig = define_map(sol_geo)\n\n\nprint(fig['data'][0]['zmin'])\n\n688\n\n\n\nElection Maps\nSlightly different as they have less geographies and colour based on winning party\n\nsol_geo.elec_wide.head()\n\n\n\n\n\n\n\n\nType\nYear\nGeo\nloc_name\n0\n1\n2\nWinning Party\n\n\n\n\n0\nNational Parliament\n2024\nConstituency\nAuki-Langalanga\nCooper Wale (SID) - 4314 (66.2%)\nDavid Filia (OUR) - 1348 (20.7%)\nTalauburi Anisi (KAD) - 488 (7.5%)\nSID\n\n\n1\nNational Parliament\n2024\nConstituency\nBaegu-Asifola\nTagini Makario (OUR) - 2391 (37.4%)\nCelsus Talifilu (U4C) - 2147 (33.6%)\nDouglas Buga (SIP) - 1009 (15.8%)\nOUR\n\n\n2\nNational Parliament\n2024\nConstituency\nCentral Guadalcanal\nShanel Agovaka (OUR) - 3454 (43.1%)\nManengelea Rex (IND) - 1592 (19.8%)\nDenson Denni (KAD) - 1381 (17.2%)\nOUR\n\n\n3\nNational Parliament\n2024\nConstituency\nCentral Honiara\nDarcy Lilo (SIP) - 8223 (63.4%)\nAlfred Efona (UP) - 3632 (28.0%)\nFrancis Idu (OUR) - 669 (5.2%)\nSIP\n\n\n4\nNational Parliament\n2024\nConstituency\nCentral Kwara'ae\nRicky Fuo'o (UP) - 5208 (47.9%)\nJackson Fiulaua (OUR) - 1831 (16.8%)\nYoung Wate (IND) - 1537 (14.1%)\nUP\n\n\n\n\n\n\n\n\nsol_geo.elec_wide[\"Winning Party\"].unique()\n\narray(['SID', 'OUR', 'SIP', 'UP', 'IND', 'PFP', 'U4C', 'KAD', 'DAP'],\n      dtype=object)\n\n\n\nsol_geo.elec[\"Party\"].unique()\n\narray(['UP', 'PLD', 'KAD', 'OUR', 'SID', 'IND', 'SIP', 'U4C', 'PAP',\n       'PFP', 'DAP', 'NTP', 'GPS'], dtype=object)",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "dash_components.html#create-a-bar-graph-to-display-current-data",
+    "href": "dash_components.html#create-a-bar-graph-to-display-current-data",
+    "title": "Generate Map",
+    "section": "Create a bar graph to display current data",
+    "text": "Create a bar graph to display current data\n\ngen_bar_plot(sol_geo, 'Ward', \"Main source of household income in last 12 months\", 'Wages Salary', ['Cruz', 'Vavaea'], 'Proportion')\n\n                                                \n\n\n\nBar Plot for Elections Data\nExample plot for Auki-Langalanga\n\ndf = sol_geo.elec\nloc = 'Auki-Langalanga'\n\ndf.loc[df['loc_name'] == loc, 'candParty'].values\n\narray(['Joseph Waleanisia (UP)', 'Obadiah Koti (PLD)',\n       'Talauburi Anisi (KAD)', 'David Filia (OUR)', 'Cooper Wale (SID)'],\n      dtype=object)\n\n\n\nfig = go.Figure()\nmeasures = list(df.columns)\nfig.add_trace(go.Bar(\n    x = df.loc[df['loc_name'] == loc, 'Candidate'].values,\n    y = df.loc[df['loc_name'] == loc, 'Total'].values,\n    name = loc,\n    marker = dict(color = list(map(lambda y: sol_geo.colormap[y], df.loc[df['loc_name'] == loc, 'Party'].values))),\n    hovertemplate = '%{x} &lt;extra&gt;%{y}&lt;/extra&gt;',\n    text = df.loc[df['loc_name'] == loc, 'Total'].values,\n    textposition='auto',\n))\nfig.update_layout(barmode='group', xaxis_tickangle=-45, title_text=\"Title\",\n                   xaxis={'categoryorder':'total descending'}, )\nfig.update_traces(textfont_size=12, textangle=0, textposition=\"outside\", cliponaxis=False)\n\n                                                \n\n\n\nsource\n\n\nelection_bar_plot\n\n election_bar_plot (sol_geo:SolomonIslandsDataMap.load_data.SolomonGeo,\n                    geo_filter:str='Constituency', year:int=2024,\n                    election:str='National Parliament',\n                    location:str='Auki-Langalanga',\n                    type_filter:str='Total')\n\nCreate a bar plot that show the census selected election data\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nsol_geo\nSolomonGeo\n\nSolomon geo object containing census data to input into map\n\n\ngeo_filter\nstr\nConstituency\nThe desired aggregation of the geography\n\n\nyear\nint\n2024\nThe year of the elections data\n\n\nelection\nstr\nNational Parliament\nThe type of election.\n\n\nlocation\nstr\nAuki-Langalanga\nDesired location within aggregation\n\n\ntype_filter\nstr\nTotal\nThe type of data, eitehr Total of Proportion\n\n\nReturns\nFigure\n\nReturns a graph object figure of a barplot\n\n\n\n\nelection_bar_plot(sol_geo, type_filter = 'Proportion')",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "dash_components.html#create-data-tables",
+    "href": "dash_components.html#create-data-tables",
+    "title": "Generate Map",
+    "section": "Create Data Tables",
+    "text": "Create Data Tables\n\nCensus Data Table\nA method that creates data tables for census\n\nsource\n\n\ngen_census_grid\n\n gen_census_grid (sol_geo:SolomonIslandsDataMap.load_data.SolomonGeo,\n                  geo_filter:str, variable:str, measure:str,\n                  locations:[&lt;class'str'&gt;]=None, type_filter:str='Total',\n                  grid_rows:int=10)\n\nCreates a basic data table using dash grid\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nsol_geo\nSolomonGeo\n\nSolomon geo object containing census data to input into map\n\n\ngeo_filter\nstr\n\nThe desired aggregation of the geography\n\n\nvariable\nstr\n\nThe variable to use to create the bar plot\n\n\nmeasure\nstr\n\nThe measure to highlight on the bar graph\n\n\nlocations\n[&lt;class ‘str’&gt;]\nNone\nDesired location within aggregation\n\n\ntype_filter\nstr\nTotal\nThe type aggregartion\n\n\ngrid_rows\nint\n10\nThe number of rows to display\n\n\nReturns\nAgGrid\n\nReturns a graph object figure of a barplot\n\n\n\n\ngen_census_grid(sol_geo, 'Province', \"Main source of household income in last 12 months\", 'Wages Salary')\n\nAgGrid(id='dash-grid', columnDefs=[{'field': 'Province', 'headerName': 'Province', 'filter': True, 'lockPinned': True, 'cellClass': 'lock-pinned'}, {'field': 'No income', 'headerName': 'No income'}, {'field': 'Wages Salary', 'headerName': 'Wages Salary'}, {'field': 'Own business', 'headerName': 'Own business'}, {'field': 'Sale fish crop craft', 'headerName': 'Sale fish crop craft'}, {'field': 'Land lease', 'headerName': 'Land lease'}, {'field': 'House rent', 'headerName': 'House rent'}, {'field': 'Remittances', 'headerName': 'Remittances'}, {'field': 'Other source', 'headerName': 'Other source'}], columnSize='sizeToFit', csvExportParams={'fileName': 'Solomons 2009 Census Data Main source of household income in last 12 months by Province - Total.csv'}, dashGridOptions={'pagination': True, 'domLayout': 'autoHeight', 'paginationPageSize': 10, 'wrapHeaderText': True, 'autoHeaderHeight': True}, defaultColDef={'resizable': True, 'sortable': True, 'minWidth': 100}, rowData=[{'Province': 'Central', 'No income': 66.0, 'Wages Salary': 665.0, 'Own business': 373.0, 'Sale fish crop craft': 2518.0, 'Land lease': 1.0, 'House rent': 5.0, 'Remittances': 88.0, 'Other source': 1189.0}, {'Province': 'Choiseul', 'No income': 88.0, 'Wages Salary': 892.0, 'Own business': 206.0, 'Sale fish crop craft': 2443.0, 'Land lease': 6.0, 'House rent': 16.0, 'Remittances': 206.0, 'Other source': 855.0}, {'Province': 'Guadalcanal', 'No income': 538.0, 'Wages Salary': 3978.0, 'Own business': 868.0, 'Sale fish crop craft': 7702.0, 'Land lease': 20.0, 'House rent': 102.0, 'Remittances': 182.0, 'Other source': 3773.0}, {'Province': 'Honiara', 'No income': 75.0, 'Wages Salary': 6984.0, 'Own business': 783.0, 'Sale fish crop craft': 393.0, 'Land lease': 54.0, 'House rent': 179.0, 'Remittances': 48.0, 'Other source': 465.0}, {'Province': 'Isabel', 'No income': 92.0, 'Wages Salary': 907.0, 'Own business': 310.0, 'Sale fish crop craft': 2900.0, 'Land lease': 4.0, 'House rent': 18.0, 'Remittances': 174.0, 'Other source': 738.0}, {'Province': 'Makira-Ulawa', 'No income': 315.0, 'Wages Salary': 1007.0, 'Own business': 459.0, 'Sale fish crop craft': 3293.0, 'Land lease': 14.0, 'House rent': 28.0, 'Remittances': 90.0, 'Other source': 1967.0}, {'Province': 'Malaita', 'No income': 1404.0, 'Wages Salary': 2942.0, 'Own business': 1290.0, 'Sale fish crop craft': 11075.0, 'Land lease': 15.0, 'House rent': 154.0, 'Remittances': 584.0, 'Other source': 6957.0}, {'Province': 'Rennell-Bell', 'No income': 114.0, 'Wages Salary': 147.0, 'Own business': 40.0, 'Sale fish crop craft': 244.0, 'Land lease': 1.0, 'House rent': 13.0, 'Remittances': 82.0, 'Other source': 47.0}, {'Province': 'Temotu', 'No income': 159.0, 'Wages Salary': 612.0, 'Own business': 166.0, 'Sale fish crop craft': 2505.0, 'Land lease': 10.0, 'House rent': 14.0, 'Remittances': 120.0, 'Other source': 717.0}, {'Province': 'Western', 'No income': 182.0, 'Wages Salary': 3732.0, 'Own business': 618.0, 'Sale fish crop craft': 7518.0, 'Land lease': 8.0, 'House rent': 48.0, 'Remittances': 410.0, 'Other source': 1246.0}], style={'height': None})\n\n\n\n\nCreate a Population Grid\n\nsource\n\n\ngen_pop_grid\n\n gen_pop_grid (sol_geo:SolomonIslandsDataMap.load_data.SolomonGeo,\n               years:str, variable:str, measure:str,\n               geo_filter:str='Province', locations:[&lt;class'str'&gt;]=None,\n               type_filter:str='Total', grid_rows:int=10)\n\nCreates a basic data table using dash grid\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nsol_geo\nSolomonGeo\n\nSolomon geo object containing census data to input into map\n\n\nyears\nstr\n\nSelected data years\n\n\nvariable\nstr\n\nThe variable to use to create the bar plot\n\n\nmeasure\nstr\n\nThe measure to highlight on the bar graph\n\n\ngeo_filter\nstr\nProvince\nThe desired aggregation of the geography\n\n\nlocations\n[&lt;class ‘str’&gt;]\nNone\nDesired location within aggregation\n\n\ntype_filter\nstr\nTotal\nThe type aggregartion\n\n\ngrid_rows\nint\n10\nThe number of rows to display\n\n\nReturns\nAgGrid\n\nReturns a graph object figure of a barplot\n\n\n\n\ngen_pop_grid(sol_geo, [2023, 2024, 2025], 'Population', 'Total',)\n\nAgGrid(id='dash-grid', columnDefs=[{'field': 'Province', 'headerName': 'Province', 'filter': True, 'lockPinned': True, 'cellClass': 'lock-pinned'}, {'field': 'Year', 'headerName': 'Year', 'filter': True, 'lockPinned': True, 'cellClass': 'lock-pinned'}, {'field': '0-4', 'headerName': '0-4'}, {'field': '5-9', 'headerName': '5-9'}, {'field': '10-14', 'headerName': '10-14'}, {'field': '15-19', 'headerName': '15-19'}, {'field': '20-24', 'headerName': '20-24'}, {'field': '25-29', 'headerName': '25-29'}, {'field': '30-34', 'headerName': '30-34'}, {'field': '35-39', 'headerName': '35-39'}, {'field': '40-44', 'headerName': '40-44'}, {'field': '45-49', 'headerName': '45-49'}, {'field': '50-54', 'headerName': '50-54'}, {'field': '55-59', 'headerName': '55-59'}, {'field': '60-64', 'headerName': '60-64'}, {'field': '65-69', 'headerName': '65-69'}, {'field': '70-74', 'headerName': '70-74'}, {'field': '75-79', 'headerName': '75-79'}, {'field': '80+', 'headerName': '80+'}], columnSize='sizeToFit', csvExportParams={'fileName': 'Solomons 2009 Population Projections for Population Population by Province - Total.csv'}, dashGridOptions={'pagination': True, 'domLayout': 'autoHeight', 'paginationPageSize': 10, 'wrapHeaderText': True, 'autoHeaderHeight': True}, defaultColDef={'resizable': True, 'sortable': True, 'minWidth': 100}, rowData=[{'Year': 2023, 'Province': 'Central', '0-4': 3621.0, '5-9': 3642.0, '10-14': 3915.0, '15-19': 4036.0, '20-24': 3534.0, '25-29': 2622.0, '30-34': 1920.0, '35-39': 1740.0, '40-44': 1830.0, '45-49': 1786.0, '50-54': 1610.0, '55-59': 1073.0, '60-64': 891.0, '65-69': 597.0, '70-74': 483.0, '75-79': 321.0, '80+': 296.0}, {'Year': 2024, 'Province': 'Central', '0-4': 3641.0, '5-9': 3603.0, '10-14': 3861.0, '15-19': 4019.0, '20-24': 3656.0, '25-29': 2773.0, '30-34': 1995.0, '35-39': 1719.0, '40-44': 1811.0, '45-49': 1776.0, '50-54': 1689.0, '55-59': 1127.0, '60-64': 933.0, '65-69': 620.0, '70-74': 493.0, '75-79': 334.0, '80+': 309.0}, {'Year': 2025, 'Province': 'Central', '0-4': 3671.0, '5-9': 3576.0, '10-14': 3788.0, '15-19': 4001.0, '20-24': 3757.0, '25-29': 2928.0, '30-34': 2091.0, '35-39': 1716.0, '40-44': 1779.0, '45-49': 1773.0, '50-54': 1732.0, '55-59': 1212.0, '60-64': 958.0, '65-69': 659.0, '70-74': 499.0, '75-79': 348.0, '80+': 322.0}, {'Year': 2023, 'Province': 'Choiseul', '0-4': 4900.0, '5-9': 4586.0, '10-14': 4396.0, '15-19': 4266.0, '20-24': 3885.0, '25-29': 3128.0, '30-34': 2539.0, '35-39': 2187.0, '40-44': 2007.0, '45-49': 1851.0, '50-54': 1668.0, '55-59': 1208.0, '60-64': 937.0, '65-69': 641.0, '70-74': 499.0, '75-79': 309.0, '80+': 330.0}, {'Year': 2024, 'Province': 'Choiseul', '0-4': 4973.0, '5-9': 4630.0, '10-14': 4458.0, '15-19': 4258.0, '20-24': 4013.0, '25-29': 3274.0, '30-34': 2640.0, '35-39': 2238.0, '40-44': 2040.0, '45-49': 1865.0, '50-54': 1735.0, '55-59': 1268.0, '60-64': 989.0, '65-69': 665.0, '70-74': 522.0, '75-79': 313.0, '80+': 345.0}, {'Year': 2025, 'Province': 'Choiseul', '0-4': 5048.0, '5-9': 4682.0, '10-14': 4479.0, '15-19': 4289.0, '20-24': 4117.0, '25-29': 3429.0, '30-34': 2750.0, '35-39': 2299.0, '40-44': 2071.0, '45-49': 1888.0, '50-54': 1777.0, '55-59': 1346.0, '60-64': 1032.0, '65-69': 704.0, '70-74': 536.0, '75-79': 328.0, '80+': 355.0}, {'Year': 2023, 'Province': 'Guadalcanal', '0-4': 21745.0, '5-9': 20158.0, '10-14': 17946.0, '15-19': 16342.0, '20-24': 15215.0, '25-29': 14197.0, '30-34': 13723.0, '35-39': 13159.0, '40-44': 10683.0, '45-49': 8749.0, '50-54': 6879.0, '55-59': 4715.0, '60-64': 3450.0, '65-69': 2140.0, '70-74': 1608.0, '75-79': 941.0, '80+': 870.0}, {'Year': 2024, 'Province': 'Guadalcanal', '0-4': 22087.0, '5-9': 20561.0, '10-14': 18484.0, '15-19': 16701.0, '20-24': 15766.0, '25-29': 14668.0, '30-34': 13976.0, '35-39': 13660.0, '40-44': 11240.0, '45-49': 9147.0, '50-54': 7337.0, '55-59': 5032.0, '60-64': 3717.0, '65-69': 2273.0, '70-74': 1697.0, '75-79': 980.0, '80+': 912.0}, {'Year': 2025, 'Province': 'Guadalcanal', '0-4': 22419.0, '5-9': 20948.0, '10-14': 18986.0, '15-19': 17102.0, '20-24': 16290.0, '25-29': 15166.0, '30-34': 14301.0, '35-39': 14036.0, '40-44': 11849.0, '45-49': 9569.0, '50-54': 7749.0, '55-59': 5425.0, '60-64': 3947.0, '65-69': 2466.0, '70-74': 1760.0, '75-79': 1044.0, '80+': 947.0}, {'Year': 2023, 'Province': 'Honiara', '0-4': 8666.0, '5-9': 9207.0, '10-14': 9041.0, '15-19': 8060.0, '20-24': 7380.0, '25-29': 7291.0, '30-34': 8878.0, '35-39': 10220.0, '40-44': 7840.0, '45-49': 5991.0, '50-54': 4628.0, '55-59': 3193.0, '60-64': 2359.0, '65-69': 1509.0, '70-74': 943.0, '75-79': 507.0, '80+': 313.0}, {'Year': 2024, 'Province': 'Honiara', '0-4': 8535.0, '5-9': 9146.0, '10-14': 9172.0, '15-19': 8285.0, '20-24': 7595.0, '25-29': 7252.0, '30-34': 8475.0, '35-39': 10381.0, '40-44': 8319.0, '45-49': 6300.0, '50-54': 4918.0, '55-59': 3392.0, '60-64': 2507.0, '65-69': 1620.0, '70-74': 1014.0, '75-79': 547.0, '80+': 343.0}, {'Year': 2025, 'Province': 'Honiara', '0-4': 8404.0, '5-9': 9065.0, '10-14': 9241.0, '15-19': 8536.0, '20-24': 7802.0, '25-29': 7291.0, '30-34': 8159.0, '35-39': 10294.0, '40-44': 8849.0, '45-49': 6643.0, '50-54': 5182.0, '55-59': 3636.0, '60-64': 2642.0, '65-69': 1746.0, '70-74': 1085.0, '75-79': 593.0, '80+': 374.0}, {'Year': 2023, 'Province': 'Isabel', '0-4': 4165.0, '5-9': 4041.0, '10-14': 4026.0, '15-19': 4005.0, '20-24': 3680.0, '25-29': 2958.0, '30-34': 2468.0, '35-39': 2128.0, '40-44': 2054.0, '45-49': 1985.0, '50-54': 1666.0, '55-59': 1131.0, '60-64': 993.0, '65-69': 764.0, '70-74': 590.0, '75-79': 379.0, '80+': 377.0}, {'Year': 2024, 'Province': 'Isabel', '0-4': 4203.0, '5-9': 4051.0, '10-14': 4047.0, '15-19': 3992.0, '20-24': 3804.0, '25-29': 3087.0, '30-34': 2562.0, '35-39': 2171.0, '40-44': 2059.0, '45-49': 2004.0, '50-54': 1764.0, '55-59': 1185.0, '60-64': 1020.0, '65-69': 786.0, '70-74': 613.0, '75-79': 394.0, '80+': 392.0}, {'Year': 2025, 'Province': 'Isabel', '0-4': 4244.0, '5-9': 4068.0, '10-14': 4038.0, '15-19': 4002.0, '20-24': 3900.0, '25-29': 3232.0, '30-34': 2657.0, '35-39': 2228.0, '40-44': 2067.0, '45-49': 2019.0, '50-54': 1838.0, '55-59': 1271.0, '60-64': 1036.0, '65-69': 816.0, '70-74': 632.0, '75-79': 413.0, '80+': 407.0}, {'Year': 2023, 'Province': 'Makira-Ulawa', '0-4': 7179.0, '5-9': 7037.0, '10-14': 7244.0, '15-19': 6960.0, '20-24': 5670.0, '25-29': 4277.0, '30-34': 3355.0, '35-39': 3440.0, '40-44': 3220.0, '45-49': 2842.0, '50-54': 2267.0, '55-59': 1512.0, '60-64': 1238.0, '65-69': 832.0, '70-74': 658.0, '75-79': 417.0, '80+': 398.0}, {'Year': 2024, 'Province': 'Makira-Ulawa', '0-4': 7242.0, '5-9': 7021.0, '10-14': 7177.0, '15-19': 7117.0, '20-24': 5929.0, '25-29': 4533.0, '30-34': 3405.0, '35-39': 3428.0, '40-44': 3263.0, '45-49': 2910.0, '50-54': 2410.0, '55-59': 1589.0, '60-64': 1297.0, '65-69': 864.0, '70-74': 679.0, '75-79': 427.0, '80+': 414.0}, {'Year': 2025, 'Province': 'Makira-Ulawa', '0-4': 7321.0, '5-9': 7021.0, '10-14': 7120.0, '15-19': 7209.0, '20-24': 6185.0, '25-29': 4788.0, '30-34': 3525.0, '35-39': 3390.0, '40-44': 3302.0, '45-49': 2977.0, '50-54': 2526.0, '55-59': 1706.0, '60-64': 1335.0, '65-69': 916.0, '70-74': 691.0, '75-79': 446.0, '80+': 427.0}, {'Year': 2023, 'Province': 'Malaita', '0-4': 18990.0, '5-9': 18896.0, '10-14': 20187.0, '15-19': 20945.0, '20-24': 18277.0, '25-29': 13286.0, '30-34': 9337.0, '35-39': 7805.0, '40-44': 7425.0, '45-49': 6991.0, '50-54': 5924.0, '55-59': 4453.0, '60-64': 3759.0, '65-69': 2804.0, '70-74': 2244.0, '75-79': 1627.0, '80+': 1394.0}, {'Year': 2024, 'Province': 'Malaita', '0-4': 19039.0, '5-9': 18690.0, '10-14': 19891.0, '15-19': 20718.0, '20-24': 18748.0, '25-29': 13942.0, '30-34': 9648.0, '35-39': 7769.0, '40-44': 7338.0, '45-49': 7010.0, '50-54': 6134.0, '55-59': 4578.0, '60-64': 3859.0, '65-69': 2871.0, '70-74': 2255.0, '75-79': 1667.0, '80+': 1453.0}, {'Year': 2025, 'Province': 'Malaita', '0-4': 19122.0, '5-9': 18543.0, '10-14': 19503.0, '15-19': 20502.0, '20-24': 19118.0, '25-29': 14609.0, '30-34': 10052.0, '35-39': 7776.0, '40-44': 7246.0, '45-49': 7006.0, '50-54': 6295.0, '55-59': 4766.0, '60-64': 3924.0, '65-69': 2967.0, '70-74': 2267.0, '75-79': 1696.0, '80+': 1516.0}, {'Year': 2023, 'Province': 'Rennell-Bell', '0-4': 566.0, '5-9': 491.0, '10-14': 424.0, '15-19': 428.0, '20-24': 444.0, '25-29': 449.0, '30-34': 299.0, '35-39': 264.0, '40-44': 189.0, '45-49': 227.0, '50-54': 172.0, '55-59': 127.0, '60-64': 132.0, '65-69': 126.0, '70-74': 113.0, '75-79': 65.0, '80+': 67.0}, {'Year': 2024, 'Province': 'Rennell-Bell', '0-4': 581.0, '5-9': 506.0, '10-14': 441.0, '15-19': 421.0, '20-24': 437.0, '25-29': 473.0, '30-34': 317.0, '35-39': 282.0, '40-44': 190.0, '45-49': 229.0, '50-54': 184.0, '55-59': 130.0, '60-64': 131.0, '65-69': 124.0, '70-74': 116.0, '75-79': 72.0, '80+': 68.0}, {'Year': 2025, 'Province': 'Rennell-Bell', '0-4': 595.0, '5-9': 521.0, '10-14': 453.0, '15-19': 420.0, '20-24': 435.0, '25-29': 483.0, '30-34': 346.0, '35-39': 293.0, '40-44': 201.0, '45-49': 223.0, '50-54': 197.0, '55-59': 137.0, '60-64': 129.0, '65-69': 124.0, '70-74': 117.0, '75-79': 78.0, '80+': 70.0}, {'Year': 2023, 'Province': 'Temotu', '0-4': 2686.0, '5-9': 2674.0, '10-14': 2813.0, '15-19': 3071.0, '20-24': 2905.0, '25-29': 2072.0, '30-34': 1578.0, '35-39': 1250.0, '40-44': 1220.0, '45-49': 1168.0, '50-54': 1197.0, '55-59': 910.0, '60-64': 765.0, '65-69': 586.0, '70-74': 460.0, '75-79': 269.0, '80+': 315.0}, {'Year': 2024, 'Province': 'Temotu', '0-4': 2697.0, '5-9': 2650.0, '10-14': 2805.0, '15-19': 2959.0, '20-24': 2996.0, '25-29': 2179.0, '30-34': 1646.0, '35-39': 1259.0, '40-44': 1221.0, '45-49': 1144.0, '50-54': 1219.0, '55-59': 941.0, '60-64': 789.0, '65-69': 598.0, '70-74': 479.0, '75-79': 283.0, '80+': 317.0}, {'Year': 2025, 'Province': 'Temotu', '0-4': 2710.0, '5-9': 2636.0, '10-14': 2756.0, '15-19': 2891.0, '20-24': 3043.0, '25-29': 2309.0, '30-34': 1709.0, '35-39': 1288.0, '40-44': 1210.0, '45-49': 1136.0, '50-54': 1215.0, '55-59': 986.0, '60-64': 806.0, '65-69': 617.0, '70-74': 490.0, '75-79': 301.0, '80+': 319.0}, {'Year': 2023, 'Province': 'Western', '0-4': 11762.0, '5-9': 11511.0, '10-14': 11679.0, '15-19': 11368.0, '20-24': 10110.0, '25-29': 8167.0, '30-34': 6990.0, '35-39': 5802.0, '40-44': 5338.0, '45-49': 4928.0, '50-54': 4599.0, '55-59': 3756.0, '60-64': 2749.0, '65-69': 1874.0, '70-74': 1368.0, '75-79': 889.0, '80+': 833.0}, {'Year': 2024, 'Province': 'Western', '0-4': 11834.0, '5-9': 11500.0, '10-14': 11631.0, '15-19': 11449.0, '20-24': 10408.0, '25-29': 8406.0, '30-34': 7198.0, '35-39': 5919.0, '40-44': 5398.0, '45-49': 4953.0, '50-54': 4678.0, '55-59': 3908.0, '60-64': 2914.0, '65-69': 1965.0, '70-74': 1420.0, '75-79': 921.0, '80+': 865.0}, {'Year': 2025, 'Province': 'Western', '0-4': 11916.0, '5-9': 11508.0, '10-14': 11564.0, '15-19': 11520.0, '20-24': 10650.0, '25-29': 8704.0, '30-34': 7373.0, '35-39': 6083.0, '40-44': 5447.0, '45-49': 4995.0, '50-54': 4729.0, '55-59': 4054.0, '60-64': 3076.0, '65-69': 2080.0, '70-74': 1468.0, '75-79': 959.0, '80+': 897.0}], style={'height': None})\n\n\ndashGridOptions={‘pagination’: True, ‘domLayout’: ‘autoHeight’, ‘paginationPageSize’: 10},",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "dash_components.html#create-kpi",
+    "href": "dash_components.html#create-kpi",
+    "title": "Generate Map",
+    "section": "Create KPI",
+    "text": "Create KPI\nThe kpi card is useful for displaying a particular value as a standout kpi\n\n# Build and test a card\ngen_kpi(sol_geo, 2022, 'Population', 'Total', [\"0-4\"])\n\n(Markdown('# 83,808'), Markdown('total persons in current selection'))",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "dash_components.html#create-function-to-make-dropdowns",
+    "href": "dash_components.html#create-function-to-make-dropdowns",
+    "title": "Generate Map",
+    "section": "Create function to make dropdowns",
+    "text": "Create function to make dropdowns\n\nsource\n\ngen_dd\n\n gen_dd (location_list:[&lt;class'str'&gt;], id:str, place_holder:str=None,\n         val:str=None, clear:bool=False, height:int=35, multi:bool=False)\n\nCreate the location dropdown from given list\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nlocation_list\n[&lt;class ‘str’&gt;]\n\na list of locations\n\n\nid\nstr\n\nId of the dropdown\n\n\nplace_holder\nstr\nNone\na placeholder message to display\n\n\nval\nstr\nNone\nThe starting value of the dropdown\n\n\nclear\nbool\nFalse\npick whether the ]\n\n\nheight\nint\n35\nheight of the dropdown text\n\n\nmulti\nbool\nFalse\nIs the dropdown multi select\n\n\nReturns\nDropdown\n\nReturns a dropdown",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "dash_components.html#create-population-pyramid",
+    "href": "dash_components.html#create-population-pyramid",
+    "title": "Generate Map",
+    "section": "Create Population Pyramid",
+    "text": "Create Population Pyramid\nFor use to demonstrate the population pyramid of solomon islands. It should highlight age groups based on selection\n\nsource\n\ngen_pyramid\n\n gen_pyramid (sol_geo:SolomonIslandsDataMap.load_data.SolomonGeo,\n              geo_filter:str, year:str, variable:str='Population',\n              locations:[&lt;class'str'&gt;]=[], type_filter:str='Total',\n              ages:[&lt;class'str'&gt;]=[])\n\nCreate a population pyramid of selected population data\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nsol_geo\nSolomonGeo\n\nSolomon geo object containing census data to input into map\n\n\ngeo_filter\nstr\n\nThe desired aggregation of the geography\n\n\nyear\nstr\n\nSelected year to display on the graph\n\n\nvariable\nstr\nPopulation\nThe variable to use to create the bar plot\n\n\nlocations\n[&lt;class ‘str’&gt;]\n[]\nDesired location within aggregation\n\n\ntype_filter\nstr\nTotal\nThe type aggregartion\n\n\nages\n[&lt;class ‘str’&gt;]\n[]\nCurrenly selected ages for highlighting\n\n\nReturns\nFigure\n\nReturns a population pyramid and it’s title\n\n\n\n\ngen_pyramid(sol_geo, geo_filter = 'Province', year = 2024, variable = \"Population\", locations = ['Western'], type_filter = \"Proportion\")",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "dash_components.html#testing",
+    "href": "dash_components.html#testing",
+    "title": "Generate Map",
+    "section": "Testing",
+    "text": "Testing\n\n# TODO implementing testing, everything should at least be run here and execute and be displayed",
+    "crumbs": [
+      "Generate Map"
+    ]
+  },
+  {
+    "objectID": "map_page.html",
+    "href": "map_page.html",
+    "title": "Map Page",
+    "section": "",
+    "text": "Setup some of the key data contiaining objects",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_page.html#customize-the-layout",
+    "href": "map_page.html#customize-the-layout",
+    "title": "Map Page",
+    "section": "Customize the Layout",
+    "text": "Customize the Layout\n\nsource\n\nlayout\n\n layout ()",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_page.html#global-variables",
+    "href": "map_page.html#global-variables",
+    "title": "Map Page",
+    "section": "Global Variables",
+    "text": "Global Variables",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_page.html#manage-sidebar",
+    "href": "map_page.html#manage-sidebar",
+    "title": "Map Page",
+    "section": "Manage Sidebar",
+    "text": "Manage Sidebar\nOn page load, manage the dropdowns displayed in the sidebar for all pages\nUpdate active page on nav based on current page\n\nsource\n\nnavClick\n\n navClick (clickData:str)\n\nThis function updates the actively selected page on the navbar\n\n\n\n\nType\nDetails\n\n\n\n\nclickData\nstr\nCUrrently selected map page\n\n\nReturns\n[&lt;class ‘str’&gt;]\nReturns the active navlink\n\n\n\n\n\nUpdate Current Dataset\nWhen the census or population page are loaded, then set the currently selected value of the dataset dropdown to the respective ones\nshow_doc(dataset_selection)",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_page.html#update-title",
+    "href": "map_page.html#update-title",
+    "title": "Map Page",
+    "section": "Update Title",
+    "text": "Update Title\nFor all pages of the dash app",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_page.html#update-location-dropdown-value-based-on-map-click",
+    "href": "map_page.html#update-location-dropdown-value-based-on-map-click",
+    "title": "Map Page",
+    "section": "Update location dropdown value based on map click",
+    "text": "Update location dropdown value based on map click\nThis callback also will trigger an update to the selected card data",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_page.html#update-map-selections",
+    "href": "map_page.html#update-map-selections",
+    "title": "Map Page",
+    "section": "Update map selections",
+    "text": "Update map selections",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_page.html#update-the-location-options-based-on-geography-selected",
+    "href": "map_page.html#update-the-location-options-based-on-geography-selected",
+    "title": "Map Page",
+    "section": "Update the location options based on geography selected",
+    "text": "Update the location options based on geography selected\n\nsource\n\nupdate_geography\n\n update_geography (geo_input:str, locations:[&lt;class'str'&gt;])\n\nUpdates the dropdown_location dropdown based on the currently selected data aggregation. Check to see if current locations are in geography, if they are not then reset them.\n\n\n\n\n\n\n\n\n\nType\nDetails\n\n\n\n\ngeo_input\nstr\nUser input from the geography dropdown\n\n\nlocations\n[&lt;class ‘str’&gt;]\nCurrently selected locations\n\n\nReturns\n[&lt;class ‘str’&gt;]\nReturns a new list of locations to display",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_page.html#update-the-variable-dropdowns-based-on-the-selection-of-the-overall-variable",
+    "href": "map_page.html#update-the-variable-dropdowns-based-on-the-selection-of-the-overall-variable",
+    "title": "Map Page",
+    "section": "Update the variable dropdowns based on the selection of the overall variable",
+    "text": "Update the variable dropdowns based on the selection of the overall variable",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_page.html#update-the-measure-selection-from-clicks-on-the-bar-graph",
+    "href": "map_page.html#update-the-measure-selection-from-clicks-on-the-bar-graph",
+    "title": "Map Page",
+    "section": "Update the measure selection from clicks on the bar graph",
+    "text": "Update the measure selection from clicks on the bar graph",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "table_page.html",
+    "href": "table_page.html",
+    "title": "Table Page",
+    "section": "",
+    "text": "Setup some of the key data contiaining objects\nsource",
+    "crumbs": [
+      "Table Page"
+    ]
+  },
+  {
+    "objectID": "table_page.html#global-variables",
+    "href": "table_page.html#global-variables",
+    "title": "Table Page",
+    "section": "Global Variables",
+    "text": "Global Variables",
+    "crumbs": [
+      "Table Page"
+    ]
+  },
+  {
+    "objectID": "table_page.html#update-the-data-displayed-in-the-table",
+    "href": "table_page.html#update-the-data-displayed-in-the-table",
+    "title": "Table Page",
+    "section": "Update the data displayed in the table",
+    "text": "Update the data displayed in the table\n\nsource\n\nupdate_grid\n\n update_grid (geo_input:str, data_type:str, measure:str, variable:str,\n              measurePop:str, variablePop:str, grid_rows:int, dataset:str)\n\nUpdates the focus census variable or geography dispalayed on the map\n\n\n\n\n\n\n\n\n\nType\nDetails\n\n\n\n\ngeo_input\nstr\nUser input from the geography dropdownk\n\n\ndata_type\nstr\nUser input of type of data\n\n\nmeasure\nstr\nA string contiaining the census variable and measure split by ‘:’\n\n\nvariable\nstr\nThe state of the variable dropdown\n\n\nmeasurePop\nstr\nA string contiaining the population measure\n\n\nvariablePop\nstr\nThe variable to display for population dataset\n\n\ngrid_rows\nint\nThe number of rows to display\n\n\ndataset\nstr\nThe dataset to load\n\n\nReturns\n(&lt;class ‘dash_ag_grid.AgGrid.AgGrid’&gt;, &lt;class ‘str’&gt;)\nReturns a graph object figure after being updated and the dynamic title",
+    "crumbs": [
+      "Table Page"
+    ]
+  },
+  {
+    "objectID": "table_page.html#update-the-grid-row-count",
+    "href": "table_page.html#update-the-grid-row-count",
+    "title": "Table Page",
+    "section": "Update the Grid row count",
+    "text": "Update the Grid row count\nNeeds to both: - update max input based on the geography selected - update the dash_grid size based on the selected row count\n\nsource\n\nupdate_page_rows\n\n update_page_rows (geo_input:str, dataset:str)\n\nUpdates the page size and max of the input selection based on updated geography\n\n\n\n\n\n\n\n\n\nType\nDetails\n\n\n\n\ngeo_input\nstr\nUser input from the geography dropdown\n\n\ndataset\nstr\nCurrently selected dataset\n\n\nReturns\n(&lt;class ‘int’&gt;, &lt;class ‘int’&gt;)\nNew value and max size of the grid selection\n\n\n\n\nsource\n\n\nupdate_page_size\n\n update_page_size (page_size:int, grid_options:dict)\n\nUpdates the page size of the grid based on input\n\n\n\n\nType\nDetails\n\n\n\n\npage_size\nint\nThe input page size\n\n\ngrid_options\ndict\nThe current grid page size option\n\n\nReturns\ndict\nThe updated grid page size option",
+    "crumbs": [
+      "Table Page"
+    ]
+  },
+  {
+    "objectID": "table_page.html#enable-downloading-the-current-csv",
+    "href": "table_page.html#enable-downloading-the-current-csv",
+    "title": "Table Page",
+    "section": "Enable downloading the current csv",
+    "text": "Enable downloading the current csv\nOn click of download button, return the current csv in the dash grid\n\nsource\n\nexport_data_as_csv\n\n export_data_as_csv (n_clicks:int)\n\n\n\n\n\nType\nDetails\n\n\n\n\nn_clicks\nint\nListening for click inputs\n\n\nReturns\nbool\nWhether to download csv\n\n\n\n\ndata_grid.children.columnDefs\n\n[{'field': 'Province',\n  'headerName': 'Province',\n  'filter': True,\n  'lockPinned': True,\n  'cellClass': 'lock-pinned'},\n {'field': 'Total Households', 'headerName': 'Total Households'}]",
+    "crumbs": [
+      "Table Page"
+    ]
+  },
+  {
+    "objectID": "map_population.html",
+    "href": "map_population.html",
+    "title": "Map Page",
+    "section": "",
+    "text": "This data store is used to trigger callbacks on page load and to know which page is loaded.\nSetup some of the key data contiaining objects",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_population.html#customize-the-layout",
+    "href": "map_population.html#customize-the-layout",
+    "title": "Map Page",
+    "section": "Customize the Layout",
+    "text": "Customize the Layout\n\nsource\n\nlayout\n\n layout ()",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_population.html#global-variables",
+    "href": "map_population.html#global-variables",
+    "title": "Map Page",
+    "section": "Global Variables",
+    "text": "Global Variables\n\nSome things to note about this page\n\nOn Load, we change geo to province if it isn’t alread there,\nWe can just use the normal geo drowpdown because it is set to and will remain as Province, the other dropdown is basically just for display,\nAs a result, we can recycle a lot of the other dropdowns,\nProbably the only other one we will overwrite is the map one, to instead display population data.\nAlso we add the age bracket dropdown\nAnd we use a different measure and variable selection\nIt’s really just updated to display new data not change to much of the other variables and callbacks",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_population.html#update-the-variable-dropdowns-based-on-the-selection-of-the-overall-variable",
+    "href": "map_population.html#update-the-variable-dropdowns-based-on-the-selection-of-the-overall-variable",
+    "title": "Map Page",
+    "section": "Update the variable dropdowns based on the selection of the overall variable",
+    "text": "Update the variable dropdowns based on the selection of the overall variable",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_population.html#update-the-measure-selection-from-population-pyramid-clicks",
+    "href": "map_population.html#update-the-measure-selection-from-population-pyramid-clicks",
+    "title": "Map Page",
+    "section": "Update the measure selection from Population Pyramid clicks",
+    "text": "Update the measure selection from Population Pyramid clicks\n\nUpdate the selected part of the map based on the dropdown\n\n\nPopulation Pyramid\nOn click, update the contents of the kpi’s",
+    "crumbs": [
+      "Map Page"
+    ]
+  },
+  {
+    "objectID": "map_population.html#update-kpi",
+    "href": "map_population.html#update-kpi",
+    "title": "Map Page",
+    "section": "Update Kpi",
+    "text": "Update Kpi\nBased on Current Selection\n\nsource\n\nupdate_kpi\n\n update_kpi (data_type:str, measure:str, loc_selection:[&lt;class'str'&gt;],\n             ages:[&lt;class'str'&gt;], year:str, variable:str)\n\nUpdates the focus census variable or geography dispalayed on the map\n\n\n\n\n\n\n\n\n\nType\nDetails\n\n\n\n\ndata_type\nstr\nUser input of type of data\n\n\nmeasure\nstr\nA string contiaining the census variable and measure split by ‘:’\n\n\nloc_selection\n[&lt;class ‘str’&gt;]\nThe selected locations, may be none\n\n\nages\n[&lt;class ‘str’&gt;]\nCurrently selected locations for highlighting\n\n\nyear\nstr\nYear of projection data\n\n\nvariable\nstr\nThe state of the variable dropdown\n\n\nReturns\n(&lt;class ‘dash.dcc.Markdown.Markdown’&gt;, &lt;class ‘dash.dcc.Markdown.Markdown’&gt;)\nReturns a graph object figure after being updated and the dynamic title",
+    "crumbs": [
+      "Map Page"
+    ]
+  }
+]
