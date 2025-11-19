@@ -235,8 +235,8 @@ def gen_census_grid(sol_geo:SolomonGeo, # Solomon geo object containing census d
         rowData = df.to_dict('records'),
         columnDefs = colDef,
         columnSize="sizeToFit",
-        defaultColDef={"resizable": True, "sortable": True},
-        dashGridOptions={"pagination": True, "domLayout": "autoHeight", "paginationPageSize": grid_rows},
+        defaultColDef={"resizable": True, "sortable": True, "minWidth": 100,},
+        dashGridOptions={"pagination": True, "domLayout": "autoHeight", "paginationPageSize": grid_rows, "wrapHeaderText": True,  "autoHeaderHeight": True},
         style={"height": None},
         csvExportParams={
                 "fileName": "Solomons 2009 Census Data " + variable + " by " + geo_filter + " - " + type_filter + ".csv",
@@ -281,8 +281,8 @@ def gen_pop_grid(sol_geo:SolomonGeo, # Solomon geo object containing census data
         rowData = df.to_dict('records'),
         columnDefs = colDef,
         columnSize="sizeToFit",
-        defaultColDef={"resizable": True, "sortable": True},
-        dashGridOptions={"pagination": True, "domLayout": "autoHeight", "paginationPageSize": grid_rows},
+        defaultColDef={"resizable": True, "sortable": True, "minWidth": 100,},
+        dashGridOptions={"pagination": True, "domLayout": "autoHeight", "paginationPageSize": grid_rows, "wrapHeaderText": True,  "autoHeaderHeight": True},
         style={"height": None},
         csvExportParams={
                 "fileName": "Solomons 2009 Population Projections for " + variable + " Population by " + geo_filter + " - " + type_filter + ".csv",
