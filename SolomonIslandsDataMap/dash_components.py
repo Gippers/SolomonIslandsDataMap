@@ -383,43 +383,70 @@ def gen_pyramid(sol_geo:SolomonGeo, # Solomon geo object containing census data 
     age_df.drop(columns = ('Population', 'Total'))
 
     y_age = age_df.index
-    x_male = age_df.loc[:, ('Population', 'Males')] * -1
-    x_female = age_df.loc[:, ('Population', 'Females')]
+   
+    # Raw values from the table (either counts or proportions in [0,1])
+    male_raw = age_df[('Population', 'Males')].astype(float)
+    female_raw = age_df[('Population', 'Females')].astype(float)
+
+    # Change data depending on whether proportion or not
+
+    if type_filter == "Proportion":
+        # Work in percentage points so axis/hover show 0–100 %
+        x_male = -male_raw * 100.0
+        x_female = female_raw * 100.0
+        axis_title = 'Population (%)'
+        female_hover = '%{y}: %{x:.1f}%<extra>Female</extra>'
+        male_hover = '%{y}: %{x:.1f}%<extra>Male</extra>'
+        tickformat = '.1f'  # numbers like 5, 10, 15; interpreted as %
+    else:
+        # Use counts directly
+        x_male = -male_raw
+        x_female = female_raw
+        axis_title = 'Population'
+        female_hover = '%{y}: %{x:,.0f} people<extra>Female</extra>'
+        male_hover = '%{y}: %{x:,.0f} people<extra>Male</extra>'
+        tickformat = ',.0f'  # comma-separated integers
 
     # Create instance of the figure
     pyramid_fig = go.Figure()
 
-
-    # Add Trace to figure
-    pyramid_fig.add_trace(go.Bar(
+    # Add traces
+    pyramid_fig.add_trace(
+        go.Bar(
             y=y_age,
             x=x_female,
             name='Female',
-            orientation='h'
-    ))
-    # Add Trace to Figure
-    pyramid_fig.add_trace(go.Bar(
+            orientation='h',
+            hovertemplate=female_hover,
+        )
+    )
+
+    pyramid_fig.add_trace(
+        go.Bar(
             y=y_age,
             x=x_male,
             name='Male',
-            orientation='h'
-    ))
+            orientation='h',
+            hovertemplate=male_hover,
+        )
+    )
 
+    # Symmetric x-axis around zero
+    max_x = float(np.nanmax([abs(x_male).max(), x_female.max()]))
+    max_x = max_x if max_x > 0 else 1.0
 
-    # Update Figure Layout
     pyramid_fig.update_layout(
-        title_font_size = 24,
+        title_font_size=24,
         barmode='relative',
         bargap=0.0,
         bargroupgap=0,
         xaxis=dict(
-            tickvals=[-30000, -20000, -10000,0, 10000, 20000, 30000],
-            ticktext=['30k', '20k', '10k','0','10k','20k', '30k'],
-            title='Population',
-            title_font_size=14
+            range=[-max_x, max_x],
+            tickformat=tickformat,
+            title=axis_title,
+            title_font_size=14,
         ),
-        yaxis = dict(title = 'Age Group')
+        yaxis=dict(title='Age Group'),
     )
-    # TODO overtext labelling, should be flipped for female
-    
+
     return pyramid_fig
