@@ -50,7 +50,7 @@ dd_location_election = html.Div(children = gen_dd(sol_geo.locations['Constituenc
 dd_age = html.Div(children = gen_dd(sol_geo.ages, 'age_dropdown'
                                     ,val = sol_geo.ages
                                     ,multi = True, clear = False))
-dd_years_pop = html.Div(children = gen_dd(sol_geo.pop_years, 'years_dropdown', val = [datetime.now().year], #multi = True 
+dd_years_pop = html.Div(children = gen_dd(sol_geo.pop_years, 'years_dropdown', val = [2025], #multi = True 
                                       ))
 
 dropdown_geo = dmc.SegmentedControl(
@@ -113,7 +113,7 @@ grid_rows = dcc.Input(id="grid-rows", type="number", min=1, max=len(sol_geo.loca
 download_button = dbc.Button("Download", id="csv-button", outline=True, n_clicks=0, color = "primary")
 
 # %% ../nbs/02_app_data.ipynb #fec90ea3
-year_slider = dcc.Slider(sol_geo.pop_years[0], sol_geo.pop_years[-1], 1,  value = datetime.now().year, marks=None, id = 'year_slider',
+year_slider = dcc.Slider(sol_geo.pop_years[0], sol_geo.pop_years[-1], 1,  value = 2025, marks=None, id = 'year_slider',
                 tooltip={"placement": "top", "always_visible": True},  included=False, dots = True, updatemode =  "drag"
                 )
 # Fake slider allows you to still have a hidden slider in the graph
@@ -226,7 +226,7 @@ selectedBarGraph = dcc.Graph(figure = gen_bar_plot(sol_geo, sol_geo.geo_levels[0
                             id = 'bar_graph')
 popPyramid = dcc.Graph(figure = gen_pyramid(sol_geo, 'Province', 2024), id = 'popPyramid')
 pyramidTitle = dcc.Markdown(children ='## Projected Population Pyramid for Solomon Islands', id = 'pyramidTitle')
-popKpi = dbc.Col(children = gen_kpi(sol_geo, datetime.now().year, 'Population', 'Total', sol_geo.ages), id = 'popKpi',
+popKpi = dbc.Col(children = gen_kpi(sol_geo, 2025, 'Population', 'Total', sol_geo.ages), id = 'popKpi',
                  width = 2, align = 'center')
 
 
