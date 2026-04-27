@@ -5,7 +5,6 @@ build-backend = "setuptools.build_meta"
 [project]
 requires-python = "==3.13"
 name="SolomonIslandsDataMap"
-requires-python=">=3.9"
 dynamic = [ "keywords", "description", "version", "dependencies", "optional-dependencies", "readme", "license", "authors", "classifiers", "entry-points", "scripts", "urls"]
 
 [tool.uv]
