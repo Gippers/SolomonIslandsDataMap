@@ -6,7 +6,8 @@ with no Python server.
 
 Stack: Astro + React islands, Tailwind v4, shadcn/ui (Base UI, `base-lyra` style), MapLibre GL, Recharts
 (shadcn charts) and TanStack Table. The theme, header and footer are copied from the personal site
-(`Gippers/gippers.github.io`) so the dashboard reads as part of thomasmartin.id.au.
+(`Gippers/gippers.github.io`) so the dashboard reads as part of thomasmartin.id.au. The one difference is the accent colour: mint
+(Bootswatch Minty, as in the Dash app) instead of violet, set at the end of `src/styles/global.css`.
 
 ## Pages
 

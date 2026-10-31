@@ -174,3 +174,21 @@
 .dark .maplibregl-ctrl-attrib a {
     @apply text-muted-foreground;
 }
+
+/* Mint accent (Bootswatch Minty's primary, as in the original Dash app) in place of the personal
+   site's violet. Only the accent changes, every other token comes from the personal site. Dark text
+   on mint keeps selected controls readable (white on #78c2ad is under 3:1). */
+:root {
+    --primary: #78c2ad;
+    --primary-foreground: oklch(0.2 0.03 175);
+    --ring: #78c2ad;
+    --sidebar-primary: #78c2ad;
+    --sidebar-primary-foreground: oklch(0.2 0.03 175);
+}
+.dark {
+    --primary: #6fb8a3;
+    --primary-foreground: oklch(0.18 0.03 175);
+    --ring: #6fb8a3;
+    --sidebar-primary: #6fb8a3;
+    --sidebar-primary-foreground: oklch(0.18 0.03 175);
+}
