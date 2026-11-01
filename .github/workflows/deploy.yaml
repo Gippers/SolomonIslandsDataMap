@@ -49,7 +49,7 @@ jobs:
           SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
           REGION_NAME: ${{ secrets.REGION_NAME }}
         run: |
-          pip install "nbdev<3" "execnb<0.2" "fastcore<1.9"
+          pip install "nbdev<3" "fastcore<2"
           pip install -e .
           nbdev_docs
           cp -r _docs web/dist/docs
