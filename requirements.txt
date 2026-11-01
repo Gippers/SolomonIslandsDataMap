@@ -1,6 +1,6 @@
 setuptools>=65.0
 execnb<0.2
-fastcore
+fastcore<2
 nbdev>=1.1.14
 pandas<3
 plotly>=5.17.0 
