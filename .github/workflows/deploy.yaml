@@ -1,18 +1,69 @@
 name: Deploy to GitHub Pages
+
+# Builds the Astro dashboard in web/ and the nbdev documentation, and publishes both to GitHub Pages:
+#   https://thomasmartin.id.au/SolomonIslandsDataMap/        dashboard
+#   https://thomasmartin.id.au/SolomonIslandsDataMap/docs/   Python (nbdev) docs
+# Repo Settings -> Pages -> Source must be set to "GitHub Actions".
 on:
   push:
     branches: [master, main]
   workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: fastai/workflows/quarto-ghp@master
-        env: # This passes enivronment variables which are accessed using os.environ['ENV_NAME']
-          ACCESS_KEY:  ${{ secrets.ACCESS_KEY }}
-          SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}   
-          REGION_NAME: ${{ secrets.REGION_NAME }}
+      - uses: actions/checkout@v7
+
+      # ---- Dashboard (static data is committed in web/public/data, see nbs/08_export_static.ipynb)
+      - uses: actions/setup-node@v5
         with:
-          github_token: ${{ secrets.PAT }}
-          branch: refs/pull/42/merge
-          directory: .
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Build dashboard
+        working-directory: web
+        run: |
+          npm ci
+          npm run build
+
+      # ---- nbdev docs, served under /docs. A docs failure never blocks the dashboard deploy.
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: quarto-dev/quarto-actions/setup@v2
+      - name: Build docs
+        id: docs
+        continue-on-error: true
+        env: # The notebooks load the data pickle from AWS when rendering
+          ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+          SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+          REGION_NAME: ${{ secrets.REGION_NAME }}
+        run: |
+          pip install "nbdev<3" "execnb<0.2" "fastcore<1.9"
+          pip install -e .
+          nbdev_docs
+          cp -r _docs web/dist/docs
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
